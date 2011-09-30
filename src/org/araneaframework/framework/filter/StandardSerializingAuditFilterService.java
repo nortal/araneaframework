@@ -37,10 +37,10 @@ import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.framework.core.BaseFilterService;
 
 /**
- * Serializes the the session during the request routing. This filter helps to be aware of serializing issues during
- * development. If the session does not serialize, exception is thrown. <br>
- * <br>
- * The serialized session can be output to a file by setting the xml session path. The path must be valid & writable.
+ * Filter service that serializes the child component during the request routing. It helps to be aware of serializing
+ * issues during development. If the session does not serialize, exception is thrown.
+ * <p>
+ * The serialized session can be output to a file by setting the XML session path. The path must be valid and writable.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
@@ -48,6 +48,8 @@ import org.araneaframework.framework.core.BaseFilterService;
 public class StandardSerializingAuditFilterService extends BaseFilterService {
 
   private static final Log LOG = LogFactory.getLog(StandardSerializingAuditFilterService.class);
+
+  private static final BigDecimal BYTES_DIVIDER = BigDecimal.valueOf(1024);
 
   private String testXmlSessionPath;
 
@@ -61,6 +63,9 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
   /**
    * Sets the path where to write the serialized classes in XML format. The path must be valid and writable. Example:
    * "/home/user/tmp".
+   * <p>
+   * NOTE: to write serialized classes as XML, <tt>XStream</tt> (<tt>com.thoughtworks.xstream</tt>) must be in
+   * class-path.
    * 
    * @param testXmlSessionPath The path where to write the serialized classes in XML format.
    */
@@ -122,14 +127,13 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
    * @return The formatted size with units.
    */
   protected static String formatSize(int size) {
-    BigDecimal limit = BigDecimal.valueOf(1024);
     BigDecimal fSize = BigDecimal.valueOf(size);
 
     char[] units = { ' ', 'k', 'M', 'G', 'T' };
     int unit = 0;
 
-    while (unit < units.length - 2 && fSize.compareTo(limit) > -1) {
-      fSize = fSize.divide(limit);
+    while (unit < units.length - 2 && fSize.compareTo(BYTES_DIVIDER) > -1) {
+      fSize = fSize.divide(BYTES_DIVIDER);
       unit++;
     }
 

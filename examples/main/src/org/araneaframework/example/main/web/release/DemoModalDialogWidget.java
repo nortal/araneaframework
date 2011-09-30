@@ -47,7 +47,8 @@ public class DemoModalDialogWidget extends TemplateBaseWidget {
 
   private boolean nested;
 
-  public DemoModalDialogWidget() {}
+  public DemoModalDialogWidget() {
+  }
 
   private DemoModalDialogWidget(boolean isNested) {
     this.nested = isNested;
@@ -57,14 +58,14 @@ public class DemoModalDialogWidget extends TemplateBaseWidget {
    * Builds the form.
    */
   @Override
-  protected void init() throws Exception {
+  protected void init() {
     setViewSelector("release/modalDialog");
     addWidget("form", buildForm());
   }
 
   private FormWidget buildForm() {
     this.form = new FormWidget();
-    this.form.addElement("textbox1", form.createElement("common.Textbox", new TextControl(), new StringData()));
+    this.form.addElement("textbox1", this.form.createElement("common.Textbox", new TextControl(), new StringData()));
     this.form.addElement("checkbox1", "common.Checkbox", new CheckboxControl(), new BooleanData());
     this.form.addElement("dateTime", "common.datetime", new DateTimeControl(), new DateData());
     this.form.addElement("date", "common.date", new DateControl(), new DateData());
@@ -88,25 +89,25 @@ public class DemoModalDialogWidget extends TemplateBaseWidget {
     return this.form;
   }
 
-  public void handleEventTestSimpleForm() throws Exception {
+  public void handleEventTestSimpleForm() {
     this.form.convertAndValidate();
   }
 
-  public void handleEventNextFlowOverlay() throws Exception {
+  public void handleEventNextFlowOverlay() {
     getOverlayCtx().start(new OverlayRootWidget(new DemoModalDialogWidget(true)));
   }
 
-  public void handleEventNextFlow() throws Exception {
+  public void handleEventNextFlow() {
     getFlowCtx().start(new DemoModalDialogWidget(true));
   }
 
-  public void handleEventReturn() throws Exception {
+  public void handleEventReturn() {
     if (isNested()) {
       getFlowCtx().cancel();
     }
   }
 
-  public void handleEventClose() throws Exception {
+  public void handleEventClose() {
     if (isOverlay()) {
       getOverlayCtx().cancel();
     }

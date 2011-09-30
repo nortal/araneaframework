@@ -18,10 +18,6 @@ package org.araneaframework.framework;
 
 import java.io.Serializable;
 import java.util.Map;
-import org.araneaframework.EnvironmentAwareCallback;
-import org.araneaframework.Widget;
-import org.araneaframework.framework.FlowContext.Configurator;
-import org.araneaframework.framework.FlowContext.Handler;
 
 /**
  * Another context interface that, in contrast to standard {@link FlowContext}, deals with flow logic that is running in
@@ -33,7 +29,7 @@ import org.araneaframework.framework.FlowContext.Handler;
  * @author Alar Kvell (alar@araneaframework.org)
  * @since 1.1
  */
-public interface OverlayContext extends Serializable {
+public interface OverlayContext extends FlowContext {
 
   /**
    * The request parameter name identifying that the request comes from an overlay.
@@ -61,86 +57,6 @@ public interface OverlayContext extends Serializable {
    * @return the current options for overlay rendering.
    */
   Map<String, Object> getOverlayOptions();
-
-  /**
-   * Destroys the current flow and starts a new one inside the overlay mode. When the new flow ends execution, it will
-   * return control to the caller of the current flow (no matter whether it is inside the overlay mode or not). Started
-   * sub-flow can be configured using the configurator.
-   * 
-   * @param flow The uninitialized widget that wishes to run.
-   * @param configurator Custom configuration for the new flow.
-   */
-  void replace(Widget flow, Configurator configurator);
-
-  /**
-   * Destroys the current flow and starts a new one inside the overlay mode. When the new flow ends execution, it will
-   * return control to the caller of the current flow (no matter whether it is inside the overlay mode or not).
-   * 
-   * @param flow The uninitialized widget that should start to run.
-   * @see FlowContext#replace(Widget)
-   */
-  void replace(Widget flow);
-
-  /**
-   * Resets all currently running flows inside the overlay mode and calls the <code>callback</code> allowing to start
-   * new flows. Useful e.g. in a menu, when selecting a new menu item and reseting the old stack.
-   * 
-   * @param callback The callback to handle the calling of new flows.
-   * @see FlowContext#reset(EnvironmentAwareCallback)
-   */
-  void reset(EnvironmentAwareCallback callback);
-
-  /**
-   * Starts a new nested <code>flow</code> inside the overlay mode, that can be configured using the
-   * <code>configurator</code>. Current flow becomes inactive until sub-flow calls {@link FlowContext#finish(Object)} or
-   * {@link FlowContext#cancel()}. <code>handler</code> allows to receive a notification, when the sub-flow ends
-   * execution.
-   * <p>
-   * The <code>flow</code> is the only mandatory parameter.
-   * 
-   * @param flow The uninitialized widget that should start to run.
-   * @param configurator The configuration handler for the widget.
-   * @param handler Allows to receive notification when the widget finishes or cancels the flow.
-   */
-  void start(Widget flow, Configurator configurator, Handler<?> handler);
-
-  /**
-   * Starts a new nested <code>flow</code> inside the overlay mode. Current flow becomes inactive until sub-flow calls
-   * {@link FlowContext#finish(Object)} or {@link FlowContext#cancel()}. <code>handler</code> allows to receive a
-   * notification, when the sub-flow ends execution.
-   * <p>
-   * The <code>flow</code> is the only mandatory parameter.
-   * 
-   * @param flow The uninitialized widget that should start to run.
-   * @param handler Allows to receive notification when the widget finishes or cancels the flow.
-   */
-  void start(Widget flow, Handler<?> handler);
-
-  /**
-   * Starts a new nested <code>flow</code> inside the overlay mode. Current flow becomes inactive until sub-flow calls
-   * {@link FlowContext#finish(Object)} or {@link FlowContext#cancel()}.
-   * <p>
-   * The <code>flow</code> is mandatory parameter.
-   * 
-   * @param flow The uninitialized widget that should start to run.
-   * @see FlowContext#start(Widget)
-   */
-  void start(Widget flow);
-
-  /**
-   * Similar to {@link FlowContext#cancel()} but closes the entire OverlayContext not just the last flow widget.
-   * 
-   * @since 1.2
-   */
-  void cancel();
-
-  /**
-   * Similar to {@link FlowContext#finish(Object)} but closes the entire OverlayContext not just the last flow widget.
-   * 
-   * @param result The result to return from the overlay context.
-   * @since 1.2
-   */
-  void finish(Object result);
 
   /**
    * This is a marker interface to say that overlay mode is active by putting this interface class into the

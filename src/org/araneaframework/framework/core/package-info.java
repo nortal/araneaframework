@@ -15,7 +15,8 @@
  */
 
 /** 
- * Base implementations of Widget and Service interfaces in <i>org.araneaframework.framework</i> package.
+ * Most general base implementations of <tt>Service</tt> and <tt>Widget</tt> classes used in
+ * <tt>org.araneaframework.framework</tt> package.
  */
 
 package org.araneaframework.framework.core;

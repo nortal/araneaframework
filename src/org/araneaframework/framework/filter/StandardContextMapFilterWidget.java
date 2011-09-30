@@ -40,15 +40,14 @@ public class StandardContextMapFilterWidget extends BaseFilterWidget {
 
   private static final Log LOG = LogFactory.getLog(StandardContextMapFilterWidget.class);
 
-  protected Map<Class<?>, Object> contexts = new HashMap<Class<?>, Object>();
+  private final Map<Class<?>, Object> contexts = new HashMap<Class<?>, Object>();
 
   @Override
-  protected void init() throws Exception {
-    getChildWidget()._getComponent().init(getScope(), new StandardEnvironment(getEnvironment(), this.contexts));
-
+  protected Environment getChildWidgetEnvironment() {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Following contexts were added to environment: " + this.contexts);
     }
+    return new StandardEnvironment(getEnvironment(), this.contexts);
   }
 
   /**

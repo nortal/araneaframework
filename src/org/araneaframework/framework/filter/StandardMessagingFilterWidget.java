@@ -41,17 +41,16 @@ import org.araneaframework.http.util.JsonArray;
 import org.araneaframework.http.util.JsonObject;
 
 /**
- * Adds a {@link org.araneaframework.framework.MessageContext} implementation to the environment that can be used to add
- * messages for later output.
+ * Filter service implementing messaging support. This service also exposes {@link MessageContext} to child components
+ * through environment. It can be used to add messages for later output.
  * <p>
  * An example how to add messages to the context follows:
  * 
  * <pre>
- * &lt;code&gt;
- * ...
  * MessageContext messageContext = getEnvironment().get(MessageContext.class);
- * messageContext.addMessage(MessageContext.INFO_TYPE, &quot;Hello message!&quot;);
- * &lt;/code&gt;
+ * messageContext.showMessage(MessageContext.INFO_TYPE, &quot;Hello message!&quot;);
+ * // or:
+ * messageContext.showInfoMessage(&quot;Hello message!&quot;);
  * </pre>
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
@@ -60,9 +59,9 @@ import org.araneaframework.http.util.JsonObject;
  */
 public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
 
-  protected Map<String, Collection<MessageData>> permanentMessages = new LinkedHashMap<String, Collection<MessageData>>();
+  private Map<String, Collection<MessageData>> permanentMessages = new LinkedHashMap<String, Collection<MessageData>>();
 
-  protected Map<String, Collection<MessageData>> messages = new LinkedHashMap<String, Collection<MessageData>>();
+  private Map<String, Collection<MessageData>> messages = new LinkedHashMap<String, Collection<MessageData>>();
 
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
@@ -81,24 +80,39 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     return new StandardEnvironment(getEnvironment(), MessageContext.class, this);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void showMessage(String type, final String message, final Object... params) {
     this.messages = storeMessage(this.messages, type, message, params);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void showMessage(String type, MessageData messageData) {
     this.messages = storeMessage(this.messages, type, messageData);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void hideMessage(String type, String message) {
     Assert.notEmptyParam(type, "type");
     removeMessage(this.messages, type, message);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void hideMessage(String type, MessageData messageData) {
     Assert.notEmptyParam(type, "type");
     removeMessage(this.messages, type, messageData);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void showMessages(String type, Set<String> messages) {
     Assert.notNullParam(messages, "messages");
     for (String message : messages) {
@@ -106,6 +120,9 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void showMessagesData(String type, Set<MessageData> messagesData) {
     Assert.notNullParam(messagesData, "messagesData");
     for (MessageData message : messagesData) {
@@ -113,6 +130,9 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void hideMessages(String type, Set<String> messages) {
     Assert.notNullParam(messages, "messages");
     for (String message : messages) {
@@ -120,6 +140,9 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void hideMessagesData(String type, Set<MessageData> messagesData) {
     Assert.notNullParam(messagesData, "messagesData");
     for (MessageData message : messagesData) {
@@ -127,56 +150,95 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void showPermanentMessage(String type, String message, Object... params) {
     this.permanentMessages = storeMessage(this.permanentMessages, type, message, params);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void hidePermanentMessage(String message) {
     removeMessage(this.permanentMessages, null, message);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void showErrorMessage(String message, Object... params) {
     showMessage(ERROR_TYPE, message, params);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void hideErrorMessage(String message) {
     hideMessage(ERROR_TYPE, message);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void showInfoMessage(String message, Object... params) {
     showMessage(INFO_TYPE, message, params);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void hideInfoMessage(String message) {
     hideMessage(INFO_TYPE, message);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void showWarningMessage(String message, Object... params) {
     showMessage(WARNING_TYPE, message, params);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void hideWarningMessage(String message) {
     hideMessage(WARNING_TYPE, message);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void clearMessages() {
     this.messages.clear();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void clearPermanentMessages() {
     this.permanentMessages.clear();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void clearAllMessages() {
     clearMessages();
     clearPermanentMessages();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public Map<String, Collection<MessageData>> getMessages() {
     // add permanent messages to one-time messages for rendering all messages together
     return Collections.unmodifiableMap(addPermanentMessages(this.messages));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public Map<String, Collection<String>> getResolvedMessages(LocalizationContext locCtx) {
     Assert.notNullParam(locCtx, "locCtx");
 
@@ -195,6 +257,9 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     return result;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public Map<String, String> getRegions(LocalizationContext locCtx) {
     JsonObject messagesByType = new JsonObject();
     Map<String, Collection<String>> messageMap = getResolvedMessages(locCtx);
@@ -203,11 +268,11 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
       for (Map.Entry<String, Collection<String>> entry : messageMap.entrySet()) {
         if (entry.getValue() != null) {
           String type = entry.getKey();
-          JsonArray messages = new JsonArray();
+          JsonArray jsonMessages = new JsonArray();
           for (String message : entry.getValue()) {
-            messages.appendString(message);
+            jsonMessages.appendString(message);
           }
-          messagesByType.setProperty(type, messages.toString());
+          messagesByType.setProperty(type, jsonMessages.toString());
         }
       }
     }
@@ -217,22 +282,30 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
 
   /**
    * Stores message of given type in given messageMap (created if <code>null</code> at invocation).
+   * 
    * @param messageMap The messages map where the message should be stored.
-   * @param type The type of message to store (one of the constants in {@link MessageContext}). 
+   * @param type The type of message to store (one of the constants in {@link MessageContext}).
    * @param message The message to store permanently until removed.
    * @param params Optional parameters to be resolved in the message.
-   * 
-   * @return The same message map taken as a parameter
+   * @return The same message map taken as a parameter.
    */
-  protected static Map<String, Collection<MessageData>> storeMessage(Map<String, Collection<MessageData>> messageMap, String type,
-      String message, Object... params) {
+  protected static Map<String, Collection<MessageData>> storeMessage(Map<String, Collection<MessageData>> messageMap,
+      String type, String message, Object... params) {
 
     Assert.notEmptyParam(message, "message");
     return storeMessage(messageMap, type, new StandardMessageData(message, params));
   }
 
-  protected static Map<String, Collection<MessageData>> storeMessage(Map<String, Collection<MessageData>> messageMap, String type,
-      MessageData messageData) {
+  /**
+   * Stores message of given type in given messageMap (created if <code>null</code> at invocation).
+   * 
+   * @param messageMap The messages map where the message should be stored.
+   * @param type The type of message to store (one of the constants in {@link MessageContext}).
+   * @param messageData The message to store permanently until removed.
+   * @return The same message map taken as a parameter.
+   */
+  protected static Map<String, Collection<MessageData>> storeMessage(Map<String, Collection<MessageData>> messageMap,
+      String type, MessageData messageData) {
 
     Assert.notEmptyParam(type, "type");
     Assert.notNullParam(messageData, "messageData");
@@ -251,6 +324,10 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   /**
    * Removes the given <code>message</code> from given message <code>type</code> in <code>messageMap</code>. When given
    * <code>type</code> is <code>NULL</code>, removes the given <code>message</code> from all types.
+   * 
+   * @param messageMap The messages map where the message should be stored.
+   * @param msgType The type of message to store (one of the constants in {@link MessageContext}).
+   * @param message The message to store permanently until removed.
    */
   protected static void removeMessage(Map<String, Collection<MessageData>> messageMap, String msgType,
       final String message) {
@@ -273,6 +350,14 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     }
   }
 
+  /**
+   * Removes the given <code>message</code> from given message <code>type</code> in <code>messageMap</code>. When given
+   * <code>type</code> is <code>NULL</code>, removes the given <code>message</code> from all types.
+   * 
+   * @param messageMap The messages map where the message should be stored.
+   * @param msgType The type of message to store (one of the constants in {@link MessageContext}).
+   * @param messageData The message to store permanently until removed.
+   */
   protected static void removeMessage(Map<String, Collection<MessageData>> messageMap, String msgType,
       MessageData messageData) {
 
@@ -296,6 +381,7 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   /**
    * Adds current permanent messages to given message map.
    * 
+   * @param msgs The messages map where the message should be stored.
    * @return given message map with permanent messages added.
    */
   protected Map<String, Collection<MessageData>> addPermanentMessages(Map<String, Collection<MessageData>> msgs) {
@@ -324,15 +410,27 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
 
     private Object[] parameters;
 
+    /**
+     * Creates a new message data.
+     * 
+     * @param message The message code (required).
+     * @param parameters Optional parameters to the message.
+     */
     public StandardMessageData(String message, Object... parameters) {
       this.message = message;
       this.parameters = parameters;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getMessage() {
       return this.message;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Object[] getMessageParameters() {
       return this.parameters;
     }

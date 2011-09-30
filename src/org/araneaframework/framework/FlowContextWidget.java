@@ -19,7 +19,7 @@ package org.araneaframework.framework;
 import org.araneaframework.Widget;
 
 /**
- * {@link Widget} that is {@link FlowContext}.
+ * A {@link Widget} that is {@link FlowContext}.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1

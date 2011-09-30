@@ -21,8 +21,8 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.SessionServiceContext;
 
 /**
- * A {@link org.araneaframework.framework.router.BaseServiceRouterService} which handles sessions. Enriches the
- * environment with an object of this class under the key SessionServiceContext.class.
+ * A session router service implementation. Exposes <tt>SessionServiceContext</tt> to child components through
+ * environment.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */

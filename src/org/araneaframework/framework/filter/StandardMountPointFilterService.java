@@ -22,17 +22,16 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.framework.MountContext;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.http.filter.StandardMountingFilterService;
 
 /**
- * This service serves as the entry point for mounted URLs. If the current request is sent to one of such URLs it will
- * send the mounting message produced by the mounting {@link org.araneaframework.framework.MountContext.MessageFactory}.
+ * Filter service that enforces <tt>MountContext</tt> mapping. If the current request is sent with mounting criteria, it
+ * will send the mounting message produced by the mounting {@link MountContext.MessageFactory}.
  * <p>
  * This service doesn't require any configuration.
  * 
- * @see MountContext
- * @see StandardMountingFilterService
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ * @see MountContext
+ * @see org.araneaframework.http.filter.StandardMountingFilterService
  */
 public class StandardMountPointFilterService extends BaseFilterService {
 

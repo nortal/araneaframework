@@ -67,6 +67,7 @@ public class StandardCriticalExceptionHandlingFilterService extends BaseFilterSe
       }
 
       arUtil.rollback();
+
       Service service = this.factory.buildExceptionHandler(e, getEnvironment());
       service._getComponent().init(getScope(), getEnvironment());
 

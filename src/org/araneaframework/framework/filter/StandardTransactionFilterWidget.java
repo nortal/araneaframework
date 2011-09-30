@@ -29,9 +29,9 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.framework.util.TransactionHelper;
 
 /**
- * Filters <code>update(InputData)</code>, <code>event(Path, InputData)</code> and <code>render(OutputData)</code> based
- * on the transaction ID. If the transaction ID is consistent, the mentioned actions get called on the child service,
- * otherwise they do not.
+ * Filter widget that serves <code>update(InputData)</code>, <code>event(Path, InputData)</code> and
+ * <code>render(OutputData)</code> based on the transaction ID. If the transaction ID is consistent, the mentioned
+ * actions get called on the child service, otherwise they do not.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
@@ -68,19 +68,14 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
     return new StandardEnvironment(super.getChildWidgetEnvironment(), TransactionContext.class, this);
   }
 
-  @Override
-  protected void destroy() throws Exception {
-    super.destroy();
-  }
-
   // Template
   @Override
   protected void update(InputData input) throws Exception {
     this.consistent = isConsistent(input);
     if (isConsistent()) {
       getChildWidget()._getWidget().update(input);
-    } else {
-      LOG.debug("Transaction id '" + getTransactionId(input) + "' not consistent for routing update().");
+    } else if (LOG.isDebugEnabled()) {
+      LOG.debug("Transaction ID '" + getTransactionId(input) + "' not consistent for routing update().");
     }
   }
 
@@ -88,7 +83,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   protected void event(Path path, InputData input) throws Exception {
     if (isConsistent()) {
       getChildWidget()._getWidget().event(path, input);
-    } else {
+    } else if (LOG.isDebugEnabled()) {
       LOG.debug("Transaction ID '" + getTransactionId(input) + "' not consistent for routing event().");
     }
   }
@@ -110,7 +105,9 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
     SystemFormContext systemFormContext = getEnvironment().requireEntry(SystemFormContext.class);
     systemFormContext.addField(TRANSACTION_ID_KEY, getTransactionId().toString());
 
-    LOG.debug("New transaction ID '" + getTransactionId() + "'.");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("New transaction ID '" + getTransactionId() + "'.");
+    }
 
     getChildWidget()._getWidget().render(output);
   }

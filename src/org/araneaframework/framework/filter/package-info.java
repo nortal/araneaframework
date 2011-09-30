@@ -15,7 +15,8 @@
  */
 
 /** 
- * Aranea standard implementation of some filter <i>Services</i> and <i>Widgets</i>.
+ * Aranea framework standard filters. Most of the filters here implement the context interfaces defined in
+ * <tt>org.araneaframework.framework</tt> package.
  */
 
 package org.araneaframework.framework.filter;

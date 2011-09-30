@@ -21,8 +21,8 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.filter.NotRenderedMessage;
 
 /**
- * This filter resets all {@link org.araneaframework.framework.core.RenderStateAware} components render state to not
- * rendered prior to calling render on its children. Therefore the parent component(s) of this filter can call
+ * Filter widget that resets all {@link org.araneaframework.framework.core.RenderStateAware} components to not rendered
+ * state prior to calling render on its children. Therefore the parent component(s) of this filter can call
  * {@link #render(OutputData)} several times. (Usually they invoke rendering only once, but UpdateRegionContext may
  * sometimes do it twice.)
  * 

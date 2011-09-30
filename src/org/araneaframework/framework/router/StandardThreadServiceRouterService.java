@@ -21,8 +21,7 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ThreadContext;
 
 /**
- * A {@link org.araneaframework.framework.router.BaseServiceRouterService} which handles threads. Enriches the
- * environment with an object of this class under the key StandardThreadServiceRouterService.class.
+ * A thread router service implementation. Exposes <tt>ThreadContext</tt> to child components through environment.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */

@@ -27,8 +27,8 @@ import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
- * A filter that logs with INFO-level the time it takes for the child service to complete its action method (serving the
- * request). The logging statement can have a message set via <code>setMessage()</code>.
+ * A filter service that logs with INFO-level the time it takes for the child service to complete its action method
+ * (serving the request). The logging statement can have a message set via <code>setMessage()</code>.
  * <p>
  * Since version 2.0, this service also supports expression in the set message that will be replaced with data from
  * request. Available expressions are stored as constants in this class. The message should contain at least the

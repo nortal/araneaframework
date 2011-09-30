@@ -32,9 +32,10 @@ import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
- * Stores system form fields that will be written out in &lt;ui:systemForm&gt; tag. This implementation adds
- * <code>topServiceId</code> and <code>threadServiceId</code> automatically, since <code>SystemFormContext</code> is
- * usually located below them in the hierarchy.
+ * Filter service that handles specifying system form hidden fields, when needed.
+ * <p>
+ * This implementation adds <code>topServiceId</code> and <code>threadServiceId</code> automatically, since
+ * <code>SystemFormContext</code> is usually located below them in the hierarchy.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  * @since 1.1
@@ -71,12 +72,18 @@ public class StandardSystemFormFilterService extends BaseFilterService implement
     super.action(path, input, output);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void addField(String key, String value) {
     Assert.notEmptyParam(key, "key");
     Assert.notNullParam(value, "value");
     this.fields.put(key, value);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public Map<String, String> getFields() {
     return Collections.unmodifiableMap(this.fields);
   }

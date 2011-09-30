@@ -35,6 +35,11 @@ public class StandardFilterChainService extends BaseFilterService {
 
   private List<FilterService> filterChain;
 
+  /**
+   * Method for providing a list of filter services (a filter chain).
+   * 
+   * @param filterChain A list of filter services.
+   */
   public void setFilterChain(List<FilterService> filterChain) {
     this.filterChain = filterChain;
   }
@@ -43,14 +48,14 @@ public class StandardFilterChainService extends BaseFilterService {
   protected void init() throws Exception {
     if (this.filterChain != null) {
       // We move from the back of the list backwards:
-      ListIterator<FilterService> i = this.filterChain.listIterator(this.filterChain.size());
-      while (i.hasPrevious()) {
+      for (ListIterator<FilterService> i = this.filterChain.listIterator(this.filterChain.size()); i.hasPrevious();) {
         FilterService filter = i.previous();
         filter.setChildService(getChildService());
         setChildService(filter);
       }
+      this.filterChain = null;
     }
-    this.filterChain = null;
+
     super.init();
   }
 }

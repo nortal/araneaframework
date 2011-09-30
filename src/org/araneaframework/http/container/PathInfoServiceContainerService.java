@@ -22,11 +22,16 @@ import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.container.StandardContainerService;
 import org.araneaframework.http.HttpInputData;
 
+/**
+ * A container service that uses request path info (following the name of the servlet) to resolve the action path.
+ * 
+ * @author Toomas Römer (toomas@webmedia.ee)
+ */
 public class PathInfoServiceContainerService extends StandardContainerService {
+
   @Override
   protected Path getActionPath(InputData input) {
-    //XXX StandardPath doesn fit here, or at least pop/push should affect the path...
-    String pathInfo = ((HttpInputData) input).getPath().substring(1);
-    return new StandardPath(pathInfo.replace('/', '.'));
+    String path = ((HttpInputData) input).getPath();
+    return path != null && path.length() > 1 ? new StandardPath(path.substring(1)) : null;
   }
 }

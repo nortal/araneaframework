@@ -43,6 +43,10 @@ import org.araneaframework.http.util.ServletUtil;
  */
 public class StandardOverlayContainerWidget extends BaseApplicationWidget implements OverlayContext {
 
+  private static final int DEFAULT_WIDTH = 800;
+
+  private static final double DEFAULT_MAX_HEIGHT = 0.9;
+
   /**
    * <p>
    * Map containing the default overlay presentation options. OPTIONS with default values (most default values are
@@ -144,19 +148,19 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
    */
   private Map<String, Object> presentationOptions = new LinkedHashMap<String, Object>();
 
-  protected FlowContextWidget main;
+  private FlowContextWidget main;
 
-  protected FlowContextWidget overlay;
+  private FlowContextWidget overlay;
 
   static {
     DEFAULT_PRESENTATION_OPTIONS.put("method", "post");
     DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", false);
-    DEFAULT_PRESENTATION_OPTIONS.put("width", 800);
+    DEFAULT_PRESENTATION_OPTIONS.put("width", DEFAULT_WIDTH);
     DEFAULT_PRESENTATION_OPTIONS.put("slideDownDuration", 0);
     DEFAULT_PRESENTATION_OPTIONS.put("slideUpDuration", 0);
     DEFAULT_PRESENTATION_OPTIONS.put("overlayDuration", 0);
     DEFAULT_PRESENTATION_OPTIONS.put("resizeDuration", 0);
-    DEFAULT_PRESENTATION_OPTIONS.put("maxHeight", 0.9);
+    DEFAULT_PRESENTATION_OPTIONS.put("maxHeight", DEFAULT_MAX_HEIGHT);
   }
 
   /**

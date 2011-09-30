@@ -15,7 +15,7 @@
  */
 
 /** 
- * Standard messages that can be sent to framework interfaces.
+ * Standard messages provided by Aranea framework.
  */
 
 package org.araneaframework.framework.message;

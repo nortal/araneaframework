@@ -16,8 +16,6 @@
 
 package org.araneaframework.framework.filter;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
@@ -31,9 +29,11 @@ import org.araneaframework.framework.ContinuationContext;
 import org.araneaframework.framework.ContinuationManagerContext;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.util.AtomicResponseHelper;
-import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
+ * Filter service implementing continuation support. This service also exposes {@link ContinuationManagerContext} and
+ * {@link ContinuationContext} to child components through environment.
+ * 
  * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
@@ -51,16 +51,13 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
 
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-
     AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
 
     try {
       if (isRunning()) {
         LOG.debug("Routing action to continuation");
         this.continuation._getService().action(path, input, output);
-      }
-
-      if (!isRunning()) {
+      } else {
         arUtil.rollback();
 
         try {
@@ -80,30 +77,41 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void start(Service continuation) {
     this.continuation = continuation;
-    Map<Class<?>, Object> entries = new HashMap<Class<?>, Object>();
-    entries.put(ContinuationContext.class, this);
-    continuation._getComponent().init(getScope(), new StandardEnvironment(getEnvironment(), entries));
+    continuation._getComponent().init(getScope(),
+        new StandardEnvironment(getEnvironment(), ContinuationContext.class, this));
     throw new AraneaRuntimeException("Continuation set!");
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void finish() {
     this.continuation._getComponent().destroy();
     this.continuation = null;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean isRunning() {
     return this.continuation != null;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void runOnce(Service continuation) {
     BaseFilterService service = new BaseFilterService(continuation) {
 
       @Override
-      protected void action(Path path, InputData input, OutputData output) throws Exception {
+      protected void action(Path path, InputData input, OutputData output) {
         getChildService()._getService().action(path, input, output);
-        EnvironmentUtil.getContinuationContext(getEnvironment()).finish();
+        getEnvironment().getEntry(ContinuationContext.class).finish();
       }
     };
     start(service);

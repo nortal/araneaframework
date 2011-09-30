@@ -49,6 +49,9 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * <p>
  * If you wish to use these events, make sure that when you override the <code>init()</code> method, also include the
  * <code>super.init()</code> line to that method.
+ * <p>
+ * Also note that following methods are monitored for exceptions: <tt>propagate(), update(), event(), render()</tt>.
+ * When an exception occurs, the following methods won't be called until the exception is rendered in <tt>render()</tt>.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
@@ -59,7 +62,7 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
   /**
    * The exception that occurs is stored in this variable.
    */
-  protected Exception exception;
+  private Exception exception;
 
   /**
    * Initializes the flow container.
@@ -98,34 +101,25 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
 
   /**
    * Handles the <code>retry</code> event.
-   * 
-   * @throws Exception Any non-specific exception that may occur.
    */
-  public void handleEventRetry() throws Exception {
+  public void handleEventRetry() {
     // Empty: no code needed for "retry".
   }
 
   /**
-   * Handles the <code>cancel</code> event.
-   * 
-   * @throws Exception Any non-specific exception that may occur.
+   * Handles the flow context <code>cancel</code> event.
    */
-  public void handleEventCancel() throws Exception {
+  public void handleEventCancel() {
     cancel();
   }
 
   /**
-   * Handles the <code>reset</code> event.
-   * 
-   * @throws Exception Any non-specific exception that may occur.
+   * Handles the flow context <code>reset</code> event.
    */
-  public void handleEventReset() throws Exception {
+  public void handleEventReset() {
     reset(null);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   protected void handleWidgetException(Exception e) throws Exception {
     this.exception = e;

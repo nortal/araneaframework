@@ -38,8 +38,8 @@
 		</property>
 	</bean>
 
-	<bean class="org.araneaframework.http.router.StandardHttpSessionRouterService" id="araneaSessionRouter"
-			scope="prototype">
+	<bean id="araneaSessionRouter" scope="prototype"
+			class="org.araneaframework.http.router.StandardHttpSessionRouterService">
 		<property name="sessionServiceFactory" ref="araneaSessionServiceFactory" />
 	</bean>
 
@@ -141,8 +141,7 @@
 		</property>
 	</bean>
 
-	<bean
-		class="org.araneaframework.framework.container.StandardOverlayContainerWidget"
+	<bean class="org.araneaframework.framework.container.StandardOverlayContainerWidget"
 		id="araneaOverlayContainer" scope="prototype">
 		<property name="main" ref="araneaRootFlowContainer" />
 		<property name="overlay" ref="araneaOverlayRootContainer" />
@@ -203,8 +202,7 @@
 	</bean>
 
 	<bean class="org.araneaframework.http.filter.StandardMountingFilterService"
-		id="araneaMountingFilter" scope="prototype">
-	</bean>
+		id="araneaMountingFilter" scope="prototype" />
 
 	<bean id="araneaMountPointFilter" scope="prototype"
 		class="org.araneaframework.framework.filter.StandardMountPointFilterService"/>

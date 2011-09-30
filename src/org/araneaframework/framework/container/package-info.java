@@ -15,7 +15,7 @@
  */
 
 /** 
- * Standard implementations of Widget and Service containers.
+ * Standard implementations of <tt>Service</tt> and <tt>Widget</tt> containers.
  */
 
 package org.araneaframework.framework.container;

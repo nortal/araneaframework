@@ -81,6 +81,8 @@ public abstract class BaseServiceRouterService extends BaseService {
   /**
    * Initialize all the services in the service map with <code>getChildEnvironment(Object serviceId)</code>. The
    * serviceId is the key of the service in the service map.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   protected void init() throws Exception {

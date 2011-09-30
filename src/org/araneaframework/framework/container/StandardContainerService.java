@@ -25,17 +25,12 @@ import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.core.BaseFilterService;
 
 /**
- * A service that contains a service and routes actions to it. If
- * <code>hasAction(InputData)</code> returns true, the action is routed to the child, otherwise
- * not.
+ * A service that contains a service and routes actions to it. If <code>hasAction(InputData)</code> returns true, the
+ * action is routed to the child, otherwise not.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardContainerService extends BaseFilterService {
-
-  //*******************************************************************
-  // CONSTANTS
-  //*******************************************************************
 
   private static final Log LOG = LogFactory.getLog(StandardContainerService.class);
 
@@ -45,25 +40,21 @@ public class StandardContainerService extends BaseFilterService {
   public static final String ACTION_PATH_INPUT_DATA_PARAMETER = "serviceActionId";
 
   /**
-   * Returns the path of action from the InputData. Uses the ACTION_PATH_INPUT_DATA_PARAMETER
-   * to get the path.
+   * Returns the path of action from the InputData. Uses the {@link #ACTION_PATH_INPUT_DATA_PARAMETER} constant to get
+   * the path.
+   * 
+   * @param input The input data for this service.
+   * @return The resolved action path, or <code>null</code> when it is not contained in the input.
    */
   protected Path getActionPath(InputData input) {
-    return new StandardPath(input.getGlobalData().get(ACTION_PATH_INPUT_DATA_PARAMETER));
-  }
-
-  /**
-   * Determines if the request contains an action. Checks if the ACTION_PATH_INPUT_DATA_PARAMETER
-   * is set in the request.
-   */
-  protected boolean hasAction(InputData input) {
-    return input.getGlobalData().get(ACTION_PATH_INPUT_DATA_PARAMETER) != null;
+    String path = input.getGlobalData().get(ACTION_PATH_INPUT_DATA_PARAMETER);
+    return path != null ? new StandardPath(path) : null;
   }
 
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    if (hasAction(input)) {
-      Path actionPath = getActionPath(input);
+    Path actionPath = getActionPath(input);
+    if (actionPath != null) {
       LOG.debug("Routing action to service '" + actionPath.toString() + "'");
       super.action(actionPath, input, output);
     }

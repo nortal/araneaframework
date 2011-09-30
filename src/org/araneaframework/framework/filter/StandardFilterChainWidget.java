@@ -35,6 +35,11 @@ public class StandardFilterChainWidget extends BaseFilterWidget {
 
   private List<FilterWidget> filterChain;
 
+  /**
+   * Method for providing a list of filter widgets (a filter chain).
+   * 
+   * @param filterChain A list of filter widgets.
+   */
   public void setFilterChain(List<FilterWidget> filterChain) {
     this.filterChain = filterChain;
   }
@@ -43,12 +48,12 @@ public class StandardFilterChainWidget extends BaseFilterWidget {
   protected void init() throws Exception {
     if (this.filterChain != null) {
       // We move from the back of the list backwards:
-      ListIterator<FilterWidget> i = this.filterChain.listIterator(this.filterChain.size());
-      while (i.hasPrevious()) {
+      for (ListIterator<FilterWidget> i = this.filterChain.listIterator(this.filterChain.size()); i.hasPrevious();) {
         FilterWidget filter = i.previous();
         filter.setChildWidget(getChildWidget());
         setChildWidget(filter);
       }
+      this.filterChain = null;
     }
 
     this.filterChain = null;

@@ -21,8 +21,7 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.TopServiceContext;
 
 /**
- * A top router service. Enriches the environment with an object of this class under the key
- * StandardTopServiceRouterService.class.
+ * A top router service implementation. Exposes <tt>TopServiceContext</tt> to child components through environment.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */

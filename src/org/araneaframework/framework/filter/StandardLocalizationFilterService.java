@@ -36,9 +36,8 @@ import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
- * Enriches the environment with an implementation that can be accessed thorugh {@link Environment} with the key
- * {@link org.araneaframework.framework.LocalizationContext}. Child components can use it and thus provide Locale
- * specific content.
+ * Filter service implementing localization support. This service also exposes {@link LocalizationContext} to child
+ * components through environment.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
@@ -54,9 +53,11 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   private List<LocaleChangeListener> localeChangeListeners;
 
   /**
-   * Set the name of the language, it must be a <b>valid ISO Language Code</b>. See the language name in {@link Locale}.
-   * This method should only be used when <i>country</i> and <i>variant</i> are not important at all, otherwise
-   * {@link #setLocale(Locale)} must be used.
+   * Set the name of the locale language, it must be a <b>valid ISO Language Code</b>. See the language name in
+   * {@link Locale}. This method should only be used when <i>country</i> and <i>variant</i> are not important at all,
+   * otherwise {@link #setLocale(Locale)} must be used.
+   * 
+   * @param languageName A Valid ISO language code.
    */
   public void setLanguageName(String languageName) {
     Assert.notNullParam(languageName, "languageName");
@@ -66,16 +67,32 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   /**
    * Sets the name of the resource bundle.
    * 
-   * @param resourceBundleName
+   * @param resourceBundleName A name of a resource bundle.
    */
   public void setResourceBundleName(String resourceBundleName) {
     this.resourceBundleName = resourceBundleName;
   }
 
+  @Override
+  protected void init() throws Exception {
+    getChildService()._getComponent().init(getScope(), getChildEnvironment());
+  }
+
+  @Override
+  protected Environment getChildEnvironment() {
+    return new StandardEnvironment(super.getChildEnvironment(), LocalizationContext.class, this);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public Locale getLocale() {
     return this.currentLocale;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void setLocale(Locale currentLocale) {
     Assert.notNullParam(currentLocale, "currentLocale");
     if (!currentLocale.equals(getLocale())) {
@@ -88,23 +105,15 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     }
   }
 
-  @Override
-  protected Environment getChildEnvironment() {
-    return new StandardEnvironment(super.getChildEnvironment(), LocalizationContext.class, this);
-  }
-
+  /**
+   * {@inheritDoc}
+   */
   public ResourceBundle getResourceBundle() {
     return getResourceBundle(this.currentLocale);
   }
 
-  @Override
-  protected void init() throws Exception {
-    getChildService()._getComponent().init(getScope(), getChildEnvironment());
-  }
-
   /**
-   * Gets a resource bundle using the specified resource bundle name and current locale and the ClassLoaders provided by
-   * the ClassLoaderUtil.
+   * {@inheritDoc}
    */
   public ResourceBundle getResourceBundle(Locale locale) {
     Assert.notNullParam(locale, "locale");
@@ -124,15 +133,24 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
         .getName(), "");
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public String localize(String key) {
     return getResourceBundle().getString(key);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public String getMessage(String code, Object... args) {
     String message = localize(code);
     return MessageFormat.format(message, args);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public String getMessage(String code, String defaultMessage, Object... args) {
     String message = null;
     try {
@@ -143,8 +161,10 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     return MessageFormat.format(message, args);
   }
 
-  /** @since 1.1 */
-  public void addLocaleChangeListener(final LocaleChangeListener listener) {
+  /**
+   * {@inheritDoc}
+   */
+  public void addLocaleChangeListener(LocaleChangeListener listener) {
     if (listener == null) {
       return;
     }
@@ -155,15 +175,16 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     this.localeChangeListeners.add(listener);
   }
 
-  /** @since 1.1 */
+  /**
+   * {@inheritDoc}
+   */
   public boolean removeLocaleChangeListener(LocaleChangeListener listener) {
-    if (listener == null || this.localeChangeListeners == null) {
-      return false;
-    }
-    return this.localeChangeListeners.remove(listener);
+    return listener != null && this.localeChangeListeners != null && this.localeChangeListeners.remove(listener);
   }
 
-  /** @since 1.1 */
+  /**
+   * {@inheritDoc}
+   */
   protected void notifyLocaleChangeListeners(Locale oldLocale, Locale newLocale) {
     if (this.localeChangeListeners != null) {
       for (LocaleChangeListener listener : this.localeChangeListeners) {

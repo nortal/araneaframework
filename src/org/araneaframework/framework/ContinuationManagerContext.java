@@ -22,8 +22,7 @@ import org.araneaframework.Service;
 /**
  * This context allows to abort the current execution flow and pass control to a provided continuation service. The
  * continuation service will be rendered on the current and subsequent request until it explicitly passes control back
- * using {@link org.araneaframework.framework.ContinuationContext#finish()}. This will end the continuation and restore
- * control back.
+ * using {@link ContinuationContext#finish()}. This will end the continuation and restore control back.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)

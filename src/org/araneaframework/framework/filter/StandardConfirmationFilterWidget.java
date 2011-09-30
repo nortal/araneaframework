@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.araneaframework.framework;
+package org.araneaframework.framework.filter;
 
 import java.io.Serializable;
 import org.apache.commons.collections.Closure;
@@ -24,10 +24,15 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.Assert;
+import org.araneaframework.framework.ConfirmationContext;
+import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
+ * Filter widget implementing confirmation context support. This service also exposes {@link ConfirmationContext}to
+ * child components through environment.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
@@ -50,18 +55,20 @@ public class StandardConfirmationFilterWidget extends BaseFilterWidget implement
   // IMPLEMENTATION
 
   /**
+   * {@inheritDoc}
+   */
+  public String getConfirmationMessage() {
+    return this.message;
+  }
+
+  // IMPLEMENTATION
+
+  /**
    * Resets confirmation context, removing the confirmation message an callback closure.
    */
   protected void removeConfirmation() {
     this.closure = null;
     this.message = null;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public String getConfirmationMessage() {
-    return this.message;
   }
 
   /**
