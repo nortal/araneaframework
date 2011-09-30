@@ -16,6 +16,7 @@
 
 package org.araneaframework.framework.container;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
@@ -28,8 +29,6 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.Assert;
-import org.araneaframework.framework.FlowContext.Configurator;
-import org.araneaframework.framework.FlowContext.Handler;
 import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.SystemFormContext;
@@ -350,5 +349,12 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
    */
   public void cancel() {
     this.overlay.cancel();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public Collection<Widget> getNestedFlows() {
+    return this.overlay.getNestedFlows();
   }
 }
