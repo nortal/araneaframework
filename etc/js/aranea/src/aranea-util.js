@@ -98,7 +98,7 @@ Aranea.Logger.FIREBUG_LOGGER = window.console && window.console.debug ? {
 Aranea.Logger.LOG4JS_LOGGER = window.log4javascript && window.log4javascript.getDefaultLogger ?
 	window.log4javascript.getDefaultLogger() : Aranea.Logger.DUMMY_LOGGER;
 
-Aranea.Logger.setLogger('dummy');
+Aranea.Logger.setLogger('firebug');
 
 /**
  * Utility functions. Aranea.Util namespace was created in version 2.0. However, "aranea-util.js" existed before. Some

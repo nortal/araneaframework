@@ -139,6 +139,7 @@ Aranea.Page = {
 			$$(Aranea.Data.focusableElements).each(function (element) {
 				element.observe("focus", function(event) {
 					Aranea.Data.focusedFormElementName = event.element().name;
+					Aranea.Logger.debug("Focus set to " + Aranea.Data.focusedFormElementName);
 				});
 			});
 		}
@@ -767,17 +768,19 @@ Aranea.Page.Submitter.AJAX = Class.create(Aranea.Page.Submitter.Plain, {
 			// Set the previously focused form control focused again (since 1.2)
 			if (Aranea.Data.autofocus && Aranea.Data.focusedFormElementName) {
 				var formElem = $$('[name="' + Aranea.Data.focusedFormElementName + '"]').first();
+				Aranea.Logger.debug("Trying to set focus to " + Aranea.Data.focusedFormElementName);
 				Aranea.Data.focusedFormElementName = null;
-
 				if (formElem) {
 					try {
 						formElem.focus();
+						Aranea.Logger.debug("Focus successfully set to  " + focusElem.name);
 					} catch (e) {
 					} finally {
 						formElem = null;
 					}
 				}
 			}
+			Aranea.Page.addAutoFocusObserver();
 		}.bind(this);
 
 		// force the delay here
