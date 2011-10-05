@@ -66,6 +66,7 @@ public class StandardWindowFocusPositionFilterWidget extends BaseFilterWidget im
   }
   
   public void resetFocus() {
+    LOG.debug("Resetting focus");
     this.focusPosition = null;
   }
   
