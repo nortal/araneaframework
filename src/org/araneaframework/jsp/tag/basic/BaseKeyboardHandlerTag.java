@@ -86,7 +86,7 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
       throw new JspException("handler may not be empty in the KeyboardHandlerHtmlTag");
     }
 
-    StringUtils.defaultIfEmpty(scope, "");
+    scope = StringUtils.defaultIfEmpty(scope, "");
 
     JspUtil.writeStartTag_SS(out, "script type='text/javascript'");
     out.write("Aranea.Keyboard.registerKeypressHandler('");
