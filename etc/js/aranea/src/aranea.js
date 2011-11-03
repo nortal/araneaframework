@@ -773,7 +773,7 @@ Aranea.Page.Submitter.AJAX = Class.create(Aranea.Page.Submitter.Plain, {
 				if (formElem) {
 					try {
 						formElem.focus();
-						Aranea.Logger.debug("Focus successfully set to  " + focusElem.name);
+						Aranea.Logger.debug("Focus successfully set to  " + formElem.name);
 					} catch (e) {
 					} finally {
 						formElem = null;
