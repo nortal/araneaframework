@@ -120,18 +120,19 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
     }
   }
 
-  public void selectMenuItem(String menuItemPath) throws Exception {
-    this.selectionPath = null;
-    final Widget newFlow = this.menu.selectMenuItem(menuItemPath);
-    this.selectionPath = menuItemPath;
+  public void selectMenuItem(final String menuItemPath) throws Exception {
 
     reset(new EnvironmentAwareCallback() {
 
       public void call(Environment env) throws Exception {
+        selectionPath = null;
+        final Widget newFlow = menu.selectMenuItem(menuItemPath);
+        selectionPath = menuItemPath;
         if (newFlow != null)
           start(newFlow);
       }
     });
+    
   }
 
   /**
