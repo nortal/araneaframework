@@ -18,7 +18,6 @@ package org.araneaframework.uilib.form;
 
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.commons.collections.ListUtils;
 import org.araneaframework.uilib.support.DataType;
 
 /**
@@ -44,8 +43,12 @@ public class ListData<T> extends Data<List<T>> {
   public boolean isStateChanged() {
     if (this.markedBaseValue == null || this.value == null) {
       return this.markedBaseValue != null || this.value != null;
-    } else {
-      return !ListUtils.isEqualList(this.markedBaseValue, this.value);
+    } else {    
+    if(this.markedBaseValue.size() != this.value.size()) {
+      return true;
+    }
+    //It's assumed that the value is converted from select control, which cannot have duplicate values.
+    return !this.markedBaseValue.containsAll(this.value);
     }
   }
 }
