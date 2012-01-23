@@ -25,6 +25,7 @@ import org.araneaframework.framework.ExpiringServiceContext;
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.tag.PresentationTag;
+import org.araneaframework.jsp.tag.updateregion.UpdateRegionHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.util.ConfigurationUtil;
@@ -93,8 +94,14 @@ public class BodyHtmlTag extends PresentationTag {
 
     JspUtil.writeCloseStartTag_SS(out);
 
+    UpdateRegionHtmlTag updateRegionHtmlTag = new UpdateRegionHtmlTag();
+    registerSubtag(updateRegionHtmlTag);
+    updateRegionHtmlTag.setPageContext(pageContext);
+    updateRegionHtmlTag.setGlobalId("araBodyScripts");
+    executeStartSubtag(updateRegionHtmlTag);
     writeAfterBodyStartScripts(out);
-
+    executeEndSubtag(updateRegionHtmlTag);
+    
     return result;
   }
 
