@@ -19,6 +19,7 @@ import java.util.Map;
 import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
@@ -32,6 +33,7 @@ import org.araneaframework.core.BaseWidget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.framework.AutoConfirmationHandler;
 import org.araneaframework.framework.ConfirmationContext;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
@@ -259,7 +261,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
 
   /** @since 1.1 */
-  public Widget getActiveFlow() {
+  protected Widget getActiveWidget() {
     CallFrame frame = getActiveCallFrame();
     return frame != null ? frame.getWidget() : null;
   }
@@ -275,8 +277,19 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
 
   /** @since 1.1 */
-  protected void doTransition(TransitionHandler transitionHandler, int transitionType, Closure closure) {
-    transitionHandler.doTransition(transitionType, getActiveFlow(), closure);
+  protected void doTransition(final TransitionHandler transitionHandler, final int transitionType, final Closure closure) {
+    if (doAutoConfirm(transitionType)) {
+      final AutoConfirmationHandler context = getEnvironment().getEntry(AutoConfirmationHandler.class);
+      context.registerUserTransition(new Closure() {
+        @Override
+        public void execute(Object arg0) {
+          destroyAutoConfirmations(transitionType, context);
+          transitionHandler.doTransition(transitionType, getActiveWidget(), closure);
+        }
+      });
+    } else {
+      transitionHandler.doTransition(transitionType, getActiveWidget(), closure);
+    }
   }
 
   /**
@@ -758,6 +771,68 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       return;
     }
     CallFrame frame = callStack.getFirst();
+    if (PROPERTY__AUTOCONFIRM_ID.equals(key)) {
+      String message = "Property '" + PROPERTY__AUTOCONFIRM_ID + "' must be instance of String!";
+      Validate.isTrue(value instanceof String, message);
+    }
     frame.putProperty(key, value);
+  }
+
+  private boolean doAutoConfirm(int transitionType) {
+    AutoConfirmationHandler context = getEnvironment().getEntry(AutoConfirmationHandler.class);
+    if (context == null) {
+      return false;
+    }
+
+    String autoConfirmationId = getActiveAutoConfirmationId();
+    if (autoConfirmationId != null && context.canRun(autoConfirmationId) && context.onTransition(autoConfirmationId)) {
+      return true;
+    }
+    destroyAutoConfirmations(transitionType, context);
+    return false;
+  }
+
+  private void destroyAutoConfirmations(int transitionType, AutoConfirmationHandler context) {
+    if (context != null) {
+      switch (transitionType) {
+      case TRANSITION_CANCEL:
+      case TRANSITION_FINISH:
+      case TRANSITION_REPLACE:
+        destroyCurrentAutoConfirmation(context);
+        break;
+      case TRANSITION_RESET:
+        destroyAllAutoConfirmations(context);
+        break;
+      }
+    }
+  }
+
+  private void destroyCurrentAutoConfirmation(AutoConfirmationHandler context) {
+    CallFrame callFrame = getActiveCallFrame();
+    String frameAutoConfirmationId = getAutoConfirmationId(callFrame);
+    if (frameAutoConfirmationId != null) {
+      context.destroy(frameAutoConfirmationId);
+    }
+  }
+
+  private void destroyAllAutoConfirmations(AutoConfirmationHandler context) {
+    for (CallFrame callFrame : callStack) {
+      String frameAutoConfirmationId = getAutoConfirmationId(callFrame);
+      if (frameAutoConfirmationId != null) {
+        context.destroy(frameAutoConfirmationId);
+      }
+    }
+  }
+
+  private String getActiveAutoConfirmationId() {
+    CallFrame activeCallFrame = getActiveCallFrame();
+    if (activeCallFrame == null) {
+      return null;
+    }
+    return getAutoConfirmationId(activeCallFrame);
+  }
+
+  private String getAutoConfirmationId(CallFrame callFrame) {
+    return (String) callFrame.getProperties().get(PROPERTY__AUTOCONFIRM_ID);
   }
 }

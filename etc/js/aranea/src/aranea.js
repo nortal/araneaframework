@@ -127,7 +127,7 @@ Aranea.Page = {
 	},
 
 	onUnload: function(data) {
-		document.fire('aranea:unloaded');
+		//document.fire('aranea:unloaded');
 		Aranea.Logger.debug("Unloaded Aranea scripts!");
 		window.Aranea = undefined;
 	},

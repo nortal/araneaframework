@@ -94,7 +94,7 @@ public class BodyHtmlTag extends PresentationTag {
     JspUtil.writeCloseStartTag_SS(out);
 
     writeAfterBodyStartScripts(out);
-
+    
     return result;
   }
 
