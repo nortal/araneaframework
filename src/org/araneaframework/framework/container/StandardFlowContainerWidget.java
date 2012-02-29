@@ -282,7 +282,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       final AutoConfirmationHandler context = getEnvironment().getEntry(AutoConfirmationHandler.class);
       context.registerUserTransition(new Closure() {
         @Override
-        public void execute(Object arg0) {
+        public void execute(Object obj) {
           destroyAutoConfirmations(transitionType, context);
           transitionHandler.doTransition(transitionType, getActiveWidget(), closure);
         }
@@ -586,6 +586,10 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     public void putProperty(String key, Object value) {
       this.properties.put(key, value);
     }
+
+    public void removeProperty(String key) {
+      this.properties.remove(key);
+    }
   }
 
   /*
@@ -776,6 +780,27 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       Validate.isTrue(value instanceof String, message);
     }
     frame.putProperty(key, value);
+    if (PROPERTY__AUTOCONFIRM_ID.equals(key)) {
+      FlowContext flowContext = getEnvironment().getEntry(FlowContext.class);
+      if (flowContext != null) {
+        flowContext.putProperty(key, value);
+      }
+    }
+  }
+
+  @Override
+  public void removeProperty(String key) {
+    if (callStack.isEmpty()) {
+      return;
+    }
+    CallFrame frame = callStack.getFirst();
+    if (PROPERTY__AUTOCONFIRM_ID.equals(key)) {
+      frame.removeProperty(key);
+      FlowContext flowContext = getEnvironment().getEntry(FlowContext.class);
+      if (flowContext != null) {
+        flowContext.removeProperty(key);
+      }
+    }
   }
 
   private boolean doAutoConfirm(int transitionType) {
@@ -813,6 +838,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     if (frameAutoConfirmationId != null) {
       context.destroy(frameAutoConfirmationId);
     }
+    removeProperty(PROPERTY__AUTOCONFIRM_ID);
   }
 
   private void destroyAllAutoConfirmations(AutoConfirmationHandler context) {
@@ -821,6 +847,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       if (frameAutoConfirmationId != null) {
         context.destroy(frameAutoConfirmationId);
       }
+      removeProperty(PROPERTY__AUTOCONFIRM_ID);
     }
   }
 

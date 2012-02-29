@@ -205,4 +205,6 @@ public interface FlowContext extends Serializable {
   public Map<String, Object> getProperties();
 
   public void putProperty(String key, Object value);
+  
+  public void removeProperty(String key);
 }
