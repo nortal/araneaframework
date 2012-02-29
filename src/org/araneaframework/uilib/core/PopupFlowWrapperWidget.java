@@ -202,4 +202,8 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   public void putProperty(String key, Object value) {
     getLocalFlowContext().putProperty(key, value);
   }
+  
+  public void removeProperty(String key) {
+    getLocalFlowContext().removeProperty(key);
+  }
 }

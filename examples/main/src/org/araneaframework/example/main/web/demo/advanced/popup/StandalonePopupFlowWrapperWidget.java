@@ -221,4 +221,8 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
   public void putProperty(String key, Object value) {
     
   }
+
+  public void removeProperty(String key) {
+    
+  }
 }
