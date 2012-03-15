@@ -17,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.Closure;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.Log;
@@ -33,14 +32,10 @@ import org.araneaframework.core.BaseWidget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
-import org.araneaframework.framework.AutoConfirmationHandler;
-import org.araneaframework.framework.ConfirmationContext;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.FlowContextWidget;
-import org.araneaframework.framework.ResetConfirmationContext;
-import org.araneaframework.framework.TransitionConfirmation;
-import org.araneaframework.framework.TransitionConfirmationContext;
+import org.araneaframework.framework.confirmation.CustomConfirmationContext;
 import org.araneaframework.http.ContainerStateContext;
 import org.araneaframework.http.WindowScrollPositionContext;
 import org.araneaframework.http.util.EnvironmentUtil;
@@ -144,8 +139,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   public void reset(final EnvironmentAwareCallback callback) {
     TransitionHandler transitionHandler = getTransitionHandler();
     ResetClosure resetClosure = new ResetClosure(callback);
-    ResetConfirmationContext ctx = getEnvironment().getEntry(ResetConfirmationContext.class);
-    doConfirmationTransition(ctx, transitionHandler, FlowContext.TRANSITION_RESET, resetClosure);
+    doTransition(transitionHandler, FlowContext.TRANSITION_RESET, resetClosure);
   }
 
   public TransitionHandler getTransitionHandler() {
@@ -279,34 +273,10 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   /** @since 1.1 */
   protected void doTransition(final TransitionHandler transitionHandler, final int transitionType, final Closure closure) {
     if (doAutoConfirm(transitionType)) {
-      final AutoConfirmationHandler context = getEnvironment().getEntry(AutoConfirmationHandler.class);
-      context.registerUserTransition(new Closure() {
-        @Override
-        public void execute(Object obj) {
-          destroyAutoConfirmations(transitionType, context);
-          transitionHandler.doTransition(transitionType, getActiveWidget(), closure);
-        }
-      });
+      CustomConfirmationContext confirmationContext = getEnvironment().requireEntry(CustomConfirmationContext.class);
+      confirmationContext.registerUserTransition(closure);
     } else {
       transitionHandler.doTransition(transitionType, getActiveWidget(), closure);
-    }
-  }
-
-  /**
-   * If a confirmation is present in the context, then it is executed before performing the transition.
-   */
-  protected void doConfirmationTransition(TransitionConfirmationContext ctx,
-                                          TransitionHandler transitionHandler,
-                                          int transitionType,
-                                          Closure closure) {
-    TransitionConfirmation confirmation = getRequiredConfirmation(ctx);
-    if (confirmation != null) {
-      // if required confirmation exists, transition handling is passed to the transition closure
-      ConfirmationContext confirmCtx = getEnvironment().requireEntry(ConfirmationContext.class);
-      confirmCtx.confirm(new TransitionConfirmationClosure(transitionHandler, transitionType, closure),
-                         confirmation.getMessage());
-    } else {
-      doTransition(transitionHandler, transitionType, closure);
     }
   }
 
@@ -487,19 +457,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     refreshGlobalEnvironment();
   }
 
-  // the first confirmation that requires confirming is taken from the list, if such exists
-  private TransitionConfirmation getRequiredConfirmation(TransitionConfirmationContext ctx) {
-    if (ctx != null && CollectionUtils.isNotEmpty(ctx.getConfirmations())) {
-      for (TransitionConfirmation confirmation : ctx.getConfirmations()) {
-        if (confirmation.confirmRequired()) {
-          return confirmation;
-        }
-      }
-    }
-
-    return null;
-  }
-
   /**
    * A widget, configurator and a handler are encapsulated into one logical structure, a call frame. Class is used
    * internally.
@@ -614,22 +571,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
 
     public void execute(Object obj) {
       doReset(this.callback);
-    }
-  }
-
-  protected class TransitionConfirmationClosure implements Closure, Serializable {
-    protected TransitionHandler transitionHandler;
-    protected int transitionType;
-    protected Closure closure;
-
-    public TransitionConfirmationClosure(TransitionHandler transitionHandler, int transitionType, Closure closure) {
-      this.transitionHandler = transitionHandler;
-      this.transitionType = transitionType;
-      this.closure = closure;
-    }
-
-    public void execute(Object obj) {
-      doTransition(transitionHandler, transitionType, closure);
     }
   }
 
@@ -775,17 +716,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       return;
     }
     CallFrame frame = callStack.getFirst();
-    if (PROPERTY__AUTOCONFIRM_ID.equals(key)) {
-      String message = "Property '" + PROPERTY__AUTOCONFIRM_ID + "' must be instance of String!";
-      Validate.isTrue(value instanceof String, message);
-    }
     frame.putProperty(key, value);
-    if (PROPERTY__AUTOCONFIRM_ID.equals(key)) {
-      FlowContext flowContext = getEnvironment().getEntry(FlowContext.class);
-      if (flowContext != null) {
-        flowContext.putProperty(key, value);
-      }
-    }
   }
 
   @Override
@@ -794,72 +725,23 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       return;
     }
     CallFrame frame = callStack.getFirst();
-    if (PROPERTY__AUTOCONFIRM_ID.equals(key)) {
-      frame.removeProperty(key);
-      FlowContext flowContext = getEnvironment().getEntry(FlowContext.class);
-      if (flowContext != null) {
-        flowContext.removeProperty(key);
-      }
-    }
+    frame.removeProperty(key);
   }
 
   private boolean doAutoConfirm(int transitionType) {
-    AutoConfirmationHandler context = getEnvironment().getEntry(AutoConfirmationHandler.class);
-    if (context == null) {
-      return false;
-    }
+    if (FlowContext.TRANSITION_CANCEL == transitionType || FlowContext.TRANSITION_FINISH == transitionType
+        || FlowContext.TRANSITION_REPLACE == transitionType || FlowContext.TRANSITION_RESET == transitionType) {
+      CustomConfirmationContext confirmationContext = getEnvironment().getEntry(CustomConfirmationContext.class);
+      if (confirmationContext == null) {
+        return false;
+      }
 
-    String autoConfirmationId = getActiveAutoConfirmationId();
-    if (autoConfirmationId != null && context.canRun(autoConfirmationId) && context.onTransition(autoConfirmationId)) {
-      return true;
+      if(!confirmationContext.getAutoConfirmations().isEmpty()) {
+        if(confirmationContext.getAutoConfirmations().getLast().needConfirmation()) {
+          return true;
+        }
+      }
     }
-    destroyAutoConfirmations(transitionType, context);
     return false;
-  }
-
-  private void destroyAutoConfirmations(int transitionType, AutoConfirmationHandler context) {
-    if (context != null) {
-      switch (transitionType) {
-      case TRANSITION_CANCEL:
-      case TRANSITION_FINISH:
-      case TRANSITION_REPLACE:
-        destroyCurrentAutoConfirmation(context);
-        break;
-      case TRANSITION_RESET:
-        destroyAllAutoConfirmations(context);
-        break;
-      }
-    }
-  }
-
-  private void destroyCurrentAutoConfirmation(AutoConfirmationHandler context) {
-    CallFrame callFrame = getActiveCallFrame();
-    String frameAutoConfirmationId = getAutoConfirmationId(callFrame);
-    if (frameAutoConfirmationId != null) {
-      context.destroy(frameAutoConfirmationId);
-    }
-    removeProperty(PROPERTY__AUTOCONFIRM_ID);
-  }
-
-  private void destroyAllAutoConfirmations(AutoConfirmationHandler context) {
-    for (CallFrame callFrame : callStack) {
-      String frameAutoConfirmationId = getAutoConfirmationId(callFrame);
-      if (frameAutoConfirmationId != null) {
-        context.destroy(frameAutoConfirmationId);
-      }
-      removeProperty(PROPERTY__AUTOCONFIRM_ID);
-    }
-  }
-
-  private String getActiveAutoConfirmationId() {
-    CallFrame activeCallFrame = getActiveCallFrame();
-    if (activeCallFrame == null) {
-      return null;
-    }
-    return getAutoConfirmationId(activeCallFrame);
-  }
-
-  private String getAutoConfirmationId(CallFrame callFrame) {
-    return (String) callFrame.getProperties().get(PROPERTY__AUTOCONFIRM_ID);
   }
 }
