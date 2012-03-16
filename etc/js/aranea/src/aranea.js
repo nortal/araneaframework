@@ -100,7 +100,9 @@ Aranea.Data = {
 	 */
 	reloadOnNoDocumentRegions: true,
 
-	systemFormId: 'aranea-overlay-form aranea-form'
+	systemFormId: 'aranea-overlay-form aranea-form',
+	
+	customUnload: null
 };
 
 Aranea.Page = {
@@ -128,6 +130,9 @@ Aranea.Page = {
 
 	onUnload: function(data) {
 		//document.fire('aranea:unloaded');
+		if(Aranea.Data.customUnload) {
+			Aranea.Data.customUnload();
+		}
 		Aranea.Logger.debug("Unloaded Aranea scripts!");
 		window.Aranea = undefined;
 	},

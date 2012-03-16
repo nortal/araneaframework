@@ -36,7 +36,6 @@ import org.araneaframework.core.ApplicationWidget;
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface FlowContext extends Serializable {
-  public final static String PROPERTY__AUTOCONFIRM_ID = "AUTOCONFIRM_ID";
   /** @since 1.1 */ 
   int TRANSITION_START = 1;
   /** @since 1.1 */
