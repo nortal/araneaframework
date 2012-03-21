@@ -392,9 +392,6 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       }
       ((Widget) component)._getWidget().render(this.output);
       ((HttpOutputData) this.output).getWriter().flush();
-      LOG.debug("Nullifying focus.");
-      WindowFocusPositionContext focusContext = component.getEnvironment().getEntry(WindowFocusPositionContext.class);
-      focusContext.resetFocus();
     }
 
   }
