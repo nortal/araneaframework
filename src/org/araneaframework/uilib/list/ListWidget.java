@@ -732,6 +732,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   public void showFullPages() {
     if (getSequenceHelper() != null) {
       getSequenceHelper().showFullPages();
+      refresh();
     } else {
       this.showFullPages = true;
     }
@@ -951,7 +952,6 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     }
 
     initFilterForm();
-    initSequenceHelper();
     this.typeHelper.init(getEnvironment());
     this.filterHelper.init(getEnvironment());
     this.listStructure.init(getEnvironment());
