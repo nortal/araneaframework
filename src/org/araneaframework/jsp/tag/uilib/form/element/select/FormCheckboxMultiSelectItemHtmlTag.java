@@ -92,7 +92,7 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "value", this.value);
     JspUtil.writeAttribute(out, "tabindex", this.tabindex);
 
-    if (viewModel.isDisabled() || viewModel.getSelectedItem() != null && viewModel.getSelectedItem().isDisabled()) {
+    if (viewModel.isDisabled() || viewModel.getSelectItem(value) != null && viewModel.getSelectItem(value).isDisabled()) {
       JspUtil.writeAttribute(out, "disabled", "disabled");
     }
 
