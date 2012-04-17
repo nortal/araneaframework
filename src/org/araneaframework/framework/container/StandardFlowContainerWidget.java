@@ -729,15 +729,14 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
 
   private boolean doAutoConfirm(int transitionType) {
-    if (FlowContext.TRANSITION_CANCEL == transitionType || FlowContext.TRANSITION_FINISH == transitionType
-        || FlowContext.TRANSITION_REPLACE == transitionType || FlowContext.TRANSITION_RESET == transitionType) {
+    if (FlowContext.TRANSITION_CANCEL == transitionType || FlowContext.TRANSITION_RESET == transitionType) {
       CustomConfirmationContext confirmationContext = getEnvironment().getEntry(CustomConfirmationContext.class);
       if (confirmationContext == null) {
         return false;
       }
 
-      if(!confirmationContext.getAutoConfirmations().isEmpty()) {
-        if(confirmationContext.getAutoConfirmations().getLast().needConfirmation()) {
+      if (!confirmationContext.getAutoConfirmations().isEmpty()) {
+        if (confirmationContext.getAutoConfirmations().getLast().needConfirmation()) {
           return true;
         }
       }

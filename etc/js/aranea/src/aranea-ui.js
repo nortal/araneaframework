@@ -136,7 +136,7 @@ Aranea.UI = {
 		if (!Object.isNumber(x) || !Object.isNumber(y)) {
 			throw ('Cannot scroll to ['+x+','+y+'] because one of given coordinates is not a number!');
 		}
-		parent.window.scrollTo(x, y);
+		setTimeout(function() {parent.window.scrollTo(x, y)}, 100);
 	},
 
 	/** 
