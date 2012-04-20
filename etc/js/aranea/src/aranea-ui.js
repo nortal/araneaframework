@@ -120,7 +120,7 @@ Aranea.UI = {
 	 * @since 1.1
 	 */
 	saveScrollCoordinates: function() {
-		var offset = parent.document.viewport.getScrollOffsets();
+		var offset = top.document.viewport.getScrollOffsets();
 		if (Aranea.Data.systemForm.windowScrollX) {
 			Aranea.Data.systemForm.windowScrollX.value = offset.left;
 		}
@@ -136,7 +136,7 @@ Aranea.UI = {
 		if (!Object.isNumber(x) || !Object.isNumber(y)) {
 			throw ('Cannot scroll to ['+x+','+y+'] because one of given coordinates is not a number!');
 		}
-		setTimeout(function() {parent.window.scrollTo(x, y)}, 100);
+		setTimeout(function() {top.window.scrollTo(x, y)}, 100);
 	},
 
 	/** 

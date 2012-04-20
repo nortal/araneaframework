@@ -9,6 +9,9 @@
 
 package org.araneaframework.framework.container;
 
+import java.util.Collection;
+import org.araneaframework.Component;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.Closure;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
@@ -28,6 +30,7 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.BaseComponent;
 import org.araneaframework.core.BaseWidget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ComponentUtil;
@@ -35,6 +38,7 @@ import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.FlowContextWidget;
+import org.araneaframework.framework.confirmation.AutoConfirmationCallback;
 import org.araneaframework.framework.confirmation.CustomConfirmationContext;
 import org.araneaframework.http.ContainerStateContext;
 import org.araneaframework.http.WindowScrollPositionContext;
@@ -736,7 +740,13 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       }
 
       if (!confirmationContext.getAutoConfirmations().isEmpty()) {
-        if (confirmationContext.getAutoConfirmations().getLast().needConfirmation()) {
+        AutoConfirmationCallback last = confirmationContext.getAutoConfirmations().getLast();
+        if (FlowContext.TRANSITION_CANCEL == transitionType
+            && last.getOwnerComponent().getScope().toString().contains(getCallStack().getFirst().getWidget().getScope().toString())
+            && last.needConfirmation()) {
+          return true;
+        } else if (FlowContext.TRANSITION_RESET == transitionType
+            && confirmationContext.getAutoConfirmations().getLast().needConfirmation()) {
           return true;
         }
       }
