@@ -77,7 +77,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
 
     for (DisplayItem displayItem : viewModel.getSelectItems()) {
       // Set the corresponding HTML id for label and checkbox so that clicking on label sets the checkbox value too:
-      String checkboxId = viewModel.getScope().toString() + displayItem.getValue();
+      String checkboxId = viewModel.getScope().toString() + "-" + displayItem.getValue();
 
       registerSubtag(item);
       item.setHtmlId(checkboxId);
