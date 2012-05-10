@@ -80,7 +80,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 
       // Set the same HTML id for label ("for") and radio-button ("id") so that clicking on label affects radio-button
       // selection:
-      String radioId = scopePrefix + displayItem.getValue();
+      String radioId = scopePrefix + "-" + displayItem.getValue();
 
       if (this.labelBefore && displayItem.getLabel() != null) {
         writeLabel(label, this.derivedId, radioId, displayItem.getLabel());
