@@ -1,0 +1,48 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;7.&nbsp;Trees</title><link rel="stylesheet" href="../css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"><link rel="start" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="up" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="prev" href="lists.html" title="Chapter&nbsp;6.&nbsp;Lists and Query Browsing"><link rel="next" href="integration.html" title="Chapter&nbsp;8.&nbsp;Third-party Integration"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;7.&nbsp;Trees</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="lists.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="integration.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="trees"></a>Chapter&nbsp;7.&nbsp;Trees</h2></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e11280"></a>7.1.&nbsp;TreeWidget &amp; TreeNodeWidget</h2></div></div></div><p>
+           	<code class="classname">org.araneaframework.uilib.tree.TreeWidget</code> allows representation of hierarchical data in a manner that has become 
+			traditional in GUIs, as an expandable tree. <code class="literal">TreeWidget</code> represents trees' root node, which is special 
+			in that it is not really rendered on-screen but serves as point where child nodes are attached. Child nodes of <code class="literal">TreeWidget</code>
+			are either attached by the programmer or acquired from associated <code class="literal">TreeDataProvider</code>.
+			The <code class="literal">TreeWidget</code> supports expanding and collapsing of all those nodes.
+           </p><p>
+           <code class="literal">TreeDataProvider</code> is a simple interface with ability to return the data under given tree node.
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">interface</span> TreeDataProvider <span class="syntax6">extends</span> Serializable <span class="syntax11">{</span>
+  <span class="syntax2">/**</span>
+<span class="syntax2">   * Returns a list of child nodes for specified parent node.</span>
+<span class="syntax2">   </span><span class="syntax2">*/</span>
+  List<span class="syntax11">&lt;</span>TreeNodeWidget<span class="syntax11">&gt;</span> <span class="syntax9">getChildren</span>(TreeNodeContext parent);
+
+  <span class="syntax2">/**</span>
+<span class="syntax2">   * Returns if the specified tree node has any children.</span>
+<span class="syntax2">   </span><span class="syntax2">*/</span>
+  <span class="syntax8">boolean</span> <span class="syntax9">hasChildren</span>(TreeNodeContext parent);
+<span class="syntax11">}</span>
+</span></pre></pre><p>
+           </p><p>
+           	As is apparent from the definition of <code class="literal">TreeDataProvider</code>, descendants of the <code class="literal">TreeWidget</code>
+           	that are to be presented in a tree, must be of type <code class="literal">TreeNodeWidget</code>. <code class="literal">TreeNodeWidget</code>
+           	is the superclass of <code class="literal">TreeWidget</code> that also has child nodes and will be rendered too. Node rendering is done with
+           	display widget that is passed to <code class="literal">TreeNodeWidget</code> in its constructor.
+           	
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax9">TreeNodeWidget</span>(Widget display);
+<span class="syntax6">public</span> <span class="syntax9">TreeNodeWidget</span>(Widget display, List nodes);
+<span class="syntax6">public</span> <span class="syntax9">TreeNodeWidget</span>(Widget display, List nodes, <span class="syntax8">boolean</span> collapsed);
+</span></pre></pre><p>
+
+			Display widget can be any widget that can render itself, it is rendered in the place of tree node instead of
+			<code class="literal">TreeNodeWidget</code>, which is just a data holder. Very often, display widget is <code class="literal">BaseUIWidget</code>
+			 which renders itself according to some JSP template.
+           	
+           	<code class="literal">TreeNodeWidget</code> does not accept independent <code class="literal">TreeDataProvider</code>, its children are acquired 
+           	from <code class="literal">TreeWidget</code>'s <code class="literal">TreeDataProvider</code>.
+           </p><p>
+           		<code class="literal">TreeWidget</code> enriches the <code class="literal">Environment</code> with <code class="literal">TreeContext</code>.
+           		<code class="literal">TreeNodeWidget</code> enriches the <code class="literal">Environment</code> of its display widget
+           		with <code class="literal">TreeNodeContext</code>. Through these contexts display widgets have access to
+           		owning tree node and root of the tree.
+           </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e11369"></a>7.2.&nbsp;Tree JSP tags</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e11372"></a>7.2.1.&nbsp;&lt;ui:tree&gt;</h3></div></div></div><p>Renders tree with given id.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e11377"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>yes</em></span></td><td>ID of the tree widget.</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e11402"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:tree id</span>=<span class="syntax3">"simpleTree"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+<span class="syntax1">&lt;!-- nothing more required, nodes' display widgets will take care of rendering the tree nodes.&gt;</span>
+</span></pre></pre></div></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="lists.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="integration.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;6.&nbsp;Lists and Query Browsing&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;8.&nbsp;Third-party Integration</td></tr></table></div></body></html>

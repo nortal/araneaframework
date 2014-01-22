@@ -1,0 +1,1072 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;6.&nbsp;Lists and Query Browsing</title><link rel="stylesheet" href="../css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"><link rel="start" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="up" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="prev" href="forms.html" title="Chapter&nbsp;5.&nbsp;Forms and Data Binding"><link rel="next" href="uilibwchapter.html" title="Chapter&nbsp;7.&nbsp;Other Uilib Widgets"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;6.&nbsp;Lists and Query Browsing</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="forms.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="uilibwchapter.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="lists"></a>Chapter&nbsp;6.&nbsp;Lists and Query Browsing</h2></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="Introduction"></a>6.1.&nbsp;Introduction</h2></div></div></div><p>A common task in web applications is displaying tables. This is a
+    simple task if the tables are small and do not contain a lot of rows. The
+    whole table can be visible at once and there is no need to split the data
+    into pages as well as provide an option to order the table by new column
+    or display a search form that can be used to filter the data. In such
+    cases where these features must be available, Aranea provides widget
+    <code class="classname">org.araneaframework.uilib.list.ListWidget</code> and some
+    support classes. In this chapter we will introduce these widgets and
+    supporting API and show how to use and extend them.</p><p><code class="classname">ListWidget</code> is used to define the list
+    columns, the way the list can be filtered and ordered, how many items are
+    shown per pages etc. <code class="classname">ListWidget</code> uses
+    <code class="classname">org.araneaframework.uilib.list.dataprovider.ListDataProvider</code>
+    to get the current list items range that also match with the current
+    filter and order conditions. <code class="classname">ListDataProvider</code> can
+    cache whole table and provide the <code class="classname">ListWidget</code> with
+    the appropriate item range or fetch only the specific item range from
+    database. Aranea provides two implementations: </p><div class="variablelist"><dl><dt><span class="term"><code class="classname">org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider</code></span></dt><dd>
+             This is the memory-based solution that must be provided with the whole data at once. It does 
+
+            <span class="emphasis"><em>filtering</em></span>
+
+             , 
+
+            <span class="emphasis"><em>ordering</em></span>
+
+             and 
+
+            <span class="emphasis"><em>paging</em></span>
+
+             memory-based. The data source is not restricted here. This is a very fast and easy-to-use solution
+             for tables with few (typically less than 100) rows. This is a good solution when your server has
+             enough memory to store all the rows, and quering all the rows does not take much time.
+          </dd><dt><span class="term"><code class="classname">org.araneaframework.uilib.list.dataprovider.BackendListDataProvider</code></span></dt><dd>
+             This is the database solution that will cache only the current item range and executes a new database query each time a 
+
+            <span class="emphasis"><em>filtering</em></span>
+
+             , 
+
+            <span class="emphasis"><em>ordering</em></span>
+
+             or 
+
+            <span class="emphasis"><em>paging</em></span>
+
+             conditions change. This is a powerful solution for tables with more than 500 rows. Especially,
+             when the query is complex and takes time (so it would not be useful to query all the rows at once).
+          </dd></dl></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ListsAPI"></a>6.2.&nbsp;Lists API</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e10908"></a>6.2.1.&nbsp;A Typical List</h3></div></div></div><p>A typical list will be created used like this: </p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">private</span> BeanListWidget myList;
+...
+<span class="syntax6">protected</span> <span class="syntax8">void</span> <span class="syntax9">init</span>() <span class="syntax11">{</span>
+  ...
+  myList <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">BeanListWidget</span>(MyModel.<span class="syntax8">class</span>);
+
+  myList.<span class="syntax9">setOrderableByDefault</span>(<span class="syntax4">true</span>);
+  myList.<span class="syntax9">addField</span>(<span class="syntax3">"name"</span>, <span class="syntax3">"#Name"</span>).<span class="syntax9">like</span>();
+  myList.<span class="syntax9">addField</span>(<span class="syntax3">"surname"</span>, <span class="syntax3">"#Surname"</span>).<span class="syntax9">like</span>();
+  myList.<span class="syntax9">addField</span>(<span class="syntax3">"phone"</span>, <span class="syntax3">"#Phone no"</span>).<span class="syntax9">like</span>();
+  myList.<span class="syntax9">addField</span>(<span class="syntax3">"birthdate"</span>, <span class="syntax3">"#Birthdate"</span>).<span class="syntax9">range</span>();
+  ...
+  myList.<span class="syntax9">setInitialOrder</span>(<span class="syntax3">"name"</span>, <span class="syntax4">true</span>);
+  myList.<span class="syntax9">setListDataProvider</span>(<span class="syntax6">new</span> <span class="syntax9">MyListDataProvider</span>());  
+  <span class="syntax9">addWidget</span>(<span class="syntax3">"myList"</span>, myList);
+  ...
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p> Note that here we basically do following things:
+      </p><div class="variablelist"><dl><dt><span class="term">Create the list</span></dt><dd>
+               The line 
+
+              <code class="literal">new BeanListWidget(MyModel.class)</code>
+
+               creates a new list widget that is associated with the 
+
+              <span class="emphasis"><em>JavaBean</em></span>
+
+               model class 
+
+              <code class="literal">MyModel</code>
+
+               . 
+            </dd><dt><span class="term">Make fields orderable</span></dt><dd>
+               The line 
+
+              <code class="literal">myList.setOrderableByDefault(true)</code>
+
+               configures the following fields as orderable. 
+            </dd><dt><span class="term">Add list fields</span></dt><dd>
+               The line 
+
+              <code class="literal">myList.addField("name", "#Name").like()</code>
+
+               adds a field associated with the JavaBean property "name" (this is also the identifier of the field), with a label "Name", makes the field filterable by 
+
+              <code class="literal">Like</code>
+
+               filter. 
+            </dd><dt><span class="term">Set the initial list order</span></dt><dd>
+               The line 
+
+              <code class="literal">myList.setInitialOrder("name", true)</code>
+
+               sets the list to be ordered by field "name" by default. 
+            </dd><dt><span class="term">Set the list data provider</span></dt><dd>
+               The line 
+
+              <code class="literal">myList.setListDataProvider(new
+              MyListDataProvider())</code>
+
+               sets the data provider for the list. 
+            </dd><dt><span class="term">Register the list</span></dt><dd>
+               The line 
+
+              <code class="literal">addWidget("myList", myList)</code>
+
+               initializes and registers the list allowing it to function. 
+            </dd></dl></div><p>Now that we have created the list we show how to build a simple
+      data provider. The following example code should be in the same widget
+      as the previous: </p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">private</span> <span class="syntax8">class</span> MyMemoryBasedListDataProvider <span class="syntax6">extends</span> MemoryBasedListDataProvider <span class="syntax11">{</span>
+  <span class="syntax6">protected</span> <span class="syntax9">MyMemoryBasedListDataProvider</span>() <span class="syntax11">{</span>
+    <span class="syntax4">super</span>(MyModel.<span class="syntax8">class</span>);
+  <span class="syntax11">}</span>
+  <span class="syntax6">public</span> List <span class="syntax9">loadData</span>() <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>             
+    <span class="syntax6">return</span> <span class="syntax9">lookupMyService</span>().<span class="syntax9">findAllMyModel</span>();
+  <span class="syntax11">}</span>
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p> The line <code class="literal">super(MyModel.class)</code>
+      associated this <code class="classname">MemoryBasedListDataProvider</code> with
+      the <span class="emphasis"><em>JavaBean</em></span> model class
+      <code class="literal">MyModel</code>. The method <code class="literal">List
+      loadData()</code> implements loading all table rows and returning it
+      as a <code class="classname">List</code> object.</p><p>Later, we will also discover using
+      <code class="classname">org.araneaframework.uilib.list.dataprovider.BackendListDataProvider</code>.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e11002"></a>6.2.2.&nbsp;Fields</h3></div></div></div><p>As the list may be displayed as a table, it is basically an
+      ordered collection of items. In the previous example, we defined a list
+      of <code class="code">MyModel.class</code> typed items that have fields 'name',
+      'surname', 'phone' and 'birthdate'. By listing of
+      <code class="code">MyModel.class</code>, we also told <code class="code">ListWidget</code> the
+      corresponding field types, e.g <code class="code">String.class</code>,
+      <code class="code">String.class</code>, <code class="code">Long.class</code> and
+      <code class="code">Date.class</code>. In fact this feature of reflection is the only
+      distinction between the <code class="code">ListWidget</code> and
+      <code class="code">BeanListWidget</code>.</p><p>Each list field have its own <span class="emphasis"><em>Id</em></span>,
+      <span class="emphasis"><em>label</em></span> and <span class="emphasis"><em>type</em></span>. The labels are
+      used to automatically create a corresponding title row above the
+      displayed table. The types are used to describe how to order or filter
+      the whole data using this field. E.g <code class="code">String.class</code> is
+      treated differently than other types, because usually one would prefer
+      to order by this field ignoring the case. Both the labels and types are
+      also used to build a corresponding search form - an automatically built
+      <code class="code">FormWidget</code> - for the list.</p><p>If we would like to add some list fields that are not
+      <code class="code">MyModel.class</code> fields, we can pass it's type to the
+      <code class="code">ListWidget</code> like following: </p><pre class="programlisting"><pre><span class="syntax0">myList.<span class="syntax9">addField</span>(<span class="syntax3">"income"</span>, <span class="syntax3">"#Income"</span>, BigDecimal.<span class="syntax8">class</span>);
+</span></pre></pre><p>
+      Here the <code class="code">myList</code> could be just a <code class="code">ListWidget</code>
+      rather than a <code class="code">BeanListWidget</code>.</p><p>When adding a list field, we can also provide this field-related
+      ordering and filtering information.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e11073"></a>6.2.3.&nbsp;Ordering</h3></div></div></div><p>Each list field can be orderable or not. We already discovered
+      <code class="code">ListWidget</code>'s method
+      <code class="code">setOrderableByDefault(boolean)</code> that switch whether to
+      configure fields that are added afterwards orderable or not. This method
+      can be used several times in the list configuration.</p><p>Another way is to set each field individually orderable or not
+      when they are added to the list. In such case add additional boolean
+      argument to the <code class="code">addField()</code> method such as: </p><pre class="programlisting"><pre><span class="syntax0">myList.<span class="syntax9">addField</span>(<span class="syntax3">"phone"</span>, <span class="syntax3">"#Phone no"</span>, <span class="syntax4">false</span>);
+</span></pre></pre><p>
+      Notice the <code class="code">false</code> as third parameter. <code class="code">true</code>
+      means that the list can be ordered by this field and <code class="code">false</code>
+      means the opposite. By not providing this parameter, simply the last
+      value is used which has been set by
+      <code class="code">setOrderableByDefault(boolean)</code> method.</p><p>In addition, we already used method <code class="code">setInitialOrder(String,
+      boolean)</code>. It sets a specified field (the first argument) to be
+      ordered by default. <code class="code">true</code> as the second argument tells the
+      ordering should be ascending, <code class="code">false</code> would mean descending.
+      By not providing this information, the list is displayed in the original
+      order.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e11115"></a>6.2.4.&nbsp;Filtering</h3></div></div></div><p>Filtering means that we only display a certain list items. The
+      list can be filtered using its fields and data provided by the search
+      form of this list.</p><p>For this, we must provide the <code class="code">ListWidget</code> with the
+      corresponding
+      <code class="code">org.araneaframework.uilib.list.structure.ListFilter</code>s and
+      <code class="code">FormElement</code>s. As the form elements are dummy "boxes" that
+      hold search data, each <code class="code">ListFilter</code> is related to a certain
+      filter test, e.g. equality, greater than comparison etc. Each
+      <code class="code">ListFilter</code> also knows what information it must consider. In
+      general, one list field is compared against a value provided by the
+      search form. It's also assumed that a blank search field means that this
+      particular <code class="code">ListWidget</code> is currently disabled.</p><p>Fortunately, in most cases it's unnecessary to add these search
+      fields manually. Instead, if one is adding a list field, he or she can
+      assign both the <code class="code">ListFilter</code> and <code class="code">FormElement</code> for
+      this field very simply: </p><pre class="programlisting"><pre><span class="syntax0">myList.<span class="syntax9">addField</span>(<span class="syntax3">"address"</span>, <span class="syntax3">"#Address"</span>).<span class="syntax9">like</span>();
+</span></pre></pre><p> Here we simply add an 'Address' field providing it with
+      label and telling there's should be a <span class="emphasis"><em>Like filter</em></span>
+      for this field. By this, we automatically add a <code class="code">TextControl</code>
+      into the search form. By filling it with value 'Paris', we will see only
+      rows which 'Address' field contain 'Paris', 'paris', 'PARIS' etc.</p><p>To describe, how this works, we show a longer version of the
+      previous code: </p><pre class="programlisting"><pre><span class="syntax0">myList.<span class="syntax9">addField</span>(<span class="syntax3">"address"</span>, <span class="syntax3">"#Address"</span>);
+myList.<span class="syntax9">getFilterHelper</span>().<span class="syntax9">like</span>(<span class="syntax3">"address"</span>);
+</span></pre></pre><p> So there's a special class
+      <code class="code">org.araneaframework.uilib.list.structure.filter.FilterHelper</code>
+      that is used to add list filters. All <code class="code">ListWidget.addField()</code>
+      methods just return a little different version of this helper class,
+      called a <code class="code">FieldFilterHelper</code>. It's methods do not need a
+      field Id and thus make one not to repeat the same field Id for each
+      filter. In general, the shorter usage is recommended of course. However
+      some filters are more complicated and may be related to more than one
+      list field. For those, one must use the <code class="code">FilterHelper</code>
+      instead.</p><p>By default all filters that deal with the Strings are case
+      insensitive. To configure some filters to be different, use the
+      following: </p><pre class="programlisting"><pre><span class="syntax0">myList.<span class="syntax9">addField</span>(<span class="syntax3">"country"</span>, <span class="syntax3">"#Country"</span>).<span class="syntax9">setIgnoreCase</span>(<span class="syntax4">false</span>).<span class="syntax9">like</span>();
+myList.<span class="syntax9">addField</span>(<span class="syntax3">"city"</span>, <span class="syntax3">"#City"</span>).<span class="syntax9">like</span>();
+myList.<span class="syntax9">addField</span>(<span class="syntax3">"address"</span>, <span class="syntax3">"#Address"</span>).<span class="syntax9">setIgnoreCase</span>(<span class="syntax4">true</span>).<span class="syntax9">like</span>();
+</span></pre></pre><p> This can be explained following: Before adding a Like filter
+      for the 'country' field, we switched to the case sensitive mode. And
+      before adding a filter for the 'address' field, we switched to the case
+      insensitive mode. Thus the city's filter is case sensitive as the
+      country's but the address' filter does ignore the case.</p><p>This state is held by the <code class="code">FilterHelper</code> and can be
+      modified either by calling a method of the <code class="code">FilterHelper</code> or
+      the <code class="code">FieldFilterHelper</code>. In such way, the following
+      parameters can be set: </p><div class="variablelist"><dl><dt><span class="term">Case sensitivity</span></dt><dd>
+               By using 
+
+              <code class="code">setIgnoreCase(boolean)</code>
+
+               one assigns new filters to ignore case (default) or not. This applies to filters that use String comparison. 
+            </dd><dt><span class="term">Strict/non-strict</span></dt><dd>
+               By using 
+
+              <code class="code">setStrict(boolean)</code>
+
+               one assigns new filters to disallow equality or not. By default equality is not allowed (strict). This applies to filters such as GreaterThan, LowerThan, Range etc. 
+            </dd></dl></div><p>Sometimes tables need to contain a column (or more) that is not bound to specific
+      model object field. One can add such a column to the list structure like this:
+      </p><pre class="programlisting"><pre><span class="syntax0">myList.<span class="syntax9">addEmptyField</span>(<span class="syntax3">"choose"</span>, <span class="syntax3">"#Choose"</span>);
+</span></pre></pre><p>
+      The column still must have unique ID (e.g. <code class="code">"choose"</code> in this case).
+      The label for the column is optional. In addition, this column would not be orderable
+      as its values are not controlled by the <code class="code">ListWdiget</code>. However, this column
+      can be used for check boxes, radio buttons, links, etc.</p><p>Now, let's show which filters we have got: </p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th><code class="code">FilterHelper</code> method</th><th><code class="code">ListFilter</code> class</th><th>Description</th></tr></thead><tbody><tr><td><code class="code">eq()</code></td><td><code class="code">EqualFilter</code></td><td>Tests if the value of a certain list field is equal to
+                the value of a certain search form field. The filter is
+                disabled if the search field is blank.</td></tr><tr><td><code class="code">eqConst()</code></td><td><code class="code">EqualFilter</code></td><td>Tests if the value of a certain list field is equal to
+                a certain constant. This filter is always enabled.</td></tr><tr><td><code class="code">gt(), lt()</code></td><td><code class="code">GreaterThanFilter, LowerThanFilter</code></td><td>Tests if the value of a certain list field is greater
+                than (lower than) the value of a certain search form field.
+                This filter is disabled if the search field is blank.</td></tr><tr><td><code class="code">gtConst(), ltConst()</code></td><td><code class="code">GreaterThanFilter, LowerThanFilter</code></td><td>Tests if the value of a certain list field is greater
+                than (lower than) a certain constant. This filter, if used,
+                is always enabled.</td></tr><tr><td><code class="code">like()</code></td><td><code class="code">LikeFilter</code></td><td>Tests if the pattern in a certain search form field
+                matches with the value of a certain list field. This
+                corresponds to the <code class="literal">LIKE</code> expression in SQL
+                with some modifications. By default, it takes
+                '<code class="literal">%</code>' and '<code class="literal">*</code>' symbols as
+                any-string wildcards and '<code class="literal">_</code>',
+                '<code class="literal">.</code>' and '<code class="literal">?</code>' as
+                any-symbol wildcards. In addition, the pattern does not have
+                to match with the whole string ('%' is automatically added
+                before and after the pattern string). The wildcards and their
+                automatic adding is configured by the
+                <code class="code">org.araneaframework.uilib.list.util.like.LikeConfiguration</code>
+                which is found from the Aranea
+                <code class="code">org.araneaframework.uilib.ConfigurationContext</code>.
+                This filter is identical in memory-based and database backend
+                usage. This filter is disabled if the search field is
+                blank.</td></tr><tr><td><code class="code">likeConst()</code></td><td><code class="code">LikeFilter</code></td><td>Tests if a certain constant pattern matches with the
+                value of a certain list field. This filter is always
+                enabled.</td></tr><tr><td><code class="code">startsWith(), endsWith()</code></td><td><code class="code">LikeFilter</code></td><td>This is very similar to the <code class="code">like()</code> constraint,
+                and tests if the list field value either starts or ends with the
+                user-provided pattern. The filter is disabled if the search field
+                is blank.</td></tr><tr><td><code class="code">startsWithConst(), endsWithConst()</code></td><td><code class="code">LikeFilter</code></td><td>Tests if given constant pattern is either in the beginning
+                or in the end of the field value. This filter, if used,
+                is always enabled.</td></tr><tr><td><code class="code">isNull(), notNull()</code></td><td><code class="code">NullFilter</code></td><td>Tests if the value of a certain list field is null (is
+                not null) if the value of a certain search form field equals
+                to a specified value.</td></tr><tr><td><code class="code">isNullConst(), notNullConst()</code></td><td><code class="code">NullFilter</code></td><td>Tests if the value of a certain list field is null (is
+                not null). This filter is always enabled.</td></tr><tr><td><code class="code">range()</code></td><td><code class="code">RangeFilter</code></td><td>Tests if the value of a certain list field is between
+                two values of certain search form fields. The filter is
+                identical to the greater than or lower than filter in case of
+                one of the search fields is blank. This filter is disabled if
+                both search fields are blank.</td></tr><tr><td><code class="code">fieldRangeInValueRange(),
+                valueRangeInFieldRange(), overlapRange()</code></td><td><code class="code">RangeInRangeFilter</code></td><td>Tests if two values of certain list fields are between
+                two values of certain search form fields, vice-versa or do
+                they have a non-empty intersection. This filter is disabled if
+                both search fields are blank.</td></tr><tr><td><code class="code">in()</code></td><td><code class="code">InFilter</code></td><td>Tests if the value of a list field is among the values
+                of a MultiSelectControl. It does a case-sensitive search for
+                this.</td></tr><tr><td><code class="code">sqlFunction()</code></td><td><code class="code">SqlFunctionFilter</code></td><td>Tests if the value returned from a certain SQL function
+                is equal (or is greater than or is lower than) to the value of
+                a certain list field, search form field or a constant. The
+                arguments of the SQL function can also be chosen among the
+                values of list fields, search form fields and constants. This
+                filter cannot be used memory-based. This filter is always
+                enabled.</td></tr></tbody></table></div><p>By default the <code class="code">FormElement</code>s added into the search
+      form have the same identifiers as the list fields. Therefore there can
+      be only one search field per list field. If one would like to override
+      the used Id for <code class="code">FormElement</code>, any filter could be added like
+      following: </p><pre class="programlisting"><pre><span class="syntax0">
+        myList.<span class="syntax9">addField</span>(<span class="syntax3">"country"</span>, <span class="syntax3">"#Country"</span>).<span class="syntax9">like</span>();
+        myList.<span class="syntax9">getFilterHelper</span>().<span class="syntax9">like</span>(<span class="syntax3">"country"</span>, <span class="syntax3">"anotherCountry"</span>);
+</span></pre></pre><p> The first line adds a list field 'country' and a
+      <span class="emphasis"><em>Like filter</em></span> associated with it as well as a new
+      <code class="code">FormElement</code> with Id of 'country'. The second line adds
+      another <span class="emphasis"><em>Like filter</em></span> associated to the list field
+      'country' and a new <code class="code">FormElement</code> with Id of
+      'anotherCountry'.</p><p>By adding a filter, the corresponding <code class="code">FormElement</code> is
+      automatically created and added to the search form of the list. Now we
+      cover the properties of the few <code class="code">FormElement</code> describing
+      their default values and showing how to customize them: </p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Property</th><th>Default value</th><th>Customizing</th></tr></thead><tbody><tr><td>Id</td><td>Same as the list field Id.</td><td>Call
+                <code class="code">addField(...).&lt;filter&gt;("myCustomId");</code></td></tr><tr><td>Label</td><td>Same as the label of the associated list field.</td><td>Call
+                <code class="code">addField(...).useCustomLabel("myCustomLabel").xxx(...);</code></td></tr><tr><td>Control</td><td>Is selected considering the type of the associated list
+                field: <div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Type</th><th>Control</th></tr></thead><tbody><tr><td>
+                            <code class="code">java.lang.String</code>
+                          </td><td>
+                            <code class="code">TextControl</code>
+                          </td></tr><tr><td><code class="code">java.math.BigInteger</code>,
+                          <code class="code">java.lang.Long</code>,
+                          <code class="code">java.lang.Integer</code>,
+                          <code class="code">java.lang.Short</code>,
+                          <code class="code">java.lang.Byte</code></td><td>
+                            <code class="code">NumberControl</code>
+                          </td></tr><tr><td><code class="code">java.math.BigDecimal</code>,
+                          <code class="code">java.lang.Double</code>,
+                          <code class="code">java.lang.Float</code></td><td>
+                            <code class="code">FloatControl</code>
+                          </td></tr><tr><td>Other subclasses of
+                          <code class="code">java.lang.Number</code></td><td>
+                            <code class="code">FloatControl</code>
+                          </td></tr><tr><td><code class="code">java.util.Date</code>,
+                          <code class="code">java.sql.Date</code></td><td>
+                            <code class="code">DateControl</code>
+                          </td></tr><tr><td>
+                            <code class="code">java.sql.Time</code>
+                          </td><td>
+                            <code class="code">TimeControl</code>
+                          </td></tr><tr><td>
+                            <code class="code">java.sql.Timestamp</code>
+                          </td><td>
+                            <code class="code">DateTimeControl</code>
+                          </td></tr><tr><td>
+                            <code class="code">java.lang.Boolean</code>
+                          </td><td>
+                            <code class="code">CheckboxControl</code>
+                          </td></tr><tr><td>All others</td><td>
+                            <code class="code">TextControl</code>
+                          </td></tr></tbody></table></div></td><td>Call <code class="code">addField(...).xxx(new
+                MyCustomControl());</code></td></tr><tr><td>Data</td><td>Corresponds to the type of the associated list
+                field.</td><td>Call
+                <code class="code">addField(...).useFieldType(MyType.class).xxx(...);</code></td></tr><tr><td>Initial value</td><td>Always <code class="code">null</code> to disable the filter by
+                default.</td><td>After adding the field and the filter call
+                <code class="code">myList.getForm().setValueByFullName("fieldId",
+                customInitialValue);</code> or add a custom
+                <code class="code">Formelement</code>.</td></tr><tr><td>Mandatory</td><td>Always <code class="code">false</code> as all search conditions are
+                optional.</td><td>After adding the field and the filter call
+                <code class="code">myList.getForm().getElementByFullName("fieldId").setMandatory(true);</code>
+                or add a custom <code class="code">Formelement</code>.</td></tr><tr><td>FormElement</td><td>See all properties above.</td><td>To use a custom <code class="code">Formelement</code>, call
+                <code class="code">addField(...).xxx(new MyCustomFormElement(...));</code>.
+                To disable adding it at all, call
+                <code class="code">addField(...)._xxx();</code> (notice the
+                underscore).</td></tr></tbody></table></div><p> The <code class="code">xxx</code> marks any filter adding method.
+      As one can count, there are 6 overridden methods for each list filter: 2
+      versions for providing a custom Id or not and 3 versions for providing a
+      custom <code class="code">FormElement</code>, <code class="code">Control</code> or neither of
+      them. In addition there are methods that start with an
+      <code class="literal">_</code> for disabling adding a form element. Using the
+      <code class="code">FilterHelper</code> instead of <code class="code">FieldFilterHelper</code> is
+      analogous except all filter adding methods take the list field Id as the
+      first argument in addition.</p><p>It's import to notice that <code class="code">xxxxConst</code> methods do not
+      create a form element because they are independent of the search form at
+      all - they are constant. However they can actually take a value Id for
+      the defined constants as well. These Ids can be used later to convert
+      specific values when creating a database query. Of course non-constant
+      filters have the same Ids but just use them mainly to get values from
+      the search form. <code class="code">xxxxConst</code> filters have 2 overridden add
+      methods depending on whether the custom value Id is provided or not. By
+      default it's the same as the field Id.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e11667"></a>6.2.5.&nbsp;Backend Data Provider</h3></div></div></div><p>Now that we have demonstrated defining lists and also creating
+      <code class="classname">MemoryBasedListDataProvider</code>, we will discover
+      using <code class="classname">BackendListDataProvider</code>. The following
+      example code should be in the same widget as constructing of the related
+      <code class="classname">ListWidget</code>. </p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">private</span> <span class="syntax8">class</span> MyBackendListDataProvider <span class="syntax6">extends</span> BackendListDataProvider <span class="syntax11">{</span>
+  <span class="syntax6">public</span> <span class="syntax9">MyBackendListDataProvider</span>() <span class="syntax11">{</span>
+    <span class="syntax4">super</span>(<span class="syntax4">true</span>);
+  <span class="syntax11">}</span>
+  <span class="syntax6">protected</span> ListItemsData <span class="syntax9">getItemRange</span>(ListQuery query) <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+    <span class="syntax6">return</span> <span class="syntax9">lookupMyService</span>().<span class="syntax9">findMyModel</span>(query);
+  <span class="syntax11">}</span>
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p> The line <code class="literal">super(true)</code> constructs
+      <code class="classname">BackendListDataProvider</code> with cache enabled (only
+      used when there are no change in <span class="emphasis"><em>query</em></span>). Notice
+      that there is no association with any <span class="emphasis"><em>JavaBean</em></span>
+      class here. The method <code class="literal">ListItemsData getItemRange(ListQuery
+      query)</code> implements loading current item range according to the
+      range indexes and filtering and ordering conditions.
+      <code class="classname">org.araneaframework.backend.list.mode.ListQuery</code>
+      and
+      <code class="classname">org.araneaframework.backend.list.mode.ListItemsData</code>
+      may be thought as being input and output of each list data query.</p><p><code class="classname">ListQuery</code> is a simple JavaBean that holds
+      the following properties: </p><div class="variablelist"><dl><dt><span class="term">List structure (since 1.1)</span></dt><dd>
+            	The structure of the list contains all the list fields
+            	and static information about the filtering and ordering.
+            	(It is constructed once as the <code class="classname">ListWidget</code> is defined.)
+            </dd><dt><span class="term">List item range indexes</span></dt><dd>
+               This is 0-based start index and items count ( 
+              <code class="classname">Long</code>
+               objects) that define the range. By default, lists are shown by pages. Although all items can be shown at once also. Then the start index is zero and items count is omitted. 
+            </dd><dt><span class="term">Filter and order info (since 1.1)</span></dt><dd>
+               These contain the current filter and ordering data as instances of
+               <code class="classname">Map</code> and <code class="classname">OrderInfo</code>.
+            </dd><dt><span class="term">Filter and order expressions</span></dt><dd>
+               These could be thought as an abstraction
+               of SQL expressions which are constructed using the info described above
+               (even the same instances). 
+               These expressions will be used in the
+               <code class="literal">WHERE</code> and <code class="literal">ORDER BY</code> clauses.
+            </dd></dl></div><p>
+        Generally, this whole object is just passed to
+      <code class="classname">org.araneaframework.backend.list.helper.ListSqlHelper</code>
+      class that is used to generate SQL statements and fetching the results
+      from database. Latter is hold in <code class="classname">ListItemsData</code>
+      object which is a simple JavaBean that holds the following properties:
+      </p><div class="variablelist"><dl><dt><span class="term">List items range</span></dt><dd>
+               Model objects that are the result of the 
+
+              <span class="emphasis"><em>query</em></span>
+
+               . 
+            </dd><dt><span class="term">Total count</span></dt><dd>
+               Total count ( 
+
+              <code class="classname">Long</code>
+
+               object) of the list. This is important information for navigating through the whole list. Notice that this depends only on filtering conditions. 
+            </dd></dl></div><p>Notice that <code class="classname">BackendListDataProvider</code>
+      actually do not depend on using databases. It just provides a simple
+      <span class="emphasis"><em>query</em></span> object and expects a simple result to be
+      returned. Thus, you have the power to use it as you like. At the same,
+      Aranea provides a very useful class
+      <code class="classname">org.araneaframework.backend.list.helper.ListSqlHelper</code>
+      that generate SQL statements and fetches the results from database. We
+      strongly recommend it together with its subclasses that support
+      different database systems. Currently <code class="literal">Oracle</code>
+      (<code class="classname">OracleListSqlHelper</code>),
+      <code class="literal">Postgre</code> (<code class="literal">PostgreListSqlHelper</code>),
+      and <code class="literal">HSQL</code> (<code class="classname">HsqlListSqlHelper</code>)
+      databases are supported (they are used similarly because they all
+      extend <code class="literal">ListSqlHelper</code>).</p><p>The following example discovers the simplest usage of
+      <code class="classname">ListSqlHelper</code>. The following code should be in a
+      service class instead of previously discovered Widget: </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">class</span> MyService <span class="syntax11">{</span>
+  ...
+  <span class="syntax6">private</span> DataSource dataSource;
+  ...
+  <span class="syntax6">public</span> ListItemsData <span class="syntax9">findMyModel</span>(ListQuery query) <span class="syntax11">{</span>
+    ListSqlHelper helper <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">OracleListSqlHelper</span>(<span class="syntax4">this</span>.dataSource, query);
+
+    helper.<span class="syntax9">addMapping</span>(<span class="syntax3">"name"</span>, <span class="syntax3">"NAME"</span>);
+    helper.<span class="syntax9">addMapping</span>(<span class="syntax3">"surname"</span>, <span class="syntax3">"SURNAME"</span>);
+    helper.<span class="syntax9">addMapping</span>(<span class="syntax3">"phone"</span>, <span class="syntax3">"PHONE_NO"</span>);
+
+    helper.<span class="syntax9">setSimpleSqlQuery</span>(<span class="syntax3">"PERSON"</span>);
+    <span class="syntax6">return</span> helper.<span class="syntax9">execute</span>(MyModel.<span class="syntax8">class</span>);
+  <span class="syntax11">}</span>
+  ...
+<span class="syntax11">}</span>
+</span></pre></pre><p>Method <code class="literal">ListItemsData findMyModel(ListQuery
+      query)</code> does the following: </p><div class="variablelist"><dl><dt><span class="term">Constructs and initializes the helper</span></dt><dd>
+               The line 
+
+              <code class="literal">ListSqlHelper helper = new
+              OracleListSqlHelper(this.dataSource, query)</code>
+
+               constructs 
+
+              <code class="classname">OracleListSqlHelper</code>
+
+               - an Oracle specific 
+
+              <code class="classname">ListSqlHelper</code>
+
+               - and passes it the 
+
+              <code class="classname">DataSource</code>
+
+               and 
+
+              <code class="classname">ListQuery</code>
+
+               data. 
+            </dd><dt><span class="term">Adds column mappings</span></dt><dd>
+               The line 
+
+              <code class="literal">helper.addMapping("name", "NAME")</code>
+
+               defines that identifier of column "name" will be converted into 
+
+              <code class="literal">"NAME"</code>
+
+               when used in an SQL statement. There may be lot of differnece between JavaBean properties names and database fields names. The same database identifier ( 
+
+              <code class="literal">"NAME"</code>
+
+               ) is used when fetching data from 
+
+              <code class="classname">ResultSet</code>
+
+               by default. This could also have another identifier set by providing it as the third argument. 
+            </dd><dt><span class="term">Provides the helper with a simple SQL query</span></dt><dd>
+               The line 
+
+              <code class="literal">helper.setSimpleSqlQuery("PERSON")</code>
+
+               sets the whole SQL query with parameters using only the given database table name. Filtering and ordering is added automatically according to the 
+
+              <code class="classname">ListQuery</code>
+
+               data. 
+            </dd><dt><span class="term">Executes the query and retrieve the data</span></dt><dd>
+               The line 
+
+              <code class="literal">return helper.execute(MyModel.class)</code>
+
+               executes and retrieves data of both total count and items range queries. The 
+
+              <code class="classname">ResultSet</code>
+
+               is read using the default 
+
+              <code class="classname">BeanResultReader</code>
+
+               . 
+            </dd></dl></div><p>The following example discovers the custom usage of
+      <code class="classname">ListSqlHelper</code>. </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">class</span> MyService <span class="syntax11">{</span>
+  ...
+  <span class="syntax6">private</span> DataSource dataSource;
+  ...
+  <span class="syntax6">public</span> ListItemsData <span class="syntax9">findMyModel</span>(ListQuery query) <span class="syntax11">{</span>
+    ListSqlHelper helper <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">OracleListSqlHelper</span>(<span class="syntax4">this</span>.dataSource, query);
+
+    helper.<span class="syntax9">addMapping</span>(<span class="syntax3">"name"</span>, <span class="syntax3">"NAME"</span>);
+    helper.<span class="syntax9">addMapping</span>(<span class="syntax3">"surname"</span>, <span class="syntax3">"SURNAME"</span>);
+    helper.<span class="syntax9">addMapping</span>(<span class="syntax3">"phone"</span>, <span class="syntax3">"PHONE_NO"</span>);
+
+    StringBuffer s <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">StringBuffer</span>();
+    s.<span class="syntax9">append</span>(<span class="syntax3">"SELECT "</span>);
+    s.<span class="syntax9">append</span>(helper.<span class="syntax9">getDatabaseFields</span>());
+    s.<span class="syntax9">append</span>(<span class="syntax3">" FROM PERSONS"</span>);
+    s.<span class="syntax9">append</span>(helper.<span class="syntax9">getDatabaseFilterWith</span>(<span class="syntax3">" WHERE "</span>, <span class="syntax3">""</span>));
+    s.<span class="syntax9">append</span>(helper.<span class="syntax9">getDatabaseOrderWith</span>(<span class="syntax3">" ORDER BY "</span>, <span class="syntax3">""</span>));
+
+    helper.<span class="syntax9">setSqlQuery</span>(s.<span class="syntax9">toString</span>());
+    helper.<span class="syntax9">addStatementParams</span>(helper.<span class="syntax9">getDatabaseFilterParams</span>());
+    helper.<span class="syntax9">addStatementParams</span>(helper.<span class="syntax9">getDatabaseOrderParams</span>());
+
+    <span class="syntax6">return</span> helper.<span class="syntax9">execute</span>(MyModel.<span class="syntax8">class</span>);
+  <span class="syntax11">}</span>
+  ...
+<span class="syntax11">}</span>
+</span></pre></pre><p>Method <code class="literal">ListItemsData findMyModel(ListQuery
+      query)</code> does the following: </p><div class="variablelist"><dl><dt><span class="term">Constructs and initializes the helper</span></dt><dd>
+               The line 
+
+              <code class="literal">ListSqlHelper helper = new
+              OracleListSqlHelper(this.dataSource, query)</code>
+
+               constructs 
+
+              <code class="classname">OracleListSqlHelper</code>
+
+               - an Oracle specific 
+
+              <code class="classname">ListSqlHelper</code>
+
+               - and passes it the 
+
+              <code class="classname">DataSource</code>
+
+               and 
+
+              <code class="classname">ListQuery</code>
+
+               data. 
+            </dd><dt><span class="term">Adds column mappings</span></dt><dd>
+               The line 
+
+              <code class="literal">helper.addMapping("name", "NAME")</code>
+
+               defines that identifier of column "name" will be converted into 
+
+              <code class="literal">"NAME"</code>
+
+               when used in an SQL statement. There may be lot of differnece between JavaBean properties names and database fields names. The same database identifier ( 
+
+              <code class="literal">"NAME"</code>
+
+               ) is used when fetching data from 
+
+              <code class="classname">ResultSet</code>
+
+               by default. This could also have another identifier set by providing it as the third argument. 
+            </dd><dt><span class="term">Gets SQL substrings from the helper</span></dt><dd>
+               The line 
+
+              <code class="literal">helper.getDatabaseFields()</code>
+
+               returns just the comma-separated list of database column identifiers that were just defined in the mapping. This does not depend on the original set of list columns at all. The line 
+
+              <code class="literal">helper.getDatabaseFilterWith(" WHERE ", "")</code>
+
+               returns the 
+
+              <code class="literal">WHERE</code>
+
+               clause body with the provided prefix and suffix. It returns an empty string if there is no filter condition currently set (it does not mean there are no filters defined). Notice that we only deal with SQL strings here. As 
+
+              <code class="classname">ListSqlHelper</code>
+
+               uses 
+
+              <code class="classname">PreparedStatement</code>
+
+               objects to execute queries, there must be provided statement parameters in addition to the SQL string. This generally provides better performance of executing similar queries. 
+            </dd><dt><span class="term">Constructs SQL query string</span></dt><dd><code class="literal">StringBuffer</code>
+
+               is used to construct the whole SQL query string. Notice that the helper does not construct it totally by itself. This lends user more power for complex queries. It is very important that the constructed query is for getting all rows that match with the current filter and order conditions, but not the range conditions. 
+
+              <code class="classname">ListSqlHelper</code>
+
+               always executes two queries: one for getting the items count and another for getting the items range. Generally, both of these can be easily constructed from this one provided query. This implementation depends on the database system and therefore the concrete 
+
+              <code class="classname">ListSqlHelper</code>
+
+               subclass. 
+            </dd><dt><span class="term">Gets SQL parameters from the helper</span></dt><dd>
+               The line 
+
+              <code class="literal">helper.getDatabaseFilterParams()</code>
+
+               returns SQL parameters of 
+
+              <code class="literal">WHERE</code>
+
+               clause or empty list if there are none. 
+            </dd><dt><span class="term">Provides the helper with the SQL query</span></dt><dd>
+               The line 
+
+              <code class="literal">helper.setSqlQuery(...)</code>
+
+               sets the SQL string and the line 
+
+              <code class="literal">helper.addStatementParams(...)</code>
+
+               adds the query parameters ( 
+
+              <code class="classname">ListSqlHelper</code>
+
+               uses 
+
+              <code class="classname">PreparedStatement</code>
+
+               s). Of course, the order of parameters must match with the SQL string. 
+            </dd><dt><span class="term">Executes the query and retrieve the data</span></dt><dd>
+               The line 
+
+              <code class="literal">return helper.execute(MyModel.class)</code>
+
+               executes and retrieves data of both total count and items range queries. The 
+
+              <code class="classname">ResultSet</code>
+
+               is read using the default 
+
+              <code class="classname">BeanResultReader.</code></dd></dl></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e12003"></a>ListSqlHelper mappings and converters</h4></div></div></div><p>All Aranea List filters that are propagated with values from the
+        filter form construct an expression chain. This chain is built each
+        time any condition is changed. E.g if one is searching for persons
+        whose birthday is between July 6th, 1950 and Sept 2nd, 1990 then
+        there's one value 'Birthday' and two values 'July 6th, 1950' and 'Sept
+        2nd, 1990' which have 'Birthday_start' and 'Birthday_end' as names.
+        Ordering the list is done the same. When retrieving data from database
+        all these information must be considered to build an appropriate
+        query. Therefore all these variables must be mapped to database
+        fields. When reading the query results Bean fields must be mapped to
+        <code class="code">ResultSet</code> columns. In general, these Bean fields match
+        exactly with the variables. But considering more specific cases, they
+        are not assumed to be the same.</p><p>The following list covers the terms that are used when
+        configuring <code class="code">ListSqlHelper</code>: </p><div class="variablelist"><dl><dt><span class="term">List field</span></dt><dd>
+                 Each list has a set of fields (or columns) that are displayed.
+                 All fields are listed up in the <code class="code">SELECT</code> clause.
+                 Some of them can be used for filtering and ordering as well.
+                 Field name can be e.g "birthday" or "group.name".
+              </dd><dt><span class="term">Expression value</span></dt><dd>
+                 Values are the temporary information in the list filtering. '1980-08-21' is a value.
+                 'Birthday_start' is a name of that value.
+                 In simple cases one list field matches with one value.
+                 In case of the range filter two different values (start and end of the range) are used.
+                 Also one value can be used together with two or more fields.
+                 A value identifier is used for optional converting before using it in a query.
+                 This is done by adding a <code class="code">Converter</code> object to <code class="code">ListSqlHelper</code>.
+                 E.g. booleans have to be converted into numeric (0 or 1) values. 
+              </dd><dt><span class="term">Database column</span></dt><dd>
+                 Database column can be for example 'age' or 'company.name' as well as 'MAX(price)' or '(SELECT(COUNT(*) FROM document WHERE userId = user.id)' (an inner SELECT) - any expression that is part of a SQL string. 
+              </dd><dt><span class="term">Database column alias</span></dt><dd>
+                 Database field alias is for example 'name', 'total_price' etc.
+                 It's just an identifier not a whole expression.
+                 In 
+                <code class="code">ListSqlHelper</code>
+                 one can assign an alias for each database field or have it automatically generated. The result of a query is a table - a 
+                <code class="code">ResultSet</code>
+                 - which columns have the same names as the aliases in the query. An alias can also be used in a custom filter condition (WHERE clause) to identify the same database field or expression that was added in the SELECT clause. 
+              </dd></dl></div><p><code class="literal">ListSqlHelper</code> methods for configuring
+        mappings: </p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Method</th><th>Purpose</th></tr></thead><tbody><tr><td><code class="literal">addMapping(String fieldName, String columnName, String columnAlias)</code></td><td>
+                  Adds a <span class="emphasis"><em>field name</em></span> to database <span class="emphasis"><em>column name</em></span>
+                  and <span class="emphasis"><em>column alias</em></span> mapping.
+                  A given field is listed in the <code class="code">SELECT</code> and is read from the <code class="code">ResultSet</code>.
+                  </td></tr><tr><td><code class="literal">addMapping(String fieldName, String columnName)</code></td><td>
+                  Adds a <span class="emphasis"><em>field name</em></span> to database <span class="emphasis"><em>column name</em></span>
+                  and <span class="emphasis"><em>column alias</em></span> mapping.
+                  A given field is listed in the <code class="code">SELECT</code> and is read from the <code class="code">ResultSet</code>.
+                  The corresponding <span class="emphasis"><em>column alias</em></span> is generated automatically.
+                  </td></tr><tr><td><code class="literal">addDatabaseFieldMapping(String fieldName, String columnName, String columnAlias)</code></td><td>
+                  Adds a <span class="emphasis"><em>field name</em></span> to database <span class="emphasis"><em>column name</em></span>
+                  and <span class="emphasis"><em>column alias</em></span> mapping.
+                  A given field is listed in the <code class="code">SELECT</code> but is not read from the <code class="code">ResultSet</code>.
+                  </td></tr><tr><td><code class="literal">addDatabaseFieldMapping(String fieldName, String columnName)</code></td><td>
+                  Adds a <span class="emphasis"><em>field name</em></span> to database <span class="emphasis"><em>column name</em></span>
+                  mapping.
+                  A given field is listed in the <code class="code">SELECT</code> but is not read from the <code class="code">ResultSet</code>.
+                  The corresponding <span class="emphasis"><em>column alias</em></span> is generated automatically.
+                  </td></tr><tr><td><code class="literal">addResultSetMapping(String fieldName, String columnAlias)</code></td><td>
+                  Adds a <span class="emphasis"><em>field name</em></span> to database <span class="emphasis"><em>column alias</em></span>
+                  mapping.
+                  A given field is not listed in the <code class="code">SELECT</code> but is read from the <code class="code">ResultSet</code>.
+                  </td></tr></tbody></table></div><p><code class="literal">ListSqlHelper</code> methods for configuring
+        converters: </p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Method</th><th>Purpose</th></tr></thead><tbody><tr><td><code class="literal">addDatabaseFieldConverter(String value,
+                  Converter converter)</code></td><td>Adds converter for expression value.</td></tr><tr><td><code class="literal">addResultSetDeconverterForBeanField(String
+                  beanField, Converter converter)</code></td><td>Adds deconverter for <code class="code">ResultSet</code> column by
+                  list field that is mapped with that Column.</td></tr><tr><td><code class="literal">addResultSetDeconverterForColumn(String
+                  rsColumn, Converter converter)</code></td><td>Adds deconverter for <code class="code">ResultSet</code>
+                  column.</td></tr></tbody></table></div></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e12211"></a>ListSqlHelper naming strategies</h4></div></div></div><p>Since Aranea MVC 1.1 ListSqlHelper also support naming strategies.
+        This means that one do not need to define database column names and aliases
+        for all list fields.
+        Instead only list fields are listed up and they can be transformed into
+        database column names and aliases using a <span class="emphasis"><em>strategy</em></span>.
+        </p><p>A <span class="emphasis"><em>strategy</em></span> is defined by the following interface. 
+<code class="classname">NamingStrategy</code>. </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">interface</span> NamingStrategy <span class="syntax11">{</span>
+        String <span class="syntax9">fieldToColumnName</span>(String fieldName);
+        String <span class="syntax9">fieldToColumnAlias</span>(String fieldName);
+<span class="syntax11">}</span>
+</span></pre></pre><p>
+			To set or get a <span class="emphasis"><em>strategy</em></span> use methods
+			<code class="code">ListSqlHelper.setNamingStrategy(NamingStrategy namingStrategy)</code> or
+			<code class="code">ListSqlHelper.getNamingStrategy()</code> respectfully.
+		</p><p>
+        The standard implementation <code class="classname">StandardNamingStrategy</code>
+        adds underscores to all names (e.g. "firstName" -&gt; "first_name").
+        
+        For an alias all dots are converted into underscores
+        (e.g. "parent.friend.age" -&gt; "parent_friend_age").
+        For a name all dots except the last are converted into underscores
+        (e.g. "parent.friend.age" -&gt; "parent_friend.age", so "parent_friend" is expected to be a table alias).
+        </p><p>
+        	If one wishes to define table aliases for the naming strategy
+        	<code class="classname">PrefixMapNamingStrategy</code> (enabled by default) can be used.
+        	By using method <code class="code">addPrefix(String fieldNamePrefix, String columnNamePrefix)</code>
+        	one can add a custom prefix for database columns and aliases.
+        	An instance of <code class="classname">PrefixMapNamingStrategy</code> can be retrieved by
+        	method <code class="code">ListSqlHelper.getPrefixMapNamingStrategy()</code>.
+        </p><p>
+        	As naming strategies still expect a set of list fields to be defined
+        	there is a way to add list fields without any mappings. 
+        </p><p>A set of fields are provided by following interface.
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">interface</span> Fields <span class="syntax11">{</span>
+        Collection <span class="syntax9">getNames</span>();
+        Collection <span class="syntax9">getResultSetNames</span>();
+<span class="syntax11">}</span>
+</span></pre></pre><p>
+			To set or get a <span class="emphasis"><em>fields provider</em></span> use methods
+			<code class="code">ListSqlHelper.setFields(Fields fields)</code> or
+			<code class="code">ListSqlHelper.getFields()</code> respectfully.
+		</p><p>
+			A standard implementation <code class="classname">StandardFields</code>
+			enables to add fields using the following methods.
+		</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Method</th><th>Purpose</th></tr></thead><tbody><tr><td><code class="literal">addField(String field)</code></td><td>Adds a field by its name.</td></tr><tr><td><code class="literal">addFields(String[] fields)</code></td><td>Adds a set of fields by their names.</td></tr><tr><td><code class="literal">addFields(Collection fields)</code></td><td>Adds a set of fields by their names.</td></tr><tr><td><code class="literal">addFields(Class beanClass)</code></td><td>Adds all the fields of the Bean class.</td></tr><tr><td><code class="literal">addFields(ListStructure structure)</code></td><td>Adds all the fields defined in the <span class="emphasis"><em>list structure</em></span>.</td></tr></tbody></table></div><p>
+          		There are also corresponding methods to add fields using a prefix and
+          		methods to remove the fields (using a prefix or not).
+          </p><p>
+          		To get the <code class="classname">StandardFields</code> call
+          		<code class="code">ListSqlHelper.getStandardFields()</code>.
+          </p><p>The following example shows how to just list up the fields
+      (the corresponding column names and aliases are generated by the naming strategy).
+      Because the column "phone" has a "non-standard" column name, it is set separately.
+      </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">class</span> MyService <span class="syntax11">{</span>
+  ...
+  <span class="syntax6">public</span> ListItemsData <span class="syntax9">findMyModel</span>(ListQuery query) <span class="syntax11">{</span>
+    ListSqlHelper helper <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">OracleListSqlHelper</span>(<span class="syntax4">this</span>.dataSource, query);
+
+    StandardFields fields <span class="syntax11">=</span> helper.<span class="syntax9">getStandardFields</span>();
+    fields.<span class="syntax9">addField</span>(<span class="syntax3">"name"</span>);
+    fields.<span class="syntax9">addField</span>(<span class="syntax3">"surname"</span>);
+
+    helper.<span class="syntax9">addMapping</span>(<span class="syntax3">"phone"</span>, <span class="syntax3">"PHONE_NO"</span>);
+
+    helper.<span class="syntax9">setSimpleSqlQuery</span>(<span class="syntax3">"PERSON"</span>);
+    <span class="syntax6">return</span> helper.<span class="syntax9">execute</span>(MyModel.<span class="syntax8">class</span>);
+  <span class="syntax11">}</span>
+  ...
+<span class="syntax11">}</span>
+</span></pre></pre><p>If all fields described for the <code class="classname">ListWidget</code> should be used
+      they can be added using the <code class="classname">ListStructure</code>
+      contained in the <code class="classname">ListQuery</code>:
+      </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">class</span> MyService <span class="syntax11">{</span>
+  ...
+  <span class="syntax6">public</span> ListItemsData <span class="syntax9">findMyModel</span>(ListQuery query) <span class="syntax11">{</span>
+    ListSqlHelper helper <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">OracleListSqlHelper</span>(<span class="syntax4">this</span>.dataSource, query);
+
+    helper.<span class="syntax9">getStandardFields</span>().<span class="syntax9">addFields</span>(query.<span class="syntax9">getListStructure</span>());
+    
+    helper.<span class="syntax9">addMapping</span>(<span class="syntax3">"phone"</span>, <span class="syntax3">"PHONE_NO"</span>);
+
+    helper.<span class="syntax9">setSimpleSqlQuery</span>(<span class="syntax3">"PERSON"</span>);
+    <span class="syntax6">return</span> helper.<span class="syntax9">execute</span>(MyModel.<span class="syntax8">class</span>);
+  <span class="syntax11">}</span>
+  ...
+<span class="syntax11">}</span>
+</span></pre></pre></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e12353"></a>6.2.6.&nbsp;Quick Overview on How to Use</h3></div></div></div></div><p>Here is a quick summary on how one can create and use a list,
+		based on the material described in this chapter.
+			</p><div class="orderedlist"><ol type="1" compact><li><span class="emphasis"><em>Create a data query.</em></span> This basically means a service layer method
+		      that takes at least a <code class="literal">ListQuery</code> for its argument, executes the
+		      database query, and returns <code class="literal">ListItemsData</code>. To execute the query,
+		      one must also specify the binding between model object fields and query result set fields.
+		    </li><li><span class="emphasis"><em>Create a list widget.</em></span> The (bean) list widget is used to define
+		      the columns and its labels together with sorting and filtering information. Also, one
+		      must define a data provider &#8212; either memory-based or back-end &#8212; that invokes
+		      the data query created previously. Note that the data provider implementation
+		      provides the <code class="literal">ListQuery</code> object (containing information about the list,
+		      the constraints, and the rows expected) for the query, and expects a
+		      <code class="literal">ListItemsData</code> object as a result. Finally, the created list must be
+		      added by its creator widget simply like following:
+		      <code class="code">this.addWidget("myList", createdList);</code></li><li><span class="emphasis"><em>Describe the layout in JSP.</em></span> Here you can use the list tags
+		      provided by Aranea. These are described below.
+		    </li></ol></div><p>
+		</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="SelectingListRows"></a>6.3.&nbsp;Selecting List Rows</h2></div></div></div><p>
+    This section shows how a user can choose list rows with a check box or a radio button.
+    The solution described here is also integrated into Aranea lists, so it is quite easy to use.
+    Firstly, Aranea provides a check box tag (<code class="literal">&lt;ui:listRowCheckBox/&gt;</code>)
+    and a radio button tag (<code class="literal">&lt;ui:listRowRadioButton/&gt;</code>) for list rows.
+    These are meant for the user to check multiple rows or just one row to submit them
+    once the user clicks on a button. Usually, these tags don't require any attributes
+    (unless one needs to customize style or javascript), and work only with the list where they
+    are used, even if there are multiple lists on the page.
+    </p><p>
+		In addition, Aranea provides a tag that selects or unselects all row check boxes in
+		the list. It is named <code class="literal">&lt;ui:listSelectAllCheckBox/&gt;</code>. Again, it
+		requires zero configuration.
+		</p><p>
+		Now, these tags are useful because the next step is just getting the model objects from
+		the list with the <code class="literal">ListWidget.getSelectedRows()</code> method. Or, if a
+		radio button was used, and, therefore, only one selected row is expected, the
+		<code class="literal">ListWidget.getSelectedRow()</code> method can be used. If no rows were
+		selected then <code class="literal">getSelectedRows()</code> would return an empty list, and
+		<code class="literal">getSelectedRow()</code> would return <code class="literal">null</code>.
+		</p><p>
+		There is also an advanced feature in case the list row check boxes are used. One
+		can make the list remember the selected rows in case the user switches between
+		the (list) pages. It can be achieved by calling
+		<code class="literal">list.setSelectFromMultiplePages(true)</code> (by default it is
+		<code class="literal">false</code>). Once enabled, the list and the tags use the
+		<code class="literal">equals()</code> method of the list row data object to know whether
+		the row must be checked or unchecked. Therefore, when the user goes back to the
+		list page where some rows were selected before then they would still appear selected. 
+		</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+		Enabling the <code class="literal">selectFromMultiplePages</code> option, that makes list
+		remember previously selected rows, requires caution because the data model objects
+		needs to have the <code class="literal">equals()</code> to correctly compare them. Otherwise,
+		the "same" object could appear several times in the returned selected rows list.
+		This is the reason why it is turned off by default.
+		</div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ListJSPTags"></a>6.4.&nbsp;List JSP Tags</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e12442"></a>6.4.1.&nbsp;&lt;ui:list&gt;</h3></div></div></div><p>Starts a list context. List view model, list sequence view model
+      and list id are made accessible to inner tags as EL variables.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e12447"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>no</em></span></td><td>List widget id.</td></tr><tr><td>varSequence</td><td><span class="emphasis"><em>no</em></span></td><td>Name of variable that represents list sequence info (by
+                default <span class="emphasis"><em>listSequence</em></span>).</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e12483"></a>Variables</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col align="center"></colgroup><thead><tr><th>Variable</th><th>Description</th><th align="center">Type</th></tr></thead><tbody><tr><td>list</td><td>View model of list.</td><td align="center"><code class="literal">ListWidget.ViewModel</code></td></tr><tr><td>listSequence (unless changed with
+                <span class="emphasis"><em>varSequence</em></span> attribute).</td><td>View model of list sequence info.</td><td align="center"><code class="literal">SequenceHelper.ViewModel</code></td></tr><tr><td>listId</td><td>Id of list.</td><td align="center"><code class="literal">String</code></td></tr><tr><td>listFullId</td><td>Full id of list.</td><td align="center"><code class="literal">String</code></td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e12535"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:list id</span>=<span class="syntax3">"list"</span><span class="syntax10">&gt;</span>
+    ...
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:list</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e12540"></a>6.4.2.&nbsp;&lt;ui:listFilter&gt;</h3></div></div></div><p>Represents list filter. Introduces an implicit form
+      (&lt;ui:form&gt;), so one can place form elements under it.</p><p><span class="emphasis"><em>This tag has no attributes.</em></span></p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e12548"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:list id</span>=<span class="syntax3">"list"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:listFilter</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+            <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:textInput id</span>=<span class="syntax3">"field1Filter"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+    
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+            <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:textInput id</span>=<span class="syntax3">"field2Filter"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+
+        ...
+
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:listFilter</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:list</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e12553"></a>6.4.3.&nbsp;&lt;ui:listFilterButton&gt; and &lt;ui:listFilterClearButton&gt;</h3></div></div></div><p>
+       <code class="literal">&lt;ui:listFilterButton&gt;</code> 
+       renders list's filter form filtering activation button and registers a keyboard handler, so that 
+       pressing <code class="literal">ENTER</code> key in any filter form field activates list filtering. 
+       <code class="literal">&lt;ui:listFilterClearButton&gt;</code> 
+       renders list's filter form clearing button, pressing it sends server-side event that clears all active list filters.
+       </p><p>
+       Both of these tags must be used inside <code class="literal">&lt;ui:listFilter&gt;</code>
+       tag. 
+       </p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e12572"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>renderMode</td><td><span class="emphasis"><em>no</em></span></td><td>Possible values are <code class="literal">button</code>, <code class="literal">input</code>&#8212;filter button is rendered with corresponding HTML tags, or <code class="literal">empty</code> in which case JSP author must provide suitable content for this tag by themself (with an image, for example). Default rendermode is <code class="literal">button</code>.</td></tr><tr><td>onClickPrecondition</td><td><span class="emphasis"><em>no</em></span></td><td>Precondition for deciding whether registered onclick
+                event should go server side or not. If left unspecified, this
+                is considered to be <code class="literal">true</code>.</td></tr><tr><td>showLabel</td><td><span class="emphasis"><em>no</em></span></td><td>Indicates whether button label is shown.Value should be
+                <code class="literal">true</code> or <code class="literal">false</code>, default
+                is <code class="literal">false</code>&#8212;using <code class="literal">true</code> is pointless with these particular tags, it only has some effect
+                when specified <code class="literal">renderMode</code> is <code class="literal">empty</code> and tags body is left empty too.</td></tr></tbody></table></div><span class="emphasis"><em>Also have all common form element rendering attributes plus standard <code class="literal">style</code> and <code class="literal">styleClass</code> attributes.</em></span></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e12654"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+...
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:listFilter</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+      <span class="syntax1">&lt;!-- Bunch of filter fields in cells --&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:listFilterButton/</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:listFilterClearButton/</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:listFilter</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e12659"></a>6.4.4.&nbsp;&lt;ui:listRows&gt;</h3></div></div></div><p>Iterating tag that gives access to each row on the current list
+      page. The row is by default accessible as EL variable
+      <span class="emphasis"><em>row</em></span>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e12667"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>var</td><td><span class="emphasis"><em>no</em></span></td><td>Name of variable that represents individual row (by
+                default "row").</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e12692"></a>Variables</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col align="center"></colgroup><thead><tr><th>Variable</th><th>Description</th><th align="center">Type</th></tr></thead><tbody><tr><td>row (unless changed with <span class="emphasis"><em>var</em></span>
+                attribute).</td><td>Object held in current row.</td><td align="center"><code class="literal">Object</code></td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e12720"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:list id</span>=<span class="syntax3">"list"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:listFilter</span><span class="syntax10">&gt;</span>
+    ...
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:listFilter</span><span class="syntax10">&gt;</span>
+  
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:listRows</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+        <span class="syntax1">&lt;!-- In each row, object in this list row is accessible --&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+            <span class="syntax10">&lt;</span><span class="syntax5">c</span><span class="syntax10">:out value</span>=<span class="syntax3">"${row.field1}"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+            <span class="syntax10">&lt;</span><span class="syntax5">c</span><span class="syntax10">:out value</span>=<span class="syntax3">"${row.field2}"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+
+        ...
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:listRows</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:list</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e12725"></a>6.4.5.&nbsp;&lt;ui:listRowButton&gt;</h3></div></div></div><p>Represents an HTML form button (not tied to any
+      <code class="literal">Control</code> or <code class="literal">FormElement</code>). Default
+      <code class="literal">styleClass="aranea-button"</code>, rendered with HTML
+      <code class="literal">&lt;button ...&gt;</code> tag.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e12742"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>eventId</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Event triggered when button is clicked.</td></tr><tr><td>id</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Button id, allows to access button from
+                JavaScript.</td></tr><tr><td>labelId</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Id of button label.</td></tr><tr><td>onClickPrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether onclick event should
+                go server side or not. If left unspecified this is set to
+                <code class="literal">return true;</code>.</td></tr><tr><td>tabindex</td><td><span class="emphasis"><em>no</em></span></td><td>This attribute specifies the position of the current element in the tabbing order for the current document. This value must be a number between 0 and 32767.</td></tr></tbody></table></div><span class="emphasis"><em>Also has standard <code class="literal">styleClass</code>,
+        <code class="literal">updateRegions</code> and
+        <code class="literal">globalUpdateRegions</code> attributes.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e12821"></a>6.4.6.&nbsp;&lt;ui:listRowLinkButton&gt;</h3></div></div></div><p>Represents a HTML link with an <code class="literal">onClick</code>
+      JavaScript event. Default
+      <code class="literal">styleClass="aranea-link-button"</code>, rendered with HTML
+      <code class="literal">&lt;a href="javascript:" ...&gt;</code> tag.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e12835"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>eventId</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Event triggered when link is clicked.</td></tr><tr><td>id</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Link id, allows to access link from JavaScript.</td></tr><tr><td>labelId</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Id of link label.</td></tr><tr><td>onClickPrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether onclick event should
+                go server side or not. If left unspecified this is set to
+                <code class="literal">return true;</code>.</td></tr><tr><td>tabindex</td><td><span class="emphasis"><em>no</em></span></td><td>This attribute specifies the position of the current element in the tabbing order for the current document. This value must be a number between 0 and 32767.</td></tr></tbody></table></div><span class="emphasis"><em>Also has standard <code class="literal">styleClass</code>,
+        <code class="literal">updateRegions</code> and
+        <code class="literal">globalUpdateRegions</code> attributes.</em></span></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e12914"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:list id</span>=<span class="syntax3">"list"</span><span class="syntax10">&gt;</span>
+  ...  
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:listRows</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+      ...
+      <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:listRowLinkButton eventId</span>=<span class="syntax3">"edit"</span><span class="syntax10">&gt;</span>
+          <span class="syntax10">&lt;</span><span class="syntax10">img src</span>=<span class="syntax3">"editButton.png"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:listRowLinkButton</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+      ...
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:listRows</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:list</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e12919"></a>6.4.7.&nbsp;&lt;ui:listRowCheckBox&gt; And &lt;ui:listRowRadioButton&gt;</h3></div></div></div><p>
+      Represents a list row check box and a list row radio button that are bound to
+      the list row. The <code class="literal">&lt;ui:listRowCheckBox&gt;</code> accompanies
+      with the <code class="literal">&lt;ui:listSelectAllCheckBox&gt;</code> that lets the
+      user mark all list row check boxes (in the same list) checked or unchecked.
+      </p><p>
+			Both <code class="literal">&lt;ui:listRowCheckBox&gt;</code> and
+			<code class="literal">&lt;ui:listRowRadioButton&gt;</code> usually require no configuration. 
+			However, if one needs to change something, the tags provide similar attributes.
+			</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e12938"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>value</td><td><span class="emphasis"><em>no</em></span></td><td>(Check box only!) Specifies a custom value (when it is submitted).
+                Default value is <code class="literal">selected</code>.</td></tr><tr><td>labelId</td><td><span class="emphasis"><em>no</em></span></td><td>Specifies a custom label for the check box or the radio button.</td></tr><tr><td>disabled</td><td><span class="emphasis"><em>no</em></span></td><td>Specifies whether the input should be rendered as disabled. Default is active state.</td></tr><tr><td>onclick</td><td><span class="emphasis"><em>no</em></span></td><td>Specifies custom <code class="literal">onclick</code> event. Default is none.</td></tr><tr><td>accessKey</td><td><span class="emphasis"><em>no</em></span></td><td>Specifies custom <code class="literal">acceskey</code> (defined by HTML). Default is none.</td></tr><tr><td>checked</td><td><span class="emphasis"><em>no</em></span></td><td>Specifies the initial state of the check box or radio button. Default is unchecked.</td></tr><tr><td>tabindex</td><td><span class="emphasis"><em>no</em></span></td><td>This attribute specifies the position of the current element in the tabbing order for the current document. This value must be a number between 0 and 32767.</td></tr><tr><td>style</td><td><span class="emphasis"><em>no</em></span></td><td>Inline (CSS) style for HTML tag.</td></tr><tr><td>styleClass</td><td><span class="emphasis"><em>no</em></span></td><td>CSS class for the tag.</td></tr><tr><td>onChangeEventId</td><td><span class="emphasis"><em>no</em></span></td><td>The event handler name (in the parent widget of the list) that wants to know when a row selection changes. The parameter for the event handler is the <code class="literal">rowRequestId</code>.</td></tr><tr><td>eventPrecondition</td><td><span class="emphasis"><em>no</em></span></td><td>A JavaScript event precondition on whether the <code class="literal">onchange</code> event should go server-side.</td></tr></tbody></table></div></div><p>
+				See also <a href="lists.html#SelectingListRows" title="6.3.&nbsp;Selecting List Rows">Section&nbsp;6.3, &#8220;Selecting List Rows&#8221;</a>
+			</p></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="EditableLists"></a>6.5.&nbsp;Editable Lists</h2></div></div></div><p>
+     <code class="literal">EditableListWidget</code> and <code class="literal">EditableBeanListWidget</code> are <code class="literal">ListWidgets</code> 
+     wrapped around <code class="literal">FormListWidget</code> (See <a href="forms.html#form_lists" title="5.3.&nbsp;Form Lists">Section&nbsp;5.3, &#8220;Form Lists&#8221;</a> about it) which gathers data 
+     with the help from <code class="literal">ListWidget</code>.
+     </p><p>
+     Both editable list widgets have just one constructor and one additional getter (compared to <code class="literal">ListWidget</code>):
+     </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax9">EditableListWidget</span>(FormRowHandler rowHandler);
+<span class="syntax6">public</span> <span class="syntax9">EditableBeanListWidget</span>(FormRowHandler rowHandler, Class beanClass);
+
+<span class="syntax1">// gets the wrapped form list</span>
+<span class="syntax6">public</span> BeanFormListWidget <span class="syntax9">getFormList</span>();
+</span></pre></pre><p>
+</p><p>
+        Most important component of editable lists is <code class="literal">FormListWidget</code>'s <code class="literal">RowHandler</code>, refer to <a href="forms.html#form_lists" title="5.3.&nbsp;Form Lists">Section&nbsp;5.3, &#8220;Form Lists&#8221;</a>
+        about implementing that interface. Other than required implementation of <code class="literal">RowHandler</code>, editable lists do not
+        differ from <code class="literal">ListWidget</code>s.
+    </p><p>
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">class</span> SampleEditableListWidget <span class="syntax11">{</span>
+  <span class="syntax6">private</span> EditableBeanListWidget list;
+  
+  <span class="syntax6">protected</span> <span class="syntax8">void</span> <span class="syntax9">init</span>() <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+    <span class="syntax9">setViewSelector</span>(<span class="syntax3">"sampleEditableListView"</span>);
+    
+    list <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">EditableBeanListWidget</span>(<span class="syntax9">buildFormRowHandler</span>(), SomeBean.<span class="syntax8">class</span>);
+    list.<span class="syntax9">setDataProvider</span>(<span class="syntax9">buildListDataProvider</span>());
+    list.<span class="syntax9">setOrderableByDefault</span>(<span class="syntax4">true</span>);
+    <span class="syntax1">// list has only two columns of which only one is editable</span>
+    list.<span class="syntax9">addField</span>(<span class="syntax3">"immutable"</span>, <span class="syntax3">"#ImmutableColumnLabel"</span>, <span class="syntax4">false</span>);
+    list.<span class="syntax9">addField</span>(<span class="syntax3">"mutable"</span>, <span class="syntax3">"#MutableColumnLabel"</span>).<span class="syntax9">like</span>();
+
+    <span class="syntax9">addWidget</span>(<span class="syntax3">"sampleEditableList"</span>, list);
+  <span class="syntax11">}</span>
+  
+  <span class="syntax6">private</span> FormRowHandler <span class="syntax9">buildFormRowHandler</span>() <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+    <span class="syntax1">// return formRowHandler, see the form list example</span>
+  <span class="syntax11">}</span>;
+  
+  <span class="syntax6">private</span> <span class="syntax6">private</span> ListDataProvider <span class="syntax9">buildListDataProvider</span>() <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+    <span class="syntax1">// return data provider</span>
+  <span class="syntax11">}</span>
+<span class="syntax11">}</span>
+</span></pre></pre><p>
+    </p><p>
+        JSP view for this sample widget is presented below:
+</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax11">&lt;</span>ui:formList id<span class="syntax11">=</span><span class="syntax3">"sampleEditableList"</span><span class="syntax11">&gt;</span>
+  <span class="syntax11">&lt;!--</span> List filter definition, usual <span class="syntax11">--&gt;</span>
+  <span class="syntax11">&lt;!--</span> Editable lists body <span class="syntax11">--&gt;</span>
+  <span class="syntax11">&lt;</span>ui:formListRows<span class="syntax11">&gt;</span>
+    <span class="syntax11">&lt;</span>ui:row<span class="syntax11">&gt;</span>
+      <span class="syntax11">&lt;</span>ui:cell<span class="syntax11">&gt;</span>
+        <span class="syntax11">&lt;!--</span> Row object is accessible as <span class="syntax3">'row'</span> just as in lists <span class="syntax11">--&gt;</span>
+        <span class="syntax11">&lt;</span>c:out value<span class="syntax11">=</span><span class="syntax3">"${row.immutable}"</span><span class="syntax11">/&gt;</span>
+      <span class="syntax11">&lt;/</span>ui:cell<span class="syntax11">&gt;</span>
+      <span class="syntax11">&lt;</span>ui:cell<span class="syntax11">&gt;</span>
+        <span class="syntax11">&lt;!--</span> But the implicit form tag <span class="syntax6">for</span> current row form is also present, so... <span class="syntax11">--&gt;</span>
+        <span class="syntax11">&lt;</span>ui:formElement id<span class="syntax11">=</span><span class="syntax3">"mutable"</span><span class="syntax11">&gt;</span>
+          <span class="syntax11">&lt;</span>ui:textInput<span class="syntax11">/&gt;</span>
+        <span class="syntax11">&lt;/</span>ui:formElement<span class="syntax11">&gt;</span>
+      <span class="syntax11">&lt;/</span>ui:cell<span class="syntax11">&gt;</span>
+    <span class="syntax11">&lt;/</span>ui:row<span class="syntax11">&gt;</span>
+  <span class="syntax11">&lt;/</span>ui:formListRows<span class="syntax11">&gt;</span>
+<span class="syntax11">&lt;/</span>ui:formList<span class="syntax11">&gt;</span>
+...
+</span></pre></pre><p>
+    </p><p>
+      Full editable list example is bundled with Aranea examples.
+    </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="forms.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="uilibwchapter.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;5.&nbsp;Forms and Data Binding&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;7.&nbsp;Other Uilib Widgets</td></tr></table></div></body></html>

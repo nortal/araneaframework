@@ -1,0 +1,1242 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;5.&nbsp;Forms and Data Binding</title><link rel="stylesheet" href="../css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"><link rel="start" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="up" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="prev" href="jsp.html" title="Chapter&nbsp;4.&nbsp;JSP and Custom Tags"><link rel="next" href="lists.html" title="Chapter&nbsp;6.&nbsp;Lists and Query Browsing"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;5.&nbsp;Forms and Data Binding</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="jsp.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="lists.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="forms"></a>Chapter&nbsp;5.&nbsp;Forms and Data Binding</h2></div></div></div><p>One of the most common tasks in web applications is gathering user
+  input, converting it to model objects and then validating it. This is
+  typically referred to as <span class="emphasis"><em>data binding</em></span> and every major
+  web framework has support for this activity. In this chapter we will
+  introduce the widgets and supporting API that implement this tasks.</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e7002"></a>5.1.&nbsp;Forms</h2></div></div></div><p>Unlike many other frameworks, in Aranea request processing,
+    validating and data binding is not a separate part of the framework, but
+    just another component. Specially it is widget
+    <code class="literal">org.araneaframework.uilib.form.FormWidget</code> and some
+    support widgets. A typical form is shown on <a href="forms.html#person-form" title="Figure&nbsp;5.1.&nbsp;Form example">Figure&nbsp;5.1, &#8220;Form example&#8221;</a>.</p><div class="figure"><a name="person-form"></a><div class="mediaobject"><img src="../images/form.png" alt="Form example"></div><p class="title"><b>Figure&nbsp;5.1.&nbsp;Form example</b></p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e7018"></a>5.1.1.&nbsp;FormWidget</h3></div></div></div><p>Let's say we have a <code class="literal">Person</code> model JavaBean that
+      looks like this:</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">class</span> Person <span class="syntax11">{</span>
+  <span class="syntax6">private</span> Long id;
+  <span class="syntax6">private</span> String name;
+  <span class="syntax6">private</span> String surname;   
+  <span class="syntax6">private</span> String phone;
+
+  <span class="syntax6">public</span> Long <span class="syntax9">getId</span>() <span class="syntax11">{</span><span class="syntax6">return</span> id;<span class="syntax11">}</span>
+  <span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">setId</span>(Long id) <span class="syntax11">{</span><span class="syntax4">this</span>.id <span class="syntax11">=</span> id;<span class="syntax11">}</span>
+  
+  <span class="syntax6">public</span> String <span class="syntax9">getName</span>() <span class="syntax11">{</span><span class="syntax6">return</span> name;<span class="syntax11">}</span>
+  <span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">setName</span>(String name) <span class="syntax11">{</span><span class="syntax4">this</span>.name <span class="syntax11">=</span> name;<span class="syntax11">}</span>
+  
+  <span class="syntax6">public</span> String <span class="syntax9">getSurname</span>() <span class="syntax11">{</span><span class="syntax6">return</span> surname;<span class="syntax11">}</span>
+  <span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">setSurname</span>(String surname) <span class="syntax11">{</span><span class="syntax4">this</span>.surname <span class="syntax11">=</span> surname;<span class="syntax11">}</span>
+  
+  <span class="syntax6">public</span> String <span class="syntax9">getPhone</span>() <span class="syntax11">{</span><span class="syntax6">return</span> phone;<span class="syntax11">}</span>
+  <span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">setPhone</span>(String phone) <span class="syntax11">{</span><span class="syntax4">this</span>.phone <span class="syntax11">=</span> phone;<span class="syntax11">}</span>
+<span class="syntax11">}</span>
+</span></pre></pre><p>A typical form will be created and used like this:</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">private</span> BeanFormWidget personForm;
+<span class="syntax6">private</span> Person person;
+...
+<span class="syntax6">protected</span> <span class="syntax8">void</span> <span class="syntax9">init</span>() <span class="syntax11">{</span>
+  ...
+  personForm <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">BeanFormWidget</span>(Person.<span class="syntax8">class</span>);
+  <span class="syntax9">addWidget</span>(<span class="syntax3">"personForm"</span>, personForm);
+
+  personForm.<span class="syntax9">addBeanElement</span>(<span class="syntax3">"name"</span>, <span class="syntax3">"#Name"</span>, <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(<span class="syntax6">new</span> <span class="syntax9">Long</span>(<span class="syntax12">3</span>), <span class="syntax4">null</span>), <span class="syntax4">true</span>);
+  personForm.<span class="syntax9">addBeanElement</span>(<span class="syntax3">"surname"</span>, <span class="syntax3">"#Last name"</span>, <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(), <span class="syntax4">true</span>);
+  personForm.<span class="syntax9">addBeanElement</span>(<span class="syntax3">"phone"</span>, <span class="syntax3">"#Phone no"</span>, <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(), <span class="syntax4">true</span>);
+  ...
+  person <span class="syntax11">=</span> <span class="syntax9">lookupPersonService</span>().<span class="syntax9">getSomePerson</span>();
+  personForm.<span class="syntax9">readFromBean</span>(person);
+  ...
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p>Note that here we basically do three things: </p><div class="variablelist"><dl><dt><span class="term">Create and register the form</span></dt><dd>
+               The line 
+
+              <code class="literal">new BeanFormWidget(Person.class)</code>
+
+               creates a new form widget that is associated with the 
+
+              <span class="emphasis"><em>JavaBean</em></span>
+
+               model class 
+
+              <code class="literal">Person</code>
+
+              . The line 
+
+              <code class="literal">addWidget("personForm", personForm)</code>
+
+               initializes and registers the form allowing it to function. 
+            </dd><dt><span class="term">Add form fields</span></dt><dd>
+               The line 
+
+              <code class="literal">personForm.addBeanElement("name", "#Name", new
+              TextControl(new Long(3), null), true)</code>
+
+               adds an element associated with the JavaBean property "name" (this is also the identifier of the field), with a label "Name" (labels in Aranea are localizable by default and "#" escapes a non-localizable string), a text box control with a minimal length of 3 and that is mandatory. 
+            </dd><dt><span class="term">Write JavaBean</span></dt><dd>
+               The line 
+
+              <code class="literal">personForm.readFromBean(person)</code>
+
+               reads the data from JavaBean properties to the corresponding form fields. 
+            </dd></dl></div><p>Now that we have created the form we show how to process events,
+      validate and read the request data. The following example code should be
+      in the same widget as the previous:</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">private</span> <span class="syntax8">void</span> <span class="syntax9">handleEventSave</span>() <span class="syntax11">{</span>
+  <span class="syntax6">if</span> (personForm.<span class="syntax9">convertAndValidate</span>()) <span class="syntax11">{</span>
+   personForm.<span class="syntax9">writeToBean</span>(person);
+   ...
+   <span class="syntax9">lookupPersonService</span>()().<span class="syntax9">savePerson</span>(person);
+  <span class="syntax11">}</span>
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p>This code will execute if an event "save" comes and will do the
+      following: </p><div class="itemizedlist"><ul type="disc" compact><li>
+             Convert the request data to the JavaBean types and validate it according to the rules specified in controls (e.g. minimal length). Wrapping event body in 
+
+            <code class="literal">if (personForm.convertAndValidate()) {...}</code>
+
+             is a generic idiom in Aranea as we believe that explicitly leads to flexibility. By default the values will be just read from request without any parsing, conversion or validation and the latter will be done only after the 
+
+            <code class="literal">convertAndValidate()</code>
+
+             call. This allows for example to validate only a subform or even one element, by calling only their 
+
+            <code class="literal">convertAndValidate()</code>
+
+             method. 
+          </li><li>
+             Read the 
+
+            <code class="literal">person</code>
+
+             object from the form, filling it in with the user data. Note that the same object that was originally read from the business layer is used here and forms take care of merging the new data and preserving the old. 
+          </li></ul></div><p>Note the use of the <code class="literal">getValueByFullName()</code>
+      method. Form API contains several such methods (named
+      <code class="literal">*ByFullName()</code>), which allow to access fields,
+      controls and values using full dot-separated element names.</p><p>If you have a composite JavaBean (containing other JavaBeans) you
+      may want to create a form with a similar structure. Let's say that our
+      <code class="literal">Person</code> bean contains an <code class="literal">Address</code>
+      under "address" JavaBean property:</p><pre class="programlisting"><pre><span class="syntax0">...
+personForm <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">BeanFormWidget</span>(Person.<span class="syntax8">class</span>);
+<span class="syntax9">addWidget</span>(<span class="syntax3">"personForm"</span>, personForm);
+...
+BeanFormWidget addrForm <span class="syntax11">=</span> personForm.<span class="syntax9">addBeanSubForm</span>(<span class="syntax3">"address"</span>);
+addrForm.<span class="syntax9">addBeanElement</span>(<span class="syntax3">"postalCode"</span>, <span class="syntax3">"#Postal code"</span>, <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(), <span class="syntax4">true</span>);
+addrForm.<span class="syntax9">addBeanElement</span>(<span class="syntax3">"street"</span>, <span class="syntax3">"#Street"</span>, <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(), <span class="syntax4">true</span>);
+...
+</span></pre></pre><p>Note that the fields will be available from the main form using a
+      dot-separated name, e.g. <code class="literal">String street = (String)
+      personForm.getValueByFullName("address.street")</code>.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e7114"></a>5.1.2.&nbsp;Controls</h3></div></div></div><p>At the core of the data binding API lies the notion of
+      <span class="emphasis"><em>controls</em></span>
+      (<code class="literal">org.araneaframework.uilib.form.Control</code>). Controls
+      are the widgets that do the actual parsing of the request parameters and
+      correspond to the controls found in HTML forms, like textbox, textarea,
+      selectbox, button, ... Additionally controls also do a bit of validating
+      the submitted data. For example textbox control validates the minimum
+      and maximum string length, since the HTML tag can do the same.
+      Programmer usually does not read values from <code class="literal">Control</code>
+      directly, but from <code class="literal">FormElement</code> that takes care of
+      converting value of <code class="literal">Control</code> to
+      <code class="literal">FormElement</code> <code class="literal">Data</code>.</p><p>The following example shows how to create a control:</p><pre class="programlisting"><pre><span class="syntax0">...
+TextControl textBox <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(<span class="syntax6">new</span> <span class="syntax9">Long</span>(<span class="syntax12">10</span>), <span class="syntax4">null</span>);
+...
+</span></pre></pre><p>This code will create a textbox with a minimal length of 10. Note
+      that this code does not yet put the control to work, as controls are
+      never used without forms, which are reviewed in the next section.</p><p>Follows a table of standard controls all found in
+      <code class="literal">org.araneaframework.uilib.form.control</code> package:
+      </p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Control</th><th>Description</th></tr></thead><tbody><tr><td><code class="literal">ButtonControl</code></td><td>A control that represents a HTML form button.</td></tr><tr><td><code class="literal">CheckboxControl</code></td><td>A control that represents a binary choice and is
+                usually rendered as a checkbox.</td></tr><tr><td><code class="literal">DateControl</code></td><td>A date selection control that allows to choose a date.
+                Supports custom formats of date input and output.</td></tr><tr><td><code class="literal">DateTimeControl</code></td><td>A date and time selection control that allows to choose
+                a date with a corresponding time. Supports custom formats of
+                date and time input and output.</td></tr><tr><td><code class="literal">DisplayControl</code></td><td>A control that can be used to render a read-only value
+                that will not be submitted with an HTML form.</td></tr><tr><td><code class="literal">FileUploadControl</code></td><td>A control that can be used to upload files to the
+                server.</td></tr><tr><td><code class="literal">FloatControl</code></td><td>A textbox control that constrains the text to be
+                floating-point numbers. Can also check the allowed minimum and
+                maximum limits.</td></tr><tr><td><code class="literal">HiddenControl</code></td><td>A control that can be used to render an invisible value
+                that will be submitted with an HTML form.</td></tr><tr><td><code class="literal">JodaDateControl</code></td><td>A date selection control that allows to choose a date.
+                Supports custom formats of date input and output. The data is stored and returned as
+                <code class="literal">org.joda.time.DateTime</code>.</td></tr><tr><td><code class="literal">JodaDateTimeControl</code></td><td>A date and time selection control that allows to choose
+                a date with a corresponding time. Supports custom formats of
+                date and time input and output. The data is stored and returned as
+                <code class="literal">org.joda.time.DateTime</code>.</td></tr><tr><td><code class="literal">JodaTimeControl</code></td><td>A time selection control that allows to choose a time
+                of day. Supports custom formats of time input and output. The
+                data is stored and returned as <code class="literal">org.joda.time.DateTime</code>.</td></tr><tr><td><code class="literal">NumberControl</code></td><td>A textbox control that constrains the text to be
+                integer numbers. Can also check the allowed minimum and
+                maximum limits.</td></tr><tr><td><code class="literal">TimeControl</code></td><td>A time selection control that allows to choose a time
+                of day. Supports custom formats of time input and
+                output.</td></tr><tr><td><code class="literal">TextareaControl</code></td><td>A multirow textbox control that can constrain the
+                inserted text minimal and maximal length.</td></tr><tr><td><code class="literal">TextControl</code></td><td>A simple textbox control with one row of text that can
+                constrain the inserted text minimal and maximal
+                length.</td></tr><tr><td><code class="literal">AutoCompleteTextControl</code></td><td><code class="literal">TextControl</code> with autocompletion
+                capability.</td></tr><tr><td><code class="literal">TimestampControl</code></td><td>Similar to <code class="literal">DateControl</code> but works
+                with <code class="literal">java.sql.TimeStamp</code>.</td></tr><tr><td><code class="literal">SelectControl</code></td><td>A control that allows to select one of many choices
+                (may be rendered as a dropdown list or option buttons).
+                Ensures that the submitted value was one of the
+                choices.</td></tr><tr><td><code class="literal">MultiSelectControl</code></td><td>A control that allows to select several from many
+                choices (may be rendered as a multiselect list or checkbox
+                list). Ensures that the submitted values are a subset of the
+                choices.</td></tr></tbody></table></div><p><code class="literal">SelectControl</code> and
+      <code class="literal">MultiSelectControl</code> deserve a special mention, as they
+      need a bit more handling than the rest. The difference comes from the
+      fact that we also need to handle the selectable options, which we refer
+      to as <code class="literal">DisplayItem</code>. Each
+      <code class="literal">DisplayItem</code> has a label, a string value and can be
+      disabled. Disabled display items cannot be selected in neither select
+      box nor multiselect box.</p><p>Both <code class="literal">SelectControl</code> and
+      <code class="literal">MultiSelectControl</code> implement the
+      <code class="literal">DisplayItemContainer</code> interface that allows to
+      manipulate the <code class="literal">DisplayItem</code>:</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">interface</span> DisplayItemContainer <span class="syntax11">{</span>
+  <span class="syntax8">void</span> <span class="syntax9">addItem</span>(DisplayItem item);
+  <span class="syntax8">void</span> <span class="syntax9">addItems</span>(Collection items);
+  <span class="syntax8">void</span> <span class="syntax9">clearItems</span>();
+  List <span class="syntax9">getDisplayItems</span>();
+  <span class="syntax8">int</span> <span class="syntax9">getValueIndex</span>(String value);
+<span class="syntax11">}</span>
+</span></pre></pre><p>In addition to this interface we also provide a
+      <code class="literal">DisplayItemUtil</code> that provides some support methods on
+      display items. These include the method
+      <code class="literal">addItemsFromBeanCollection</code> that allows to add the
+      items to a (multi)select control from a business method returning a
+      collection of model JavaBean objects (which is one of the most common
+      use cases). So a typical select control will be filled as
+      follows:</p><pre class="programlisting"><pre><span class="syntax0">SelectControl control <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">SelectControl</span>();
+control.<span class="syntax9">addItem</span>(<span class="syntax6">new</span> <span class="syntax9">DisplayItem</span>(<span class="syntax4">null</span>, <span class="syntax3">"- choice -"</span>));
+DisplayItemUtil.<span class="syntax9">addItemsFromBeanCollection</span>(
+  control,
+  <span class="syntax9">lookupMyService</span>().<span class="syntax9">getMyItemCollection</span>(),
+  <span class="syntax3">"value"</span>,
+  <span class="syntax3">"label"</span>);
+</span></pre></pre><p>Controls can also listen to user events. For example
+      <code class="literal">ButtonControl</code> can react to an
+      <code class="literal">onClick</code> event, while most others can react to an
+      <code class="literal">onChange</code> event. The only thing needed to receive the
+      control events is to register an appropriate event listener:</p><pre class="programlisting"><pre><span class="syntax0">...
+SelectControl selControl <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">SelectControl</span>();
+FormElement selEl <span class="syntax11">=</span> form.<span class="syntax9">addBeanElement</span>(<span class="syntax3">"clientId"</span>, <span class="syntax3">"#Client id"</span>, selControl, <span class="syntax4">true</span>);
+selControl.<span class="syntax9">addOnChangeEventListener</span>(<span class="syntax6">new</span> <span class="syntax9">OnChangeEventListener</span>() <span class="syntax11">{</span>
+  <span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">onChange</span>() <span class="syntax11">{</span>
+    <span class="syntax1">//We convert and validate one element only as the rest of the form</span>
+    <span class="syntax1">//might be invalid</span>
+    <span class="syntax6">if</span> (selEl.<span class="syntax9">convertAndValidate</span>()) <span class="syntax11">{</span>
+      Long clientId <span class="syntax11">=</span> (Long) selEl.<span class="syntax9">getValue</span>();
+      <span class="syntax1">//Now we can use the client id to do whatever we want</span>
+      <span class="syntax1">//E.g. update another select control</span>
+    <span class="syntax11">}</span>
+  <span class="syntax11">}</span>
+<span class="syntax11">}</span>);
+...
+</span></pre></pre><p><code class="literal">onChange</code> events are also produced by text boxes
+      and similar, so the user input can processed right after the user has
+      finished it.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e7349"></a>5.1.3.&nbsp;Constraints</h3></div></div></div><p>Though controls provide some amount of validation they are limited
+      only to the rules that can be controlled on the client-side. To support
+      more diverse rules Aranea has
+      <code class="literal">org.araneaframework.uilib.form.Constraint</code>, that
+      allows to put any logical and/or business validation rules. Typically
+      constraints are used as follows:</p><pre class="programlisting"><pre><span class="syntax0">...
+myForm.<span class="syntax9">addBeanElement</span>(<span class="syntax3">"registration"</span>, <span class="syntax3">"#Registration"</span>, <span class="syntax6">new</span> <span class="syntax9">DateControl</span>(), <span class="syntax4">true</span>);
+myForm.<span class="syntax9">getElement</span>(<span class="syntax3">"registration"</span>).<span class="syntax9">setConstraint</span>(<span class="syntax6">new</span> <span class="syntax9">AfterTodayConstraint</span>(<span class="syntax4">false</span>));
+...
+</span></pre></pre><p>The
+      <code class="literal">org.araneaframework.uilib.form.constraint.AfterTodayConstraint</code>
+      makes sure that the date is today or later, with the boolean parameter
+      indicating whether today is allowed. The constraint will validate if the
+      form or the element in question is validated (e.g.
+      <code class="literal">convertAndValidate()</code> is called) and will show an
+      error message to the user, if the constraint was not satisfied. The
+      error message is customizable using localization and involves the label
+      of the field being validated.</p><p>The following is a more complex example that shows how to use
+      constraints that apply to more than one field, and how to combine
+      constraints using logical expressions:</p><pre class="programlisting"><pre><span class="syntax0">...
+searchForm <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">FormWidget</span>();
+
+<span class="syntax1">//Adding form controls</span>
+searchForm.<span class="syntax9">addElement</span>(<span class="syntax3">"clientFirstName"</span>, <span class="syntax3">"#Client first name"</span>, 
+  <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(), <span class="syntax6">new</span> <span class="syntax9">StringData</span>(), <span class="syntax4">false</span>);
+searchForm.<span class="syntax9">addElement</span>(<span class="syntax3">"clientLastName"</span>, <span class="syntax3">"#Client last name"</span>, 
+  <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(), <span class="syntax6">new</span> <span class="syntax9">StringData</span>(), <span class="syntax4">false</span>);
+
+searchForm.<span class="syntax9">addElement</span>(<span class="syntax3">"clientAddressTown"</span>, <span class="syntax3">"#Town"</span>, 
+  <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(), <span class="syntax6">new</span> <span class="syntax9">StringData</span>(), <span class="syntax4">false</span>);
+searchForm.<span class="syntax9">addElement</span>(<span class="syntax3">"clientAddressStreet"</span>, <span class="syntax3">"#Street"</span>, 
+  <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(), <span class="syntax6">new</span> <span class="syntax9">StringData</span>(), <span class="syntax4">false</span>);
+
+<span class="syntax1">//First searching scenario</span>
+AndConstraint clientNameConstraint <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">AndConstraint</span>();
+clientNameConstraint.<span class="syntax9">addConstraint</span>(
+  <span class="syntax6">new</span> <span class="syntax9">NotEmptyConstraint</span>(searchForm.<span class="syntax9">getElementByFullName</span>(<span class="syntax3">"clientFirstName"</span>)));
+clientNameConstraint.<span class="syntax9">addConstraint</span>(
+  <span class="syntax6">new</span> <span class="syntax9">NotEmptyConstraint</span>(searchForm.<span class="syntax9">getElementByFullName</span>(<span class="syntax3">"clientLastName"</span>)));
+
+<span class="syntax1">//Second searching scenario</span>
+AndConstraint clientAddressConstraint <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">AndConstraint</span>();
+clientAddressConstraint.<span class="syntax9">addConstraint</span>(
+  <span class="syntax6">new</span> <span class="syntax9">NotEmptyConstraint</span>(searchForm.<span class="syntax9">getElementByFullName</span>(<span class="syntax3">"clientAddressTown"</span>)));
+clientAddressConstraint.<span class="syntax9">addConstraint</span>(
+  <span class="syntax6">new</span> <span class="syntax9">NotEmptyConstraint</span>(searchForm.<span class="syntax9">getElementByFullName</span>(<span class="syntax3">"clientAddressStreet"</span>)));
+
+<span class="syntax1">//Combining scenarios</span>
+OrConstraint searchConstraint <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">OrConstraint</span>();    
+searchConstraint.<span class="syntax9">addConstraint</span>(clientNameConstraint);
+searchConstraint.<span class="syntax9">addConstraint</span>(clientAddressConstraint);
+
+<span class="syntax1">//Setting custom error message</span>
+searchConstraint.<span class="syntax9">setCustomErrorMessage</span>(<span class="syntax3">"Not enough data for search!"</span>);
+
+<span class="syntax1">//Setting constraint</span>
+searchForm.<span class="syntax9">setConstraint</span>(searchConstraint);
+
+<span class="syntax1">//Putting the widget</span>
+<span class="syntax9">addWidget</span>(<span class="syntax3">"searchForm"</span>, searchForm);    
+...
+</span></pre></pre><p>The example use case is a two scenario search&#8212;either both client
+      first name and client last name fields are filled in or both town and
+      street address fields are filled in, otherwise an error message "Not
+      enough data for search!" is shown. The constraints will be validated
+      when <code class="literal">convertAndValidate()</code> method is called on
+      <code class="literal">searchForm</code>. Note that the constraint is added to the
+      form itself, rather than to its elements&#8212;this is a typical idiom, when
+      the constraint involves several elements.</p><p>Table of standard <code class="literal">Constraint</code>s. </p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Constraint</th><th>Purpose</th></tr></thead><tbody><tr><td><code class="literal">AfterTodayConstraint</code></td><td>Field constraint, checks that field contains
+                <code class="literal">Date</code> later than current date.</td></tr><tr><td><code class="literal">NotEmptyConstraint</code></td><td>Field constraint, checks that field contains non-empty
+                value.</td></tr><tr><td><code class="literal">NumberInRangeConstraint</code></td><td>Field constraint, checks that number in a field belongs
+                on given range (integer only).</td></tr><tr><td><code class="literal">StringLengthInRangeConstraint</code></td><td>Field constraint, checks that length of a string in a
+                field falls within given boundaries.</td></tr><tr><td><code class="literal">RangeConstraint</code></td><td>Multiple field constraint, checks that value of one
+                field is lower than value of other field. Field values must
+                <code class="literal">Comparable</code>.</td></tr><tr><td><code class="literal">AndConstraint</code></td><td>Composite constraint, checks that all subconstraints
+                are satisfied.</td></tr><tr><td><code class="literal">OrConstraint</code></td><td>Composite constraint, checks that at least one
+                subconstraint is satisfied.</td></tr></tbody></table></div><p>There are two constraints that deserve a special mention. One of
+      them is <code class="literal">OptionalConstraint</code> that will only let its
+      subconstraint to validate the field, if the field has been submitted by
+      user (it is very useful for instance when non-mandatory fields must
+      nevertheless follow some pattern, whereas empty input should still be
+      allowed).</p><p>The other constraint is called
+      <code class="literal">GroupedConstraint</code>. It is useful in cases when
+      different constraints should be activated depending on the particular
+      state of the component (a typical use case is that some groups of fields
+      are made mandatory in different states of document approval). The
+      constraint is created using the <code class="literal">ConstraintGroupHelper</code>
+      as follows:</p><pre class="programlisting"><pre><span class="syntax0">...
+ConstraintGroupHelper groupHelper <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">ConstraintGroupHelper</span>();
+AndConstraint andCon <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">AndConstraint</span>();
+andCon.<span class="syntax9">addConstraint</span>(
+  groupHelper.<span class="syntax9">createGroupedConstraint</span>(<span class="syntax6">new</span> <span class="syntax9">NotEmptyConstraint</span>(field1), <span class="syntax3">"group1"</span>));
+andCon.<span class="syntax9">addConstraint</span>(
+  groupHelper.<span class="syntax9">createGroupedConstraint</span>(<span class="syntax6">new</span> <span class="syntax9">NotEmptyConstraint</span>(field2), <span class="syntax3">"group1"</span>));
+andCon.<span class="syntax9">addConstraint</span>(
+  groupHelper.<span class="syntax9">createGroupedConstraint</span>(<span class="syntax6">new</span> <span class="syntax9">NotEmptyConstraint</span>(field3), <span class="syntax3">"group2"</span>));
+andCon.<span class="syntax9">addConstraint</span>(
+  groupHelper.<span class="syntax9">createGroupedConstraint</span>(<span class="syntax6">new</span> <span class="syntax9">NotEmptyConstraint</span>(field4), <span class="syntax3">"group2"</span>));
+form.<span class="syntax9">setConstraint</span>(andCon);
+
+<span class="syntax1">//Now only field1 and field2 will be required from user!</span>
+groupHelper.<span class="syntax9">setActiveGroup</span>(<span class="syntax3">"group1"</span>);
+...
+</span></pre></pre><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e7458"></a>Custom Constraints</h4></div></div></div><p>It is a very common need to validate some additional logic for a
+        particular field (e.g. a field must follow some particular pattern).
+        In this case it is comfortable to create a custom constraint. Most
+        often the constraint is associated with one field only, so we will
+        extend the <code class="literal">BaseFieldConstraint</code>, which supports this
+        particular idiom:</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">public</span> <span class="syntax8">class</span> PersonIdentifierConstraint <span class="syntax6">extends</span> BaseFieldConstraint <span class="syntax11">{</span>
+  <span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">validateConstraint</span>() <span class="syntax11">{</span>
+    <span class="syntax6">if</span> (<span class="syntax11">!</span>PersonUtil.<span class="syntax9">validateIdentifier</span>(<span class="syntax9">getValue</span>()) <span class="syntax11">{</span>
+      <span class="syntax9">addError</span>(<span class="syntax3">"Field '"</span> <span class="syntax11">+</span> <span class="syntax9">getLabel</span>() <span class="syntax11">+</span> <span class="syntax3">"' is not a valid personal identifier"</span>);
+    <span class="syntax11">}</span>
+  <span class="syntax11">}</span>
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p>Note that we can use <code class="literal">getValue()</code> that contains
+        the converted value of the field. We can also use the fields label via
+        <code class="literal">getLabel()</code>. We might also want to localize the
+        message and in such a case you will find
+        <code class="literal">MessageUtil</code> to contain some helpful methods.</p><p>If we need to validate more than one field we should extend the
+        <code class="literal">BaseConstraint</code> and take those fields into the
+        constructor. In this case the developer will have to provide this
+        fields to the constraint and the constraint should be added to the
+        enclosing form.</p></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e7484"></a>5.1.4.&nbsp;Data</h3></div></div></div><p>The typical use of forms includes associating the form fields with
+      JavaBean properties. However this is not always possible, since it is
+      not feasible to make a JavaBean property for each and every form field.
+      In such cases one may still want to use type conversion and data
+      validation. To do that forms allow the
+      <code class="literal">org.araneaframework.uilib.form.Data</code> and its
+      subclasses (subclasses correspond to specific types) to be associated
+      with the field:</p><pre class="programlisting"><pre><span class="syntax0">...
+personForm <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">BeanFormWidget</span>(Person.<span class="syntax8">class</span>);
+<span class="syntax9">addWidget</span>(<span class="syntax3">"personForm"</span>, personForm);
+...
+personForm.<span class="syntax9">addElement</span>(<span class="syntax3">"numberOfChildren"</span>, <span class="syntax3">"#No. of chidren"</span>,
+  <span class="syntax6">new</span> <span class="syntax9">NumberControl</span>(), <span class="syntax6">new</span> <span class="syntax9">LongData</span>(), <span class="syntax4">true</span>);
+...
+</span></pre></pre><p>In such a case one can retrieve the data directly from the
+      field:</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">private</span> <span class="syntax8">void</span> <span class="syntax9">handleEventSave</span>() <span class="syntax11">{</span>
+  <span class="syntax6">if</span> (myForm.<span class="syntax9">convertAndValidate</span>()) <span class="syntax11">{</span>
+    ...
+    Long numberOfChildren <span class="syntax11">=</span> (Long) personForm.<span class="syntax9">getValueByFullName</span>(<span class="syntax3">"numberOfChildren"</span>);
+    <span class="syntax1">//Alternative:</span>
+    <span class="syntax1">//FormElement nocEl = (FormElement) personForm.getElement("numberOfChildren");</span>
+    <span class="syntax1">//Long numberOfChildren = (Long) nocEl.getValue();</span>
+    ...
+  <span class="syntax11">}</span>
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p>If there is no JavaBean to associate the form with
+      <code class="literal">org.araneaframework.uilib.form.FormWidget</code> may be used
+      instead of <code class="literal">BeanFormWidget</code>.</p><p>Note that the reason for existence of <code class="literal">Data</code>
+      objects is that Java types correspond poorly to some restricted
+      types&#8212;for instance enumerations, type encodings and collections
+      container types (this problem is somewhat solved in Java 5, but Aranea
+      is compatible with Java 1.3).</p><p>Table of <code class="literal">Data</code> types. </p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Data</th><th>Value Type</th></tr></thead><tbody><tr><td><code class="literal">BigDecimalData</code></td><td><code class="literal">java.math.BigDecimal</code></td></tr><tr><td><code class="literal">BigDecimalListData</code></td><td><code class="literal">List
+                &lt;java.math.BigDecimal</code>&gt;</td></tr><tr><td><code class="literal">BooleanData</code></td><td><code class="literal">java.lang.Boolean</code></td></tr><tr><td><code class="literal">BooleanListData</code></td><td><code class="literal">List
+                &lt;java.lang.Boolean</code>&gt;</td></tr><tr><td><code class="literal">DateData</code></td><td><code class="literal">java.util.Date</code></td></tr><tr><td><code class="literal">DisplayItemListData</code></td><td><code class="literal">List
+                &lt;org.araneaframework.uilib.support.DisplayItemDisplayItem</code>&gt;</td></tr><tr><td><code class="literal">FileInfoData</code></td><td><code class="literal">org.araneaframework.uilib.support.FileInfo</code></td></tr><tr><td><code class="literal">IntegerData</code></td><td><code class="literal">java.lang.Integer</code></td></tr><tr><td><code class="literal">IntegerListData</code></td><td><code class="literal">List
+                &lt;java.lang.Integer</code>&gt;</td></tr><tr><td><code class="literal">LongData</code></td><td><code class="literal">java.lang.Long</code></td></tr><tr><td><code class="literal">LongListData</code></td><td><code class="literal">List &lt;java.lang.Long</code>&gt;</td></tr><tr><td><code class="literal">StringData</code></td><td><code class="literal">java.lang.String</code></td></tr><tr><td><code class="literal">StringListData</code></td><td><code class="literal">List
+                &lt;java.lang.String</code>&gt;</td></tr><tr><td><code class="literal">TimestampData</code></td><td><code class="literal">java.sql.Timestamp</code></td></tr><tr><td><code class="literal">YNData</code></td><td><code class="literal">java.lang.String</code></td></tr></tbody></table></div><p>Finally <code class="literal">Data</code> constructor also accepts both a
+      <code class="literal">Class</code> instance and a simple string. So if you have a
+      custom datatype with an appropriate converter (see next section) you can
+      just assign the data with the same type (in fact if you have your own
+      converter the type doesn't matter that much, it will just allow some
+      checks to be done on the programmer).</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e7646"></a>5.1.5.&nbsp;Converters</h3></div></div></div><p>Converter sole purpose is conversion of values with one type to
+      values of another type. Conventionally converter which
+      <code class="literal">convert()</code> method accepts object of type
+      <span class="emphasis"><em>A</em></span> and returns object of type <span class="emphasis"><em>B</em></span>
+      is named <code class="literal">AToBConverter</code>. Converter from type
+      <span class="emphasis"><em>B</em></span> to type <span class="emphasis"><em>A</em></span> is obtained with
+      <code class="literal">new ReverseConverter(new AToBConverter())</code>.</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">interface</span> Converter <span class="syntax6">extends</span> Serializable, FormElementAware <span class="syntax11">{</span>
+    <span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">setFormElementCtx</span>(FormElementContext feCtx);
+    <span class="syntax6">public</span> Object <span class="syntax9">convert</span>(Object data);
+    <span class="syntax6">public</span> Object <span class="syntax9">reverseConvert</span>(Object data);
+    <span class="syntax6">public</span> Converter <span class="syntax9">newConverter</span>();
+<span class="syntax11">}</span>
+</span></pre></pre><p>Converters are used internally to convert
+      <code class="literal">Control</code> values to values of
+      <code class="literal">FormElement</code> <code class="literal">Data</code> and vice-versa.
+      Converters are usually looked up from
+      <code class="literal">ConverterFactory</code>, but each
+      <code class="literal">FormElement</code> can be set explicit
+      <code class="literal">Converter</code> by calling
+      <code class="literal">FormElement.setConverter()</code>. Direction of
+      <code class="literal">Converter</code> set this way should be from
+      <code class="literal">FormElement</code> <code class="literal">Control</code> value type to
+      <code class="literal">FormElement</code> <code class="literal">Data</code> type.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="formvalidation"></a>5.1.6.&nbsp;Form validation</h3></div></div></div><p>
+			As already mentioned, form validation is mostly explicit. By default, the values will be just read from 
+			request without any parsing, conversion or validation. Validation will be performed after call to
+			<code class="literal">FormWidget.convertAndValidate()</code>.
+		</p><p>
+			It is also possible to configure forms to be validated in the background, as end-user is filling it.
+			Background validation is enabled by calling <code class="literal">FormWidget.setBackgroundValidation(true)</code>. This
+			performs XMLHttp requests (using Aranea Action API) to server each time when user moves from changed form field 
+			to another. Background validation takes place on server-side and is implicit.
+		</p><p>
+			Produced form validation error messages are rendered by active <code class="literal">FormElementValidationErrorRenderer</code>
+			implementation, which adheres to these methods:
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">interface</span> FormElementValidationErrorRenderer <span class="syntax6">extends</span> Serializable <span class="syntax11">{</span>
+
+  <span class="syntax8">void</span> <span class="syntax9">addError</span>(FormElement element, String error);
+
+  <span class="syntax8">void</span> <span class="syntax9">clearErrors</span>(FormElement element);
+
+  String <span class="syntax9">getClientRenderText</span>(FormElement element);
+
+<span class="syntax11">}</span>
+</span></pre></pre><p>
+			The last method is used to provide the client-side script (together with
+			<code class="literal">&lt;script&gt;...&lt;/script&gt;</code> tags) that binds its validator with the given
+			form element and updates error messages inside the &lt;span&gt; element of the given form element.
+		</p><p>
+		  It is possible to choose between two bundled implementations &#8212;
+		  <code class="literal">StandardFormElementValidationErrorRenderer</code>, which is enabled by default, and
+		  <code class="literal">LocalFormElementValidationErrorRenderer</code>. The first one renders
+		  <code class="literal">FormElement</code> validation errors to standard <code class="literal">MessageContext</code>.
+		  The second bundled implementation renders the validation messages into the same HTML
+		  <code class="literal">span</code> element as input field (using the script returned by the
+		  <code class="literal">getClientRenderText(FormElement)</code> method).
+		</p><p>
+		   <code class="literal">FormElementValidationErrorRenderer</code> default implementation can be switched by configuring the 
+		   bean representing <code class="literal">ConfigurationContext</code> (named <code class="literal">'araneaConfiguration'</code>) 
+           to have entry with key '<code class="literal">uilib.widgets.forms.formelement.error.renderer</code>' value set to desired
+           <code class="literal">FormElementValidationErrorRenderer</code> instance:
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax10">&lt;</span><span class="syntax10">bean id</span>=<span class="syntax3">"araneaConfiguration"</span><span class="syntax10"> singleton</span>=<span class="syntax3">"false"</span>
+<span class="syntax10">    class</span>=<span class="syntax3">"org.araneaframework.uilib.core.StandardConfiguration"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">property name</span>=<span class="syntax3">"confEntries"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">map</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">entry key</span>=<span class="syntax3">"uilib.widgets.forms.formelement.error.renderer"</span><span class="syntax10">&gt;</span>
+          <span class="syntax10">&lt;</span><span class="syntax10">bean class</span>=<span class="syntax3">"org.araneaframework.uilib.form.LocalFormElementValidationErrorRenderer"</span><span class="syntax10"> singleton</span>=<span class="syntax3">"false"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">/entry</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/map</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/property</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/bean</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p>
+		</p><p>
+			For the cases where validation errors should be rendered differently for just few elements, 
+			<code class="literal">FormElement.setFormElementValidationErrorRenderer()</code> method should be used.
+		</p></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e7782"></a>5.2.&nbsp;Forms JSP Tags</h2></div></div></div><p>Form JSP tags can be divided into two categories&#8212;tags providing
+    <span class="emphasis"><em>contexts</em></span> (&lt;ui:form&gt;, &lt;ui:formElement&gt;)
+    and tags for <span class="emphasis"><em>rendering</em></span> form elements containing
+    different controls. We will first describe the attributes that are common
+    to all form element rendering tags; then proceed to explain
+    <span class="emphasis"><em>context</em></span> tags and different form element rendering
+    tags with their unique attributes.</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="common-formelement-attributes"></a>5.2.1.&nbsp;Common attributes for all form element rendering tags.</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>no/yes</em></span></td><td>Id of form element to be rendered. If not specified, it
+              is usually taken from current form element context (<a href="forms.html#uiFormElementTag" title="5.2.3.&nbsp;<ui:formElement&gt;">Section&nbsp;5.2.3, &#8220;&lt;ui:formElement&gt;&#8221;</a>). For few tags, it is required.</td></tr><tr><td>events</td><td><span class="emphasis"><em>no</em></span></td><td>Whether element will send events that are registered by
+              server-side, <code class="literal">true</code> by default.</td></tr><tr><td>validateOnEvent</td><td><span class="emphasis"><em>no</em></span></td><td>Whether the form should be validated on the client-side
+              (or by making AJAX request to server) when <span class="emphasis"><em>element
+              generates an event</em></span> (this is <code class="literal">false</code>
+              by default and is not supported by any default Aranea JSP
+              tags).</td></tr><tr><td>tabindex</td><td><span class="emphasis"><em>no</em></span></td><td>This attribute specifies the position of the current element in the tabbing order for the current document. This value must be a number between 0 and 32767.</td></tr><tr><td>updateRegions</td><td><span class="emphasis"><em>no</em></span></td><td>Comma separated list of update regions that should be
+              updated upon button receiving event. This attribute is only
+              needed when using AJAX features&#8212; ordinary HTTP requests always
+              update whole page.</td></tr><tr><td>globalUpdateRegions</td><td><span class="emphasis"><em>no</em></span></td><td>Comma separated list of global update regions that should
+              be updated upon button receiving event. This attribute is only
+              needed when using AJAX features&#8212; ordinary HTTP requests always
+              update whole page.</td></tr><tr><td>styleClass</td><td><span class="emphasis"><em>no</em></span></td><td>CSS class applied HTML tag(s) that are used for rendering
+              element.</td></tr><tr><td>style</td><td><span class="emphasis"><em>no</em></span></td><td>Inline CSS style applied to HTML tag(s) that are used for rendering element.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e7890"></a>5.2.2.&nbsp;&lt;ui:form&gt;</h3></div></div></div><p>Specifies form context for inner tags. Form view model and id are
+      made accessible to inner tags as EL variables.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e7895"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>no</em></span></td><td>Id of context form. When not specified, current form
+                context is preserved (if it exists).</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e7920"></a>Variables</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col align="center"></colgroup><thead><tr><th>Variable</th><th>Description</th><th align="center">Type</th></tr></thead><tbody><tr><td>form</td><td>View model of form.</td><td align="center"><code class="literal">FormWidget.ViewModel</code></td></tr><tr><td>formId</td><td>Id of form.</td><td align="center"><code class="literal">String</code></td></tr><tr><td>formFullId</td><td>Full id of form.</td><td align="center"><code class="literal">String</code></td></tr><tr><td>formScopedFullId</td><td>Full scoped id of form.</td><td align="center"><code class="literal">String</code></td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e7969"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:form id</span>=<span class="syntax3">"loginForm"</span><span class="syntax10">&gt;</span>
+    ...  <span class="syntax1">&lt;!-- formElements, formElementLabels, ... --&gt;</span> ...
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:form</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="uiFormElementTag"></a>5.2.3.&nbsp;&lt;ui:formElement&gt;</h3></div></div></div><p>Specifies form element context for inner tags. Must be surrounded
+      by &lt;ui:form&gt; tag. Form element view model, id and value are made
+      accessible to inner tags as EL variables.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e7980"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>yes</em></span></td><td>Id of context form element.</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8005"></a>Variables</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col align="center"></colgroup><thead><tr><th>Variable</th><th>Description</th><th align="center">Type</th></tr></thead><tbody><tr><td>formElement</td><td>View model of form element.</td><td align="center"><code class="literal">FormElement.ViewModel</code></td></tr><tr><td>formElementId</td><td>Id of form element.</td><td align="center"><code class="literal">String</code></td></tr><tr><td>formElementValue</td><td>Value currently kept inside form element.</td><td align="center"><code class="literal">Object</code></td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8046"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:form id</span>=<span class="syntax3">"loginForm"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:formElement id</span>=<span class="syntax3">"username"</span><span class="syntax10">&gt;</span>
+        ...
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:formElement</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:form</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8052"></a>5.2.4.&nbsp;&lt;ui:label&gt;</h3></div></div></div><p>Renders localizable label bound to form element. Rendered with
+      HTML &lt;span&gt; and &lt;label&gt; tags.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8057"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>no</em></span></td><td>Id of form element which label should be rendered. If
+                left unspecified, form element id from form element context is
+                used.</td></tr><tr><td>showMandatory</td><td><span class="emphasis"><em>no</em></span></td><td>Indicates whether mandatory input fields label is
+                marked with asterisk. Value should be <code class="literal">true</code>
+                or <code class="literal">false</code>, default is
+                <code class="literal">true</code></td></tr><tr><td>showColon</td><td><span class="emphasis"><em>no</em></span></td><td>Indicates whether colon is shown after the label.
+                Default is <code class="literal">true</code>.</td></tr></tbody></table></div><span class="emphasis"><em>Also has standard <code class="literal">style</code> and <code class="literal">styleClass</code> attributes.</em></span></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8117"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:form id</span>=<span class="syntax3">"loginForm"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:formElement id</span>=<span class="syntax3">"username"</span><span class="syntax10">&gt;</span>
+            <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+                <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:label/</span><span class="syntax10">&gt;</span>
+            <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:formElement</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:form</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8123"></a>5.2.5.&nbsp;&lt;ui:simpleLabel&gt;</h3></div></div></div><p>Renders localizable label (with HTML &lt;span&gt; and
+      &lt;label&gt; tags).</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8128"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>labelId</td><td><span class="emphasis"><em>yes</em></span></td><td>ID of label to render.</td></tr><tr><td>showMandatory</td><td><span class="emphasis"><em>no</em></span></td><td>Indicates whether label is marked with asterisk. Value
+                should be <code class="literal">true</code> or <code class="literal">false</code>,
+                default is <code class="literal">false</code></td></tr><tr><td>showColon</td><td><span class="emphasis"><em>no</em></span></td><td>Indicates whether colon is shown after the label.
+                Default is <code class="literal">true</code>.</td></tr><tr><td>for</td><td><span class="emphasis"><em>no</em></span></td><td>ID of the form element for which the label is
+                created.</td></tr></tbody></table></div><span class="emphasis"><em>Also has standard <code class="literal">style</code> and <code class="literal">styleClass</code> attributes.</em></span></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8196"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:form id</span>=<span class="syntax3">"loginForm"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+            <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:simpleLabel labelId</span>=<span class="syntax3">"username.input.label"</span><span class="syntax10"> showMandatory</span>=<span class="syntax3">"true"</span><span class="syntax10"> for</span>=<span class="syntax3">"username"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:form</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8202"></a>5.2.6.&nbsp;&lt;ui:button&gt;</h3></div></div></div><p>Renders form buttons that represent
+      <code class="literal">ButtonControls</code>. Either HTML &lt;button&gt; or
+      &lt;input type="button" ... &gt; will be used for rendering.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8210"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>showLabel</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Indicates whether button label is shown.Value should be
+                <code class="literal">true</code> or <code class="literal">false</code>, default
+                is <code class="literal">true</code></td></tr><tr><td>onClickPrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether onclick event should
+                go server side or not. If left unspecified, this is considered
+                to be <code class="literal">true</code>.</td></tr><tr><td>renderMode</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Allowed values are <code class="literal">button</code> and
+                <code class="literal">input</code>&#8212;the corresponding HTML tag will be
+                used to render the button. Default is button.</td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8278"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:form id</span>=<span class="syntax3">"loginForm"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:button id</span>=<span class="syntax3">"loginButton"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:form</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8284"></a>5.2.7.&nbsp;&lt;ui:linkButton&gt;</h3></div></div></div><p>Renders HTML link that represents
+      <code class="literal">ButtonControl</code>. HTML &lt;a href="javascript:" ... &gt;
+      tag will be used for rendering. Default
+      <code class="literal">styleClass="aranea-link"</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8295"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>showLabel</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Indicates whether button label is shown.Value should be
+                <code class="literal">true</code> or <code class="literal">false</code>, default
+                is <code class="literal">true</code></td></tr><tr><td>onClickPrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether registered onclick
+                event should go server side or not. If left unspecified, this
+                is considered to be <code class="literal">true</code>.</td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8348"></a>5.2.8.&nbsp;&lt;ui:formKeyboardHandler&gt;</h3></div></div></div><p>Registers a simple keyboard handler. Invokes a
+      <code class="literal">uiRegisterKeyboardHandler</code> javascript. This is
+      basically the same stuff as &lt;ui:keyboardHandler&gt; with a few
+      modifications.</p><p>There is no <code class="literal">scope</code> attribute. Instead, the tag
+      assumes that it is located inside a form, and takes the full id of that
+      form as its scope.</p><p>As an alternative to specifying the <code class="literal">handler</code>
+      attribute, you may specify a form element and a javascript event to
+      invoke on that element. You specify the element by its id relative to
+      the surrounding form. The event is given as a name of the javascript
+      function to be invoked on the element. For example, if you specify the
+      element as "someButton", and event as "click", then when the required
+      keyboard event occurs, the following javascript will be executed:</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">var</span> el <span class="syntax11">=</span> document<span class="syntax11">.</span><span class="syntax9">getElementById</span>(<span class="syntax3">"&lt;form-id&gt;.someButton"</span>)<span class="syntax11">;</span>
+el<span class="syntax11">.</span><span class="syntax9">click</span>()<span class="syntax11">;</span>
+</span></pre></pre><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8368"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>handler</td><td><span class="emphasis"><em>no</em></span></td><td>A javascript handler function that takes two parameters
+                - the event object and the element id for which the event was
+                fired. Example: <code class="literal">function(event, elementId) {
+                alert(elementId); } </code> Either handler or
+                elementId/event pair should be specified, not both.</td></tr><tr><td>subscope</td><td><span class="emphasis"><em>no</em></span></td><td>Specifies form element which is the scope of this
+                handler. By default the "scope" (as in
+                <code class="literal">&lt;ui:keyboardHandlerTag&gt;</code>) of this
+                keyboard handler is the form inside which the handler is
+                defined. By specifying this, scope of certain element may be
+                narrowed. For example if the handler is defined inside form
+                "myForm", and subscope is specified as "myelement", the scope
+                of the handler will be "myForm.myelement", not the default
+                "myForm". The handler will therefore be active only for the
+                element 'someElement'".</td></tr><tr><td>elementId</td><td><span class="emphasis"><em>no</em></span></td><td>Sets the (relative) <code class="literal">id</code> of the
+                element whose javascript event should be invoked. The
+                <code class="literal">id</code> is relative with respect to the
+                surrounding form. Instead of this attribute, element's full id
+                may be set using the <code class="literal">fullElementId</code>
+                attribute, but only one of those attributes should be set at
+                once.</td></tr><tr><td>fullElementId</td><td><span class="emphasis"><em>no</em></span></td><td>Sets the full <code class="literal">id</code> of the element
+                whose javascript event should be invoked.</td></tr><tr><td>event</td><td><span class="emphasis"><em>no</em></span></td><td>Set the javascript event that should be invoked when
+                keypress is detected&#8212;"click" and "focus" are safe for most
+                controls. If target element (the one given by
+                <code class="literal">elementId</code>) is a selectbox "select" may be
+                used. For more, javascript reference should be consulted. This
+                attribute is not foolproof and invalid javascript may be
+                produced when it is not used cautiously.</td></tr><tr><td>keyCode</td><td><span class="emphasis"><em>no</em></span></td><td>Keycode to which the event must be triggered. Either
+                keyCode or key must be specified, but not both.</td></tr><tr><td>key</td><td><span class="emphasis"><em>no</em></span></td><td>Key to which the event must be triggered, accepts key
+                "aliases" instead of codes. Accepted aliases include
+                <code class="literal">F1..F12, RETURN, ENTER, BACKSPACE, ESCAPE, TAB,
+                SHIFT, CONTROL, SPACE</code>.</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8465"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:form id</span>=<span class="syntax3">"loginForm"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:eventButton id</span>=<span class="syntax3">"btnLogin"</span><span class="syntax10"> eventId</span>=<span class="syntax3">"login"</span><span class="syntax10"> labelId</span>=<span class="syntax3">"button.login.enter"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:formKeyboardHandler fullElementId</span>=<span class="syntax3">"btnLogin"</span><span class="syntax10"> key</span>=<span class="syntax3">"enter"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:form</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8471"></a>5.2.9.&nbsp;&lt;ui:formEnterKeyboardHandler&gt;</h3></div></div></div><p>Same as <code class="literal">&lt;ui:formKeyboardHandlerTag&gt;</code>
+      except <code class="literal">key</code> is already set to
+      <code class="literal">enter</code>.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8486"></a>5.2.10.&nbsp;&lt;ui:formEscapeKeyboardHandler&gt;</h3></div></div></div><p>Same as <code class="literal">&lt;ui:formKeyboardHandlerTag&gt;</code>
+      except <code class="literal">key</code> is already set to
+      <code class="literal">escape</code>.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8501"></a>5.2.11.&nbsp;&lt;ui:textInput&gt;</h3></div></div></div><p>Form text input field, represents <code class="literal">TextControl</code>.
+      It is rendered in HTML with <code class="literal">&lt;input type="text"
+      ...&gt;</code> tag. Default
+      <code class="literal">styleClass="aranea-text"</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8515"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>size</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Maximum length of accepted text (in
+                characters).</td></tr><tr><td>onChangePrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether registered onchange
+                event should go server side or not. If left unspecified, this
+                is considered to be <code class="literal">true</code>. For this tag,
+                <span class="emphasis"><em>onchange</em></span> event is simulated with
+                <span class="emphasis"><em>onblur</em></span>.</td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8565"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:form id</span>=<span class="syntax3">"someForm"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:formElement id</span>=<span class="syntax3">"firstField"</span><span class="syntax10">&gt;</span>
+     <span class="syntax1">&lt;!-- Renders input field binded to form's firstField element --&gt;</span>
+     <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:textInput/</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:formElement</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:form</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8570"></a>5.2.12.&nbsp;&lt;ui:autoCompleteTextInput&gt;</h3></div></div></div><p>Form text input field, represents
+      <code class="literal">AutoCompleteTextControl</code>. It is rendered in HTML with
+      <code class="literal">&lt;input type="text" ...&gt;</code> tag. Default
+      <code class="literal">styleClass="aranea-text"</code>. It is able to make
+      background AJAX request to the server, fetching suggested completions to
+      user input and displaying these to the user.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8584"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>size</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Maximum length of accepted text (in
+                characters).</td></tr><tr><td>onChangePrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether registered onchange
+                event should go server side or not. If left unspecified, this
+                is considered to be <code class="literal">true</code>. For this tag,
+                <span class="emphasis"><em>onchange</em></span> event is simulated with
+                <span class="emphasis"><em>onblur</em></span>.</td></tr><tr><td>divClass</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>CSS class attribute assigned to &lt;DIV&gt; inside
+                which suggestions are presented.</td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="comboTextInput"></a>5.2.13.&nbsp;&lt;ui:comboTextInput&gt;</h3></div></div></div><p>Form text input field, represents <code class="literal">ComboTextControl</code>.
+      This is an input field combined with Select&#8212;it allows end-user to enter text
+      into field or select some predefined value from provided list of values.
+      It is rendered in HTML with <code class="literal">&lt;input type="text"
+      ...&gt;</code> tag plus custom select component. Default
+      <code class="literal">styleClass="aranea-text"</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8658"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>size</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Maximum length of accepted text (in
+                characters).</td></tr><tr><td>onChangePrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether registered onchange
+                event should go server side or not. If left unspecified, this
+                is considered to be <code class="literal">true</code>. For this tag,
+                <span class="emphasis"><em>onchange</em></span> event is simulated with
+                <span class="emphasis"><em>onblur</em></span>.</td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8708"></a>5.2.14.&nbsp;&lt;ui:textInputDisplay&gt;</h3></div></div></div><p>Form text display field, represents
+      <code class="literal">TextControl</code>. It is rendered in HTML with
+      <code class="literal">&lt;span ...&gt;</code> tag. Default
+      <code class="literal">styleClass="aranea-text-display"</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8722"></a>Attributes</h4></div></div></div><span class="emphasis"><em>Has standard <code class="literal">id</code> and
+        <code class="literal">styleClass</code> attributes.</em></span></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8733"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:form id</span>=<span class="syntax3">"someForm"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:formElement id</span>=<span class="syntax3">"firstField"</span><span class="syntax10">&gt;</span>
+     <span class="syntax1">&lt;!-- Renders display field for form's firstField element --&gt;</span>
+     <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:textInputDisplay/</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:formElement</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:form</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8739"></a>5.2.15.&nbsp;&lt;ui:numberInput&gt;</h3></div></div></div><p>Form number input field, represents
+      <code class="literal">NumberControl</code>. It is rendered in HTML with
+      <code class="literal">&lt;input type="text" ...&gt;</code> tag. Default
+      <code class="literal">styleClass="aranea-number"</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8753"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>size</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Maximum length of accepted text (in
+                characters).</td></tr><tr><td>onChangePrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether registered onchange
+                event should go server side or not. If left unspecified, this
+                is considered to be <code class="literal">true</code>. For this tag,
+                <span class="emphasis"><em>onchange</em></span> event is simulated with
+                <span class="emphasis"><em>onblur</em></span>.</td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8803"></a>5.2.16.&nbsp;&lt;ui:numberInputDisplay&gt;</h3></div></div></div><p>Form number display field, represents
+      <code class="literal">NumberControl</code>. It is rendered in HTML with
+      <code class="literal">&lt;span ...&gt;</code> tag. Default
+      <code class="literal">styleClass="aranea-number-display"</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8817"></a>Attributes</h4></div></div></div><span class="emphasis"><em>Has standard <code class="literal">id</code> and
+        <code class="literal">styleClass</code> attributes.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8829"></a>5.2.17.&nbsp;&lt;ui:floatInput&gt;</h3></div></div></div><p>Form floating-point number input field, represents
+      <code class="literal">FloatControl</code>. It is rendered in HTML with
+      <code class="literal">&lt;input type="text" ...&gt;</code> tag. Default
+      <code class="literal">styleClass="aranea-float"</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8843"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>size</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Maximum length of accepted floating-point number (in
+                characters).</td></tr><tr><td>onChangePrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether registered onchange
+                event should go server side or not. If left unspecified, this
+                is considered to be <code class="literal">true</code>. For this tag,
+                <span class="emphasis"><em>onchange</em></span> event is simulated with
+                <span class="emphasis"><em>onblur</em></span>.</td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8893"></a>5.2.18.&nbsp;&lt;ui:floatInputDisplay&gt;</h3></div></div></div><p>Form floating-point number display field, represents
+      <code class="literal">FloatControl</code>. It is rendered in HTML with
+      <code class="literal">&lt;span ...&gt;</code> tag. Default
+      <code class="literal">styleClass="aranea-float-display"</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8907"></a>Attributes</h4></div></div></div><span class="emphasis"><em>Has standard <code class="literal">id</code> and
+        <code class="literal">styleClass</code> attributes.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8919"></a>5.2.19.&nbsp;&lt;ui:passwordInput&gt;</h3></div></div></div><p>Form number input field, represents
+      <code class="literal">TextControl</code>. It is rendered in HTML with
+      <code class="literal">&lt;input type="password" ...&gt;</code> tag. Default
+      <code class="literal">styleClass="aranea-text"</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8933"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>size</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Maximum length of password (in characters).</td></tr><tr><td>onChangePrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether registered onchange
+                event should go server side or not. If left unspecified, this
+                is considered to be <code class="literal">true</code>. For this tag,
+                <span class="emphasis"><em>onchange</em></span> event is simulated with
+                <span class="emphasis"><em>onblur</em></span>.</td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e8984"></a>5.2.20.&nbsp;&lt;ui:textDisplay&gt;</h3></div></div></div><p>Form text display field, represents
+      <code class="literal">DisplayControl</code>, displays element value as
+      <code class="literal">String</code>. It is rendered in HTML with <code class="literal">&lt;span
+      ...&gt;</code> tag.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e8998"></a>Attributes</h4></div></div></div><span class="emphasis"><em>Has standard <code class="literal">id</code> and
+        <code class="literal">styleClass</code> attributes.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9010"></a>5.2.21.&nbsp;&lt;ui:valueDisplay&gt;</h3></div></div></div><p>Puts form element value in page scope variable, represents
+      <code class="literal">DisplayControl</code>. It does not output any HTML.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9018"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>var</td><td>
+                  <span class="emphasis"><em>true</em></span>
+                </td><td>Name of the page-scoped EL variable that will be
+                assigned element value.</td></tr></tbody></table></div><span class="emphasis"><em>Also has standard <code class="literal">id</code>
+        attribute.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9051"></a>5.2.22.&nbsp;&lt;ui:textarea&gt;</h3></div></div></div><p>Form text input area, represents
+      <code class="literal">TextareaControl</code>. It is rendered in HTML with
+      <code class="literal">&lt;textarea ...&gt;</code> tag. Default
+      <code class="literal">styleClass="aranea-textarea"</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9065"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>cols</td><td>
+                  <span class="emphasis"><em>true</em></span>
+                </td><td>Number of visible columns in textarea.</td></tr><tr><td>rows</td><td>
+                  <span class="emphasis"><em>true</em></span>
+                </td><td>Number of visible rows in textarea.</td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9106"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:form id</span>=<span class="syntax3">"someForm"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:formElement id</span>=<span class="syntax3">"longLongText"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:textarea rows</span>=<span class="syntax3">"15"</span><span class="syntax10"> cols</span>=<span class="syntax3">"150"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:formElement</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:form</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9112"></a>5.2.23.&nbsp;&lt;ui:richtextarea&gt;</h3></div></div></div><p>Form text input area, represents
+      <code class="literal">TextareaControl</code>. It is rendered in HTML with
+      <code class="literal">&lt;textarea ...&gt;</code> tag with
+      <code class="literal">styleClass="richTextEditor"</code>. The area is displayed as
+      a rich text editor. The configuration of the editor is done via
+      <code class="literal">&lt;ui:richTextAreaInit&gt;</code>. The tag shares all the
+      attributes of the <code class="literal">&lt;ui:textarea&gt;</code> except the
+      <code class="literal">styleClass</code> which cannot be set for this tag.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9135"></a>5.2.24.&nbsp;&lt;ui:richTextAreaInit&gt;</h3></div></div></div><p>A tag for configuring the rich textareas. The <a href="http://tinymce.moxiecode.com/" target="_top">tinyMCE</a> WYSIWYG editor is
+      attached to the textareas defined via
+      <code class="literal">&lt;ui:richTextarea&gt;</code> . The configuration lets you
+      choose the looks, buttons, functionality of the editor. See <a href="http://tinymce.moxiecode.com/tinymce/docs/reference_configuration.html" target="_top">tinyMCE
+      configuration reference</a> for different configurable
+      options.</p><p>The configuration is done via nesting key value pairs inside the
+      <code class="literal">&lt;ui:richTextAreaInit&gt;</code>. For the key value pairs the
+      <code class="literal">&lt;ui:attribute&gt;</code> tag is used. See the example for
+      an overview.</p><p>The <code class="literal">editor_selector</code> and <code class="literal">mode</code>
+      options are set by default and should not be changed. The default
+      <code class="literal">theme</code> is "simple".</p><p><span class="emphasis"><em>Important:</em></span> the configuration should be done
+      in the <code class="literal">&lt;head&gt;</code> section of the HTML
+      document.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9175"></a>Example</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:richTextAreaInit</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:attribute name</span>=<span class="syntax3">"theme"</span><span class="syntax10"> value</span>=<span class="syntax3">"advanced"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:attribute name</span>=<span class="syntax3">"theme_advanced_buttons1"</span><span class="syntax10"> value</span>=<span class="syntax3">"bold,italic,underline,separator,code"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:attribute name</span>=<span class="syntax3">"theme_advanced_toolbar_location"</span><span class="syntax10"> value</span>=<span class="syntax3">"top"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:attribute name</span>=<span class="syntax3">"theme_advanced_toolbar_align"</span><span class="syntax10"> value</span>=<span class="syntax3">"left"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:attribute name</span>=<span class="syntax3">"theme_advanced_path_location"</span><span class="syntax10"> value</span>=<span class="syntax3">"bottom"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:richTextAreaInit</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9180"></a>5.2.25.&nbsp;&lt;ui:textareaDisplay&gt;</h3></div></div></div><p>Form text display area, represents
+      <code class="literal">TextareaControl</code>. It is rendered in HTML with
+      <code class="literal">&lt;span ...&gt;</code> tag. Default
+      <code class="literal">styleClass="aranea-textarea-display"</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9194"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>escapeSingleSpaces</td><td>
+                  <span class="emphasis"><em>false</em></span>
+                </td><td>Boolean, specifying whether even single spaces (blanks) should be replace with &amp;nbsp; entities in output. It affects
+                browser performed text-wrapping. Default value is <code class="literal">false</code>. 
+                Attribute is available since tag-library version 1.0.6.</td></tr></tbody></table></div><span class="emphasis"><em>Also has standard <code class="literal">id</code> and
+        <code class="literal">styleClass</code> attributes.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9233"></a>5.2.26.&nbsp;&lt;ui:hiddenInput&gt;</h3></div></div></div><p>Represents a "hidden" form input
+      element&#8212;<code class="literal">HiddenControl</code>. It is rendered in HTML with
+      <code class="literal">&lt;input type="hidden" ...&gt;</code> tag.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9244"></a>Attributes</h4></div></div></div><span class="emphasis"><em>See <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span>
+
+         However, rendered tag is not visible to end-user, thus using any attributes is mostly pointless. 
+      </div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9253"></a>5.2.27.&nbsp;&lt;ui:checkbox&gt;</h3></div></div></div><p>Form checkbox <span class="emphasis"><em>input</em></span> field, represents
+      <code class="literal">CheckboxControl</code>. By default
+      <code class="literal">styleClass="aranea-checkbox"</code>. Rendered in HTML with
+      <code class="literal">&lt;input type="checkbox" ...&gt;</code> tag.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9270"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>onChangePrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether registered onchange
+                event should go server side or not. If left unspecified, this
+                is considered to be <code class="literal">true</code></td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9303"></a>5.2.28.&nbsp;&lt;ui:checkboxDisplay&gt;</h3></div></div></div><p>Form checkbox <span class="emphasis"><em>display</em></span> field, represents
+      <code class="literal">CheckboxControl</code>. By default
+      <code class="literal">styleClass="aranea-checkbox-display"</code>. Rendered in
+      HTML inside <code class="literal">&lt;span&gt;</code> tag.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9320"></a>Attributes</h4></div></div></div><span class="emphasis"><em>Has standard <code class="literal">id</code> and
+        <code class="literal">styleClass</code> attributes.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9332"></a>5.2.29.&nbsp;&lt;ui:fileUpload&gt;</h3></div></div></div><p>
+        Form file upload field, represents <code class="literal">FileUploadControl</code>.
+        File upload can upload the file automatically once it is selected. This would enable file
+        uploads on pages with update regions and overlay. To make a file upload submit its data
+        without rendering the page, add a CSS class to the input named <code class="literal">ajax-upload</code>.
+        See more info at the <a href="javascript.html" title="Chapter&nbsp;9.&nbsp;Javascript Libraries">Chapter&nbsp;9, <i>Javascript Libraries</i></a> part of the documentation.
+      </p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9345"></a>Attributes</h4></div></div></div><span class="emphasis"><em>See <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9352"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+...
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:form id</span>=<span class="syntax3">"uploadForm"</span><span class="syntax10">&gt;</span>
+   <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+       <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell styleClass</span>=<span class="syntax3">"name"</span><span class="syntax10">&gt;</span>
+           <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:fileUpload id</span>=<span class="syntax3">"file"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+       <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+   <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:form</span><span class="syntax10">&gt;</span>
+...
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9358"></a>5.2.30.&nbsp;&lt;ui:dateInput&gt;</h3></div></div></div><p>Form date input field, represents <code class="literal">(Joda)DateControl</code>.
+      Default <code class="literal">styleClass="aranea-date"</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9369"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>onChangePrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether registered onchange
+                event should go server side or not. If left unspecified, this
+                is considered to be <code class="literal">true</code>.</td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9403"></a>5.2.31.&nbsp;&lt;ui:dateInputDisplay&gt;</h3></div></div></div><p>Form date display field, represents
+      <code class="literal">(Joda)DateControl</code>. Default
+      <code class="literal">styleClass="aranea-date-display"</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9414"></a>Attributes</h4></div></div></div><span class="emphasis"><em>Has standard <code class="literal">id</code> and
+        <code class="literal">styleClass</code> attributes.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9426"></a>5.2.32.&nbsp;&lt;ui:timeInput&gt;</h3></div></div></div><p>Form time input field, represents <code class="literal">(Joda)TimeControl</code>.
+      Default <code class="literal">styleClass="aranea-time"</code>. HTML &lt;select&gt;s for easy hour/minute selection
+      are rendered too, unless <code class="literal">showTimeSelect</code> attribute forbids it.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9440"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>onChangePrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether registered onchange
+                event should go server side or not. If left unspecified, this
+                is considered to be <code class="literal">true</code>.</td></tr><tr><td>showTimeSelect</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>
+                	Boolean, specifying whether HTML &lt;select&gt;'s should be rendered for easy hour/minute selection.
+                	Default is to render them (<code class="literal">true</code>).
+                </td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9487"></a>5.2.33.&nbsp;&lt;ui:timeInputDisplay&gt;</h3></div></div></div><p>Form time display field, represents
+      <code class="literal">(Joda)TimeControl</code>. Default
+      <code class="literal">styleClass="aranea-time-display"</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9498"></a>Attributes</h4></div></div></div><span class="emphasis"><em>Has standard <code class="literal">id</code> and
+        <code class="literal">styleClass</code> attributes.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9509"></a>5.2.34.&nbsp;&lt;ui:dateTimeInput&gt;</h3></div></div></div><p>Form input field for both date and time, represents
+      <code class="literal">(Joda)DateTimeControl</code>. It is rendered as input fields for date and time + date picker and
+      time picker (time picker can be switched off by setting <code class="literal">showTimeSelect="false"</code> if so desired).</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9520"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>onChangePrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether registered onchange
+                event should go server side or not. If left unspecified, this
+                is considered to be <code class="literal">true</code>.</td></tr><tr><td>showTimeSelect</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>
+                	Boolean, specifying whether HTML &lt;select&gt;'s should be rendered for easy hour/minute selection.
+                	Default is to render them (<code class="literal">true</code>).
+                </td></tr><tr><td>dateStyleClass</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td><span class="emphasis"><em>styleClass</em></span> for date. Default is
+                "aranea-date".</td></tr><tr><td>timeStyleClass</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td><span class="emphasis"><em>styleClass</em></span> for time. Default is
+                "aranea-time".</td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9591"></a>5.2.35.&nbsp;&lt;ui:dateTimeInputDisplay&gt;</h3></div></div></div><p>Form display field for both date and time, represents
+      <code class="literal">(Joda)DateTimeControl</code>. Default
+      <code class="literal">styleClass="aranea-datetime-display"</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9602"></a>Attributes</h4></div></div></div><span class="emphasis"><em>Has standard <code class="literal">id</code> and
+        <code class="literal">styleClass</code> attributes.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="ui_select"></a>5.2.36.&nbsp;&lt;ui:select&gt;</h3></div></div></div><p>Form dropdown list input field, represents
+      <code class="literal">SelectControl</code>. Default
+      <code class="literal">styleClass="aranea-select"</code>, rendered with HTML
+      <code class="literal">&lt;select ...&gt;</code> tag.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9628"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>onChangePrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether registered onchange
+                event should go server side or not. If left unspecified, this
+                is considered to be <code class="literal">true</code>.</td></tr><tr><td>size</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Number of select elements visible at once.</td></tr><tr><td>localizeDisplayItems</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>
+                	A boolean specifying whether to localize display items.
+                	Provides a way to override
+                	ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA.
+                </td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9683"></a>5.2.37.&nbsp;&lt;ui:selectDisplay&gt;</h3></div></div></div><p>Form select display field, represents
+      <code class="literal">SelectControl</code>. Default
+      <code class="literal">styleClass="aranea-select-display"</code>, rendered with
+      HTML <code class="literal">&lt;span ...&gt;</code> tag.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9697"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>localizeDisplayItems</td><td><span class="emphasis"><em>no</em></span></td><td>
+                	A boolean specifying whether to localize display items.
+                	Provides a way to override
+                	ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA.
+                </td></tr></tbody></table></div><span class="emphasis"><em>Also has standard <code class="literal">id</code> and <code class="literal">styleClass</code> attributes.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9731"></a>5.2.38.&nbsp;&lt;ui:multiSelect&gt;</h3></div></div></div><p>Form list input field, represents
+      <code class="literal">MultiSelectControl</code>. Default
+      <code class="literal">styleClass="aranea-multi-select"</code>, rendered with HTML
+      <code class="literal">&lt;select multiple="true" ...&gt;</code> tag.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9745"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>size</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Vertical size, number of options displayed at
+                once.</td></tr><tr><td>localizeDisplayItems</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>
+                	A boolean specifying whether to localize display items.
+                	Provides a way to override
+                	ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA.
+                </td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9787"></a>5.2.39.&nbsp;&lt;ui:multiSelectDisplay&gt;</h3></div></div></div><p>Form multiselect display field, represents
+      <code class="literal">MultiSelectControl</code>. Default
+      <code class="literal">styleClass="aranea-multi-select-display"</code>, rendered
+      with HTML <code class="literal">&lt;span ...&gt;</code> tag.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9801"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>separator</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>The separator between list items, can be any string or
+                '\n' for newline. Default is ', ').</td></tr><tr><td>localizeDisplayItems</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>
+                	A boolean specifying whether to localize display items.
+                	Provides a way to override
+                	ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA.
+                </td></tr></tbody></table></div><span class="emphasis"><em>Has standard <code class="literal">id</code> and
+        <code class="literal">styleClass</code> attributes.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9847"></a>5.2.40.&nbsp;&lt;ui:radioSelect&gt;</h3></div></div></div><p>Form radioselect buttons field, represents
+      <code class="literal">SelectControl</code>. Default
+      <code class="literal">styleClass="aranea-radioselect"</code>. It takes care of
+      rendering all its elements; internally using
+      &lt;ui:radioSelectItemLabel&gt; and &lt;ui:radioSelectItem&gt;
+      tags.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9858"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>type</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>The way the radio buttons will be rendered - can be
+                either <span class="emphasis"><em>vertical</em></span> or
+                <span class="emphasis"><em>horizontal</em></span>. By default
+                "horizontal".</td></tr><tr><td>labelBefore</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Boolean that controls whether label is before or after
+                each radio button, <code class="literal">false</code> by
+                default.</td></tr><tr><td>localizeDisplayItems</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>
+                	A boolean specifying whether to localize display items.
+                	Provides a way to override
+                	ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA.
+                </td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9919"></a>5.2.41.&nbsp;&lt;ui:radioSelectItem&gt;</h3></div></div></div><p>Form radio button, represents one item from
+      <code class="literal">SelectControl</code>. Default
+      <code class="literal">styleClass="aranea-radio"</code>. It will be rendered with
+      HTML <code class="literal">&lt;input type="radio" ...&gt;</code> tag.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9933"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>value</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>The value of this radio button that will be submitted
+                with form if this radio button is selected.</td></tr><tr><td>onChangePrecondition</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Precondition for deciding whether registered onchange
+                event should go server side or not. If left unspecified, this
+                is considered to be <code class="literal">true</code>.</td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e9978"></a>5.2.42.&nbsp;&lt;ui:radioSelectItemLabel&gt;</h3></div></div></div><p>Form radio button label, represents label of one item from
+      <code class="literal">SelectControl</code>. It will be rendered with HTML
+      <code class="literal">&lt;span ...&gt;</code> tag.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e9989"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>value</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Select item value.</td></tr><tr><td>showMandatory</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Indicates whether label for mandatory input is marked
+                with asterisk. Value should be <code class="literal">true</code> or
+                <code class="literal">false</code>, default is
+                <code class="literal">true</code>.</td></tr><tr><td>showColon</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Indicates whether colon is shown between the label and
+                value. Default is <code class="literal">true</code></td></tr></tbody></table></div><span class="emphasis"><em>Also has standard <code class="literal">id</code> and
+        <code class="literal">styleClass</code> attributes.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e10056"></a>5.2.43.&nbsp;&lt;ui:checkboxMultiSelect&gt;</h3></div></div></div><p>Form multiselect checkbox field, represents
+      <code class="literal">MultiSelectControl</code>. It takes care of rendering all
+      its elements; internally using &lt;ui:checkboxMultiSelectItemLabel&gt;
+      and &lt;ui:checkboxMultiSelectItem&gt; tags.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10064"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>type</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>The way the checkboxes will be rendered - can be either
+                <span class="emphasis"><em>vertical</em></span> or
+                <span class="emphasis"><em>horizontal</em></span>. Default is
+                <span class="emphasis"><em>horizontal</em></span>.</td></tr><tr><td>labelBefore</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Boolean that controls whether label is before or after
+                each cehckbox, <code class="literal">false</code> by default.</td></tr><tr><td>localizeDisplayItems</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>
+                	A boolean specifying whether to localize display items.
+                	Provides a way to override
+                	ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA.
+                </td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e10128"></a>5.2.44.&nbsp;&lt;ui:checkboxMultiSelectItem&gt;</h3></div></div></div><p>Form radio button, represents one item from
+      <code class="literal">MultiSelectControl</code>. Default
+      <code class="literal">styleClass="aranea-multi-checkbox"</code>. It will be
+      rendered with HTML <code class="literal">&lt;input type="checkbox" ...&gt;</code>
+      tag.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10142"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>value</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>The value of this checkbox that will be submitted with
+                form if this checkbox is selected.</td></tr></tbody></table></div><span class="emphasis"><em>Also see <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e10174"></a>5.2.45.&nbsp;&lt;ui:checkboxMultiSelectItemLabel&gt;</h3></div></div></div><p>Form checkbox label, represents label of one item from
+      <code class="literal">MultiSelectControl</code>. It will be rendered with HTML
+      <code class="literal">&lt;span ...&gt;</code> tag.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10185"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>value</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Select item value.</td></tr><tr><td>showMandatory</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Indicates whether label for mandatory input is marked
+                with asterisk. Value should be <code class="literal">true</code> or
+                <code class="literal">false</code>, default is
+                <code class="literal">true</code>.</td></tr><tr><td>showColon</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Indicates whether colon is shown between the label and
+                value. Default is <code class="literal">true</code></td></tr></tbody></table></div><span class="emphasis"><em>Also has standard <code class="literal">id</code> and
+        <code class="literal">styleClass</code> attributes.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e10252"></a>5.2.46.&nbsp;&lt;ui:conditionalDisplay&gt;</h3></div></div></div><p>Depending whether form element boolean value is
+      <span class="emphasis"><em>true</em></span> or <span class="emphasis"><em>false</em></span> display one or
+      other content, represents <code class="literal">DisplayControl</code>.
+      <code class="literal">&lt;ui:conditionFalse&gt;</code> and
+      <code class="literal">&lt;ui:conditionFalse&gt;</code> tags must be used inside
+      this tag to define alternative contents. This tag itself is not
+      rendered.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10272"></a>Attributes</h4></div></div></div><span class="emphasis"><em>Has standard <code class="literal">id</code> attribute.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e10281"></a>5.2.47.&nbsp;&lt;ui:conditionFalse&gt;</h3></div></div></div><p>The content of this tag will be displayed when form element of
+      surrounding <code class="literal">&lt;ui:conditionalDisplay&gt;</code> was
+      <code class="literal">false</code>. Tag has no attributes.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e10293"></a>5.2.48.&nbsp;&lt;ui:conditionTrue&gt;</h3></div></div></div><p>The content of this tag will be displayed when form element of
+      surrounding <code class="literal">&lt;ui:conditionalDisplay&gt;</code> was
+      <code class="literal">true</code>. Tag has no attributes.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10304"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:form id</span>=<span class="syntax3">"someForm"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:conditionalDisplay id</span>=<span class="syntax3">"isActive"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:conditionTrue</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">img src</span>=<span class="syntax3">"red_flag.png"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:conditionTrue</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:conditionFalse</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">img src</span>=<span class="syntax3">"green_flag.png"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:conditionFalse</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:conditionalDisplay</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:form</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e10309"></a>5.2.49.&nbsp;&lt;ui:listDisplay&gt;</h3></div></div></div><p>Display form element value as list of strings, represents
+      <code class="literal">DisplayControl</code> and requires that element value would
+      be of type <code class="literal">Collection</code>.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10320"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>separator</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>The separator between list items, can be any string and
+                "\n", meaning a newline (default is "\n").</td></tr></tbody></table></div><span class="emphasis"><em>Also has standard <code class="literal">id</code> and
+        <code class="literal">styleClass</code> attributes.</em></span></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e10355"></a>5.2.50.&nbsp;&lt;ui:automaticFormElement&gt;</h3></div></div></div><p>Sometimes the type of <code class="literal">FormElement</code> is not known
+      for sure when writing JSP (it could be <code class="literal">textInput</code>,
+      <code class="literal">floatInput</code>, <code class="literal">select</code>, ...). For that
+      purpose, <code class="literal">FormElement</code> that has some known identifier
+      can be dynamically associated with some JSP tag in Java code and then
+      rendered with <code class="literal">&lt;ui:automaticFormElement&gt;</code> tag
+      which uses associated tag to render
+      <code class="literal">FormElement</code>.
+      </p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10381"></a>Attributes</h4></div></div></div><span class="emphasis"><em>See <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>.</em></span></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10388"></a>Examples</h4></div></div></div><p>In Java code, setting tag that should rendering element is done
+        by either setting <code class="literal">FormElement</code> property or preferably by using <code class="literal">AutomaticFormElementUtil</code>
+        utility which makes the code slightly less verbose. Following lines of code all do the same thing:
+        </p><pre class="programlisting"><pre><span class="syntax0">element.<span class="syntax9">setProperty</span>(FormElementViewSelector.FORM_ELEMENT_VIEW_SELECTOR_PROPERTY, <span class="syntax6">new</span> <span class="syntax9">FormElementViewSelector</span>(tag, attributes));
+AutomaticFormElementUtil.<span class="syntax9">setFormElementViewSelector</span>(element, <span class="syntax6">new</span> <span class="syntax9">FormElementViewSelector</span>(tag, attributes));
+AutomaticFormElementUtil.<span class="syntax9">setFormElementTag</span>(element, tag, attributes);
+</span></pre></pre><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:formElement id</span>=<span class="syntax3">"someForm"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:automaticFormElement/</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:formElement</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="form_lists"></a>5.3.&nbsp;Form Lists</h2></div></div></div><p>A common need in handling data is allowing a user to list of data,
+    where the number of rows is not known beforehand (a typical example being
+    user inputting one to many addresses). Aranea supports such a use case by
+    providing a special type of <code class="literal">FormElement</code> that deals an
+    arbitrary amount of subforms. This element is called
+    <code class="literal">FormListWidget</code> and it can be used both on its own or as
+    a subelement just like a <code class="literal">FormWidget</code>. An example of a
+    form list is shown on <a href="forms.html#person-form-list" title="Figure&nbsp;5.2.&nbsp;Insert your name display">Figure&nbsp;5.2, &#8220;Insert your name display&#8221;</a>.</p><div class="figure"><a name="person-form-list"></a><div class="mediaobject"><img src="../images/formList.png" alt="Insert your name display"></div><p class="title"><b>Figure&nbsp;5.2.&nbsp;Insert your name display</b></p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e10426"></a>5.3.1.&nbsp;FormListWidget</h3></div></div></div><p>Unlike usual forms, form lists are "lazy", from the point that
+      they are tied to a model and update themselves according to it. To
+      create a form list widget we pass it a model and a handler:</p><pre class="programlisting"><pre><span class="syntax0">... 
+  <span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">init</span>() <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+    <span class="syntax6">private</span> FormListWidget personFormList;
+    ...
+    Map persons <span class="syntax11">=</span> <span class="syntax9">lookupMyService</span>().<span class="syntax9">getPersons</span>();
+
+    personFormList <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">BeanFormListWidget</span>(
+        <span class="syntax6">new</span> <span class="syntax9">PersonFormRowHandler</span>(),
+        <span class="syntax6">new</span> <span class="syntax9">MapFormListModel</span>(persons),
+        Person.<span class="syntax8">class</span>);
+
+    <span class="syntax9">addWidget</span>(<span class="syntax3">"personFormList"</span>, personFormList);
+  <span class="syntax11">}</span>
+...
+</span></pre></pre><p>Note here that we have tied the form list to the model that uses a
+      <code class="literal">Map</code> as the underlying storage. When we update that
+      map, the form list will also be updated. Note also that the form list
+      widget is associated with the <code class="literal">Person</code> bean class,
+      which can be used to manipulate the beans under the model.</p><p>However this code doesn't yet tell us much. The bulk of the custom
+      logic of the form lists is hidden in the
+      <code class="literal">PersonFormRowHandler</code> class. Let's inspect it step by
+      step.</p><p>Every form row handler must implement the
+      <code class="literal">FormRowHandler</code> interface. In our case we choose to
+      extend <code class="literal">ValidOnlyIndividualFormRowHandler</code>, which
+      processes only valid form rows and allows to process them one by one,
+      not all at once:</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">class</span> PersonFormRowHandler
+  <span class="syntax6">extends</span> ValidOnlyIndividualFormRowHandler <span class="syntax11">{</span>
+  ...
+<span class="syntax11">}</span>
+</span></pre></pre><p>The first method we have to implement is
+      <code class="literal">getRowKey</code>. It is used by the form list widget to
+      identify the row among the others. Since typically the row is just a
+      bean we can identify it using its identifier (either a natural one or
+      artificial, as long as its unique in this context):</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">public</span> Object <span class="syntax9">getRowKey</span>(Object rowData) <span class="syntax11">{</span>
+  <span class="syntax6">return</span> ((Person) rowData).<span class="syntax9">getId</span>();
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p>The next method is called <code class="literal">initAddForm</code> and it
+      will create a form used to add new rows to the form list:</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">initAddForm</span>(FormWidget addForm) <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+  addForm.<span class="syntax9">addBeanElement</span>(<span class="syntax3">"name"</span>, <span class="syntax3">"#First name"</span>, <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(), <span class="syntax4">true</span>);
+  addForm.<span class="syntax9">addBeanElement</span>(<span class="syntax3">"surname"</span>, <span class="syntax3">"#Last name"</span>, <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(),  <span class="syntax4">true</span>);
+  addForm.<span class="syntax9">addBeanElement</span>(<span class="syntax3">"phone"</span>, <span class="syntax3">"#Phone no"</span>, <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(), <span class="syntax4">false</span>);
+
+  FormListUtil.<span class="syntax9">addAddButtonToAddForm</span>(<span class="syntax3">"#"</span>, formList, addForm);
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p>The bulk of the logic is just adding the fields to the add form.
+      But we also use the <code class="literal">FormListUtil</code> to add a button
+      "Add" to the form, that will take care of the actual adding a new row
+      (or at least calling the form row handler to do that).
+      <code class="literal">FormListUtil</code> contains a lot of helpful methods for
+      manipulating form lists and more on it can be found in <a href="forms.html#form-list-util" title="5.3.2.&nbsp;FormListUtil">Section&nbsp;5.3.2, &#8220;FormListUtil&#8221;</a>. The next step would be to handle the user
+      clicking the add button and add a new row to the model. Since we process
+      only valid rows the method will be named
+      <code class="literal">addValidRow</code>:</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">addValidRow</span>(FormWidget addForm) <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+  Person person <span class="syntax11">=</span> (Person) (((BeanFormWidget)addForm).<span class="syntax9">writeToBean</span>(<span class="syntax6">new</span> <span class="syntax9">Person</span>()));
+  <span class="syntax1">//We want to save changes immediately</span>
+  person <span class="syntax11">=</span> lookupPersonService.<span class="syntax9">addPerson</span>(person);
+  data.<span class="syntax9">add</span>(person.<span class="syntax9">getId</span>(), person);
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p>Note that although we save the changes here immediately, form
+      lists also support deferring this until some later point as described in
+      <a href="forms.html#form-list-in-memory-helper" title="5.3.5.&nbsp;In Memory Form List">Section&nbsp;5.3.5, &#8220;In Memory Form List&#8221;</a>. Now that we have added a
+      row to the model we will also have to initialize a form for that using
+      <code class="literal">initFormRow</code> method:</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">initFormRow</span>(FormRow formRow, Object rowData) <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+  <span class="syntax1">// Set initial status of list rows to closed - they cannot be edited before opened.</span>
+  formRow.<span class="syntax9">close</span>();
+
+  BeanFormWidget form <span class="syntax11">=</span> (BeanFormWidget)formRow.<span class="syntax9">getForm</span>();
+
+  form.<span class="syntax9">addBeanElement</span>(<span class="syntax3">"name"</span>, <span class="syntax3">"#First name"</span>, <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(), <span class="syntax4">true</span>);
+  form.<span class="syntax9">addBeanElement</span>(<span class="syntax3">"surname"</span>, <span class="syntax3">"#Last name"</span>, <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(),  <span class="syntax4">true</span>);
+  form.<span class="syntax9">addBeanElement</span>(<span class="syntax3">"phone"</span>, <span class="syntax3">"#Phone no"</span>, <span class="syntax6">new</span> <span class="syntax9">TextControl</span>(), <span class="syntax4">false</span>);
+
+  FormListUtil.<span class="syntax9">addEditSaveButtonToRowForm</span>(<span class="syntax3">"#"</span>, formList, form, <span class="syntax9">getRowKey</span>(rowData));
+  FormListUtil.<span class="syntax9">addDeleteButtonToRowForm</span>(<span class="syntax3">"#"</span>, formList, form, <span class="syntax9">getRowKey</span>(rowData));
+
+  form.<span class="syntax9">readFromBean</span>(rowData);
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p>Note that most of the fields are same for add form and edit forms,
+      so in a real setup we could easily have added a method
+      <code class="literal">addCommonFields(FormWidget)</code> that would add those
+      fields to any given form (it is actually a very common idiom to do
+      that). Finally we have to handle the saving of row form:</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">saveValidRow</span>(FormRow formRow) <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+  BeanFormWidget form <span class="syntax11">=</span> (BeanFormWidget) formRow.<span class="syntax9">getForm</span>();
+  Person person <span class="syntax11">=</span> (Person) form.<span class="syntax9">writeToBean</span>(data.<span class="syntax9">get</span>(formRow.<span class="syntax9">getKey</span>()));
+
+  <span class="syntax9">lookupPersonService</span>().<span class="syntax9">save</span>(rowData);
+  data.<span class="syntax9">put</span>(person.<span class="syntax9">getId</span>(), person);
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p>And the last one left is deletion:</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">deleteRow</span>(Object key) <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+  Long id <span class="syntax11">=</span> (Long) key;
+  <span class="syntax9">lookupPersonService</span>().<span class="syntax9">remove</span>(id);
+  data.<span class="syntax9">remove</span>(id);
+<span class="syntax11">}</span>
+...
+</span></pre></pre></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="form-list-util"></a>5.3.2.&nbsp;FormListUtil</h3></div></div></div><p><code class="literal">FormListUtil</code> provides a couple of methods that
+      help to handle form maps passed to some of the handler methods. However
+      of main interest are the methods that add various buttons with ready
+      logic to the add forms and row forms.</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody><tr><td><code class="literal">addSaveButtonToRowForm()</code></td><td>Button that will save the current row.</td></tr><tr><td><code class="literal">addDeleteButtonToRowForm()</code></td><td>Button that will delete the current row.</td></tr><tr><td><code class="literal">addOpenCloseButtonToRowForm()</code></td><td>Button that will open or close the current row for
+              editing (it inverts the current state).</td></tr><tr><td><code class="literal">addEditSaveButtonToRowForm()</code></td><td>Button that will open/close the row for editing, however
+              will also save it after editing is finished and the row is
+              closed.</td></tr><tr><td><code class="literal">addAddButtonToAddForm()</code></td><td>Button that will add a new row, should be added to the
+              addition form.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e10553"></a>5.3.3.&nbsp;Form Row Handlers</h3></div></div></div><p>Since row form handler interface supports bulk
+      saving/adding/deleting of row forms it is comfortable to use one of the
+      base classes that will do some of the work for you.</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Class</th><th>Description</th></tr></thead><tbody><tr><td><code class="literal">DefaultFormRowHandler</code></td><td>Implements all of the menthods and default handling of
+              opening/closing rows.</td></tr><tr><td><code class="literal">ValidOnlyFormRowHandler</code></td><td>Checks that all of the added/saved rows are
+              valid.</td></tr><tr><td><code class="literal">IndividualFormRowHandler</code></td><td>Supports one by one processing of row saving and
+              deleting.</td></tr><tr><td><code class="literal">ValidOnlyIndividualFormRowHandler</code></td><td>Supports one by one processing of row saving and
+              deleting. Checks that all of the added/saved rows are
+              valid.</td></tr></tbody></table></div><p>Note that row handlers also have an
+      <code class="literal">openOrCloseRow</code> method that may be overridden if one
+      wants more than just inverting the row state on user action.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e10598"></a>5.3.4.&nbsp;Models</h3></div></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="form-list-in-memory-helper"></a>5.3.5.&nbsp;In Memory Form List</h3></div></div></div><p>Often it is the case that we do not want to save the changes in
+      the form list to the database until the user presses the "Save" button.
+      For such a use case we provide
+      <code class="literal">InMemoryFormListHelper</code>. To use the helper we first
+      need to initialize the form list to use the helper model:</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">private</span> BeanFormListWidget personFormList;
+<span class="syntax6">private</span> InMemoryFormListHelper inMemoryHelper;
+
+<span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">init</span>() <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+  <span class="syntax6">private</span> FormListWidget personFormList;
+  ...
+  Map persons <span class="syntax11">=</span> <span class="syntax9">lookupMyService</span>().<span class="syntax9">getPersons</span>();
+
+  personFormList <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">BeanFormListWidget</span>(<span class="syntax6">new</span> <span class="syntax9">PersonFormRowHandler</span>(), Person.<span class="syntax8">class</span>);
+  inMemoryHelper <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">InMemoryFormListHelper</span>(
+    personFormList,
+    <span class="syntax9">lookupPersonService</span>().<span class="syntax9">getSomePersonList</span>());
+
+  <span class="syntax9">addWidget</span>(<span class="syntax3">"personFormList"</span>, personFormList);
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p>Now we just have to add/save/delete the row to/from the
+      helper:</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">saveValidRow</span>(FormRow editableRow) <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+  ...
+  inMemoryHelper.<span class="syntax9">update</span>(editableRow.<span class="syntax9">getKey</span>(), rowData);
+<span class="syntax11">}</span>
+
+<span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">deleteRow</span>(Object key) <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+  ...
+  inMemoryHelper.<span class="syntax9">delete</span>(key);
+<span class="syntax11">}</span>
+
+<span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">addValidRow</span>(FormWidget addForm) <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+  ...
+  inMemoryHelper.<span class="syntax9">add</span>(rowData);
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p>And when the user presses "Save" we can just process the
+      changes:</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">protected</span> <span class="syntax8">void</span> <span class="syntax9">handleEventSave</span>() <span class="syntax11">{</span>
+  lookupPersonService.<span class="syntax9">addAll</span>(inMemoryHelper.<span class="syntax9">getAdded</span>().<span class="syntax9">values</span>());
+  lookupPersonService.<span class="syntax9">saveAll</span>(inMemoryHelper.<span class="syntax9">getUpdated</span>().<span class="syntax9">values</span>());
+  lookupPersonService.<span class="syntax9">deleteAll</span>(inMemoryHelper.<span class="syntax9">getDeleted</span>());
+<span class="syntax11">}</span>
+...
+</span></pre></pre></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e10619"></a>5.4.&nbsp;Form Lists JSP Tags</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e10622"></a>5.4.1.&nbsp;&lt;ui:formList&gt;</h3></div></div></div><p>Formlist is a list of forms, an editable list. This tag specifies
+      editable list context for its inner tags.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10627"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>no</em></span></td><td>Id of editable list. When not specified, attempt is
+                made to construct it from existing list context&#8212;it this does
+                not succeed, tag fails.</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10652"></a>Variables</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col align="center"></colgroup><thead><tr><th>Variable</th><th>Description</th><th align="center">Type</th></tr></thead><tbody><tr><td>formList</td><td>Editable list view model.</td><td align="center"><code class="literal">FormListWidget.ViewModel</code></td></tr><tr><td>formListId</td><td>Editable list id.</td><td align="center"><code class="literal">String</code></td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10685"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:list id</span>=<span class="syntax3">"list"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:formList</span><span class="syntax10">&gt;</span>
+       ...
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:formList</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:list</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e10691"></a>5.4.2.&nbsp;&lt;ui:formListRows&gt;</h3></div></div></div><p>Iterating tag that gives access to each row and row form on the
+      editable list current page. The editable row is accessible as
+      "editableRow" variable.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10696"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>var</td><td><span class="emphasis"><em>no</em></span></td><td>Name of variable that represents individual row (by
+                default "row").</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10721"></a>Variables</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col align="center"></colgroup><thead><tr><th>Variable</th><th>Description</th><th align="center">Type</th></tr></thead><tbody><tr><td>formRow</td><td>Current editable list row view model.</td><td align="center"><code class="literal">FormRow.ViewModel</code></td></tr><tr><td>row (unless changed with <span class="emphasis"><em>var</em></span>
+                attribute).</td><td>Object held in current row.</td><td align="center"><code class="literal">Object</code></td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10757"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:list id</span>=<span class="syntax3">"list"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:formList</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:formListRows</span><span class="syntax10">&gt;</span>
+           ...
+        <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:formListRows</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:formList</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:list</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e10762"></a>5.4.3.&nbsp;&lt;ui:formListAddForm&gt;</h3></div></div></div><p>Allows for adding new forms (rows) to editable list.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10767"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>no</em></span></td><td>Editable list id. Searched from context, if not
+                specified.</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10792"></a>Variables</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col align="center"></colgroup><thead><tr><th>Variable</th><th>Description</th><th align="center">Type</th></tr></thead><tbody><tr><td>form</td><td>View model of form.</td><td align="center"><code class="literal">FormWidget.ViewModel</code></td></tr><tr><td>formId</td><td>Id of form.</td><td align="center"><code class="literal">String</code></td></tr><tr><td>formFullId</td><td>Full id of form.</td><td align="center"><code class="literal">String</code></td></tr><tr><td>formScopedFullId</td><td>Full scoped id of form.</td><td align="center"><code class="literal">String</code></td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e10841"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:formListAddForm</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+            <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:textInput id</span>=<span class="syntax3">"name"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+        
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+            <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:textInput id</span>=<span class="syntax3">"surname"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+        
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+            <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:textInput id</span>=<span class="syntax3">"phone"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+        
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+            <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:dateInput id</span>=<span class="syntax3">"birthdate"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>                          
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>       
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:formListAddForm</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="jsp.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="lists.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;4.&nbsp;JSP and Custom Tags&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;6.&nbsp;Lists and Query Browsing</td></tr></table></div></body></html>

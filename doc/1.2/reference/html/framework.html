@@ -1,0 +1,632 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;3.&nbsp;Framework and Configuration</title><link rel="stylesheet" href="../css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"><link rel="start" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="up" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="prev" href="core.html" title="Chapter&nbsp;2.&nbsp;Components, Widgets and Services"><link rel="next" href="jsp.html" title="Chapter&nbsp;4.&nbsp;JSP and Custom Tags"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;3.&nbsp;Framework and Configuration</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="core.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="jsp.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="framework"></a>Chapter&nbsp;3.&nbsp;Framework and Configuration</h2></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e2346"></a>3.1.&nbsp;Overview</h2></div></div></div><p>Aranea framework consists of a number of independent components each
+    performing a single well-defined function. Aranea uses Spring to wire
+    these components into a working framework. Though other IoC containers and
+    configuration frameworks would also work we support Spring by default
+    since it provides a very comfortable and versatile syntax for configuring
+    beans. The dispatcher servlet that uses Spring is called
+    <code class="literal">org.araneaframework.integration.spring.AraneaSpringDispatcherServlet</code>.
+    Note that Aranea itself does not depend on Spring except the classes in
+    the <code class="literal">org.araneaframework.integration.spring</code>
+    package.</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="application-configuration"></a>3.2.&nbsp;Application Configuration</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="web.xml"></a>3.2.1.&nbsp;web.xml</h3></div></div></div><p>The simplest way to configure Aranea for a web application is to
+      set the <code class="literal">araneaApplicationStart</code> init parameter of the
+      dispatcher servlet to the starting widget or flow of the application:
+      </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax7">&lt;!</span><span class="syntax7">DOCTYPE web-app PUBLIC </span>
+<span class="syntax7">  </span><span class="syntax3">"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"</span><span class="syntax7"> </span>
+<span class="syntax7">  </span><span class="syntax3">"http://java.sun.com/dtd/web-app_2_3.dtd"</span><span class="syntax7">&gt;</span>
+
+<span class="syntax10">&lt;</span><span class="syntax10">web-app</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">listener</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">listener-class</span><span class="syntax10">&gt;</span>
+      org.araneaframework.http.core.StandardSessionListener
+    <span class="syntax10">&lt;</span><span class="syntax10">/listener-class</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/listener</span><span class="syntax10">&gt;</span>
+   
+   <span class="syntax10">&lt;</span><span class="syntax10">servlet</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">servlet-name</span><span class="syntax10">&gt;</span>araneaServlet<span class="syntax10">&lt;</span><span class="syntax10">/servlet-name</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">servlet-class</span><span class="syntax10">&gt;</span>
+        org.araneaframework.integration.spring.AraneaSpringDispatcherServlet
+      <span class="syntax10">&lt;</span><span class="syntax10">/servlet-class</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">init-param</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">param-name</span><span class="syntax10">&gt;</span>araneaApplicationStart<span class="syntax10">&lt;</span><span class="syntax10">/param-name</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">param-value</span><span class="syntax10">&gt;</span>example.StartWidget<span class="syntax10">&lt;</span><span class="syntax10">/param-value</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">/init-param</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">load-on-startup</span><span class="syntax10">&gt;</span>1<span class="syntax10">&lt;</span><span class="syntax10">/load-on-startup</span><span class="syntax10">&gt;</span>
+   <span class="syntax10">&lt;</span><span class="syntax10">/servlet</span><span class="syntax10">&gt;</span>
+   
+   <span class="syntax10">&lt;</span><span class="syntax10">servlet-mapping</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">servlet-name</span><span class="syntax10">&gt;</span>araneaServlet<span class="syntax10">&lt;</span><span class="syntax10">/servlet-name</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">url-pattern</span><span class="syntax10">&gt;</span>/main/*<span class="syntax10">&lt;</span><span class="syntax10">/url-pattern</span><span class="syntax10">&gt;</span>
+   <span class="syntax10">&lt;</span><span class="syntax10">/servlet-mapping</span><span class="syntax10">&gt;</span>  
+<span class="syntax10">&lt;</span><span class="syntax10">/web-app</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p>This configuration will load Aranea using
+      <code class="literal">example.StartWidget</code> as the application starting
+      point. </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The servlet must be mapped to a all subpathes starting from
+          some prefix (in our case <code class="literal">/main/*</code>) so that Aranea
+          could do some path-dependent operations like extension file
+          importing.</p></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p><code class="literal">org.araneaframework.http.core.StandardSessionListener</code>
+          is required to allow Aranea to process events like session
+          invalidation.</p></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="aranea-conf.xml"></a>3.2.2.&nbsp;aranea-conf.xml</h3></div></div></div><p>Aranea can also be configured using a Spring configuration file
+      located in <code class="literal">/WEB-INF/aranea-conf.xml</code>. Particularly it
+      may be used to set the starting widget instead of the init-parameter:
+      </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax7">&lt;!</span><span class="syntax7">DOCTYPE beans PUBLIC </span><span class="syntax3">"-//SPRING//DTD BEAN//EN"</span><span class="syntax7"> </span>
+<span class="syntax7">  </span><span class="syntax3">"http://www.springframework.org/dtd/spring-beans.dtd"</span><span class="syntax7">&gt;</span>
+
+<span class="syntax10">&lt;</span><span class="syntax10">beans</span><span class="syntax10">&gt;</span>   
+    <span class="syntax10">&lt;</span><span class="syntax10">bean id</span>=<span class="syntax3">"araneaApplicationStart"</span><span class="syntax10"> </span>
+<span class="syntax10">      class</span>=<span class="syntax3">"example.StartWidget"</span>
+<span class="syntax10">      singleton</span>=<span class="syntax3">"false"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/beans</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p>This seems to be more verbose, but it also allows to configure the
+      framework components as described in <a href="framework.html#framework-configuration" title="3.4.&nbsp;Framework Configuration">Section&nbsp;3.4, &#8220;Framework Configuration&#8221;</a>.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="aranea-conf.properties"></a>3.2.3.&nbsp;aranea-conf.properties</h3></div></div></div><p>Aranea also takes into account a property file located in
+      <code class="literal">/WEB-INF/aranea-conf.properties</code>. The following
+      properties are recognized: </p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody><tr><td><code class="literal">l10n.resourceBundle</code></td><td>The base name of the resource bundle used for
+                localization. This value isn't used if default
+                <code class="literal">araneaLocalizationFilter</code> is overidden (e.g.
+                by the <code class="literal">SpringLocalizationFilterService</code>)
+                <p><span class="strong"><strong>Default value:</strong></span>
+                <code class="literal">org.araneaframework.http.support.DefaultResourceBundle</code></p></td></tr><tr><td><code class="literal">l10n.defaultLocale</code></td><td>The default locale to be used in the application.
+                <p><span class="strong"><strong>Default value:</strong></span>
+                <code class="literal">en</code></p></td></tr><tr><td><code class="literal">l10n.encoding</code></td><td>The default character encoding to be used throughout
+                the application (e.g. for request and response).
+                <p><span class="strong"><strong>Default value:</strong></span>
+                <code class="literal">UTF-8</code></p></td></tr><tr><td><code class="literal">jsp.path</code></td><td>The path from the webapp root to the directory that
+                will act as JSP root. The JSPs put there can be selected using
+                widget view selectors (see <a href="core.html#widget-view-selector" title="2.7.7.&nbsp;View Model and Rendering">Section&nbsp;2.7.7, &#8220;View Model and Rendering&#8221;</a>). <p><span class="strong"><strong>Default value:</strong></span>
+                <code class="literal">/WEB-INF/jsp</code></p></td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="AraneaSpringDispatcherServlet"></a>3.2.4.&nbsp;AraneaSpringDispatcherServlet</h3></div></div></div><p><code class="literal">AraneaSpringDispatcherServlet</code> provides a number
+      of init-params that allow to further customize Aranea configuration:
+      </p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>init-param</th><th>Description</th></tr></thead><tbody><tr><td><code class="literal">araneaCustomConfXML</code></td><td>The custom location of a Spring XML file used to
+                configure Aranea. <p><span class="strong"><strong>Default
+                value:</strong></span>
+                <code class="literal">/WEB-INF/aranea-conf.xml</code></p></td></tr><tr><td><code class="literal">araneaCustomConfProperties</code></td><td>The custom location of a property file used to
+                configure Aranea. <p><span class="strong"><strong>Default
+                value:</strong></span>
+                <code class="literal">/WEB-INF/aranea-conf.properties</code></p></td></tr><tr><td><code class="literal">araneaApplicationStart</code></td><td>The class name of an Aranea widget that will serve as
+                the starting point of an Aranea application. If omitted the
+                Spring bean <code class="literal">araneaApplicationStart</code> will be
+                used.</td></tr><tr><td><code class="literal">araneaApplicationRoot</code></td><td>The class name of an Spring bean describing an Aranea
+                component that will serve as the framework root. If omitted
+                the Spring bean <code class="literal">araneaApplicationRoot</code> will
+                be used. Can be used to override the default configuration
+                altogether.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="ExtendingDispatcher"></a>3.2.5.&nbsp;Extending Dispatcher</h3></div></div></div><p>Currently, the most common way to put Aranea to work is to host it
+      in a Servlet 2.3 or compatible container. The most generic way to do
+      that is to extend the
+      <code class="literal">org.araneaframework.http.core.BaseAraneaDispatcherServlet</code>
+      and build the root component of type
+      <code class="literal">org.araneaframework.http.ServletServiceAdapterComponent</code>
+      in the overrided method <code class="literal">buildRootComponent()</code>:
+      </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax7">package</span> com.foobar.myapp;
+
+<span class="syntax8">class</span> MyServlet <span class="syntax6">extends</span> BaseAraneaDispatcherServlet <span class="syntax11">{</span>
+   <span class="syntax6">protected</span> ServletServiceAdapterComponent <span class="syntax9">buildRootComponent</span>() <span class="syntax11">{</span>
+     StandardServletServiceAdapterComponent root <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">StandardServletServiceAdapterComponent</span>();
+
+     <span class="syntax1">//Configure the child components, service widgets using setter injection</span>
+     <span class="syntax1">//...</span>
+
+     <span class="syntax6">return</span> root;
+   <span class="syntax11">}</span>
+<span class="syntax11">}</span>
+</span></pre></pre><p> One can then use such a servlet to configure Aranea in
+      a web application as by replacing the standard dispatcher servlet
+      with the custom one in <code class="literal">WEB-INF/web.xml</code>.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="ConfigurationContext"></a>3.2.6.&nbsp;ConfigurationContext</h3></div></div></div><p>Aranea also provides a central way to configure some settings that
+      affect the way some components work or display data. These settings are
+      stored in a <code class="literal">Map</code>, where the key names are defined in the
+      <a href="/docs/stable/javadoc/org/araneaframework/uilib/ConfigurationContext.html" target="_top"><code class="literal">org.araneaframework.uilib.ConfigurationContext</code></a> interface.
+      </p><p>
+			The <code class="literal">ConfigurationContext</code> is accessible from the
+			<code class="literal">Environment</code> or by the <code class="literal">getConfiguration()</code>
+			method of <code class="code">BaseUIWidget</code>.
+			</p><p>
+			Every application may provide their own values for settings by implementing
+			their version of the <code class="literal">ConfigurationContext</code> like following:
+
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">class</span> CustomConfiguration <span class="syntax6">implements</span> ConfigurationContext <span class="syntax11">{</span>
+
+  <span class="syntax6">private</span> Map configuration <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">HashMap</span>();
+
+  <span class="syntax6">public</span> <span class="syntax9">CustomConfiguration</span>() <span class="syntax11">{</span>
+    <span class="syntax1">// Note that these constants are defined by the ConfigurationContext.</span>
+    configuration.<span class="syntax9">put</span>(CUSTOM_DATE_FORMAT, <span class="syntax3">"dd.MM.yyyy|d.M.yyyy"</span>);
+    configuration.<span class="syntax9">put</span>(CUSTOM_TIME_FORMAT, <span class="syntax3">"HH:mm"</span>);
+    configuration.<span class="syntax9">put</span>(FULL_LIST_ITEMS_ON_PAGE, <span class="syntax6">new</span> <span class="syntax9">Long</span>(<span class="syntax12">20</span>));
+  <span class="syntax11">}</span>
+
+  <span class="syntax6">public</span> Object <span class="syntax9">getEntry</span>(String entryName) <span class="syntax11">{</span>
+    <span class="syntax6">return</span> configuration.<span class="syntax9">get</span>(entryName);
+  <span class="syntax11">}</span>
+
+<span class="syntax11">}</span>
+</span></pre></pre><p>
+
+			For more information on the settings that can be changed, please see the
+			<code class="literal">ConfigurationContext</code> interface in the
+			<a href="http://www.araneaframework.org/docs/1.1/javadoc/" target="_top">Aranea API</a>.
+			</p><p>
+			To make Aranea use the custom-created configuration, the class must be
+			defined in <code class="literal">aranea-conf.xml</code> file like this:
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax10">&lt;</span><span class="syntax10">bean id</span>=<span class="syntax3">"araneaConfiguration"</span>
+<span class="syntax10">    class</span>=<span class="syntax3">"com.company.conf.CustomConfiguration"</span><span class="syntax10"> singleton</span>=<span class="syntax3">"false"</span><span class="syntax10"> /</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p>
+				Note that it is defined as not being a singleton. This means that the
+				configuration is created for every context (user). Therefore, the
+				settings can be further customized to be more user specific.
+			</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="StateVersioningContext"></a>3.2.7.&nbsp;StateVersioningContext</h3></div></div></div><p>
+		To compensate the lack of support for the back button of the web browser,
+		a custom solution for this has been added to Aranea since release 1.2. This
+		solution depends on rsh (<a href="http://code.google.com/p/reallysimplehistory/" target="_top">Really Simple History</a>),
+		so you also need to import JavaScripts (<code class="filename">js/aranea/aranea-rsh.js</code>,
+		<code class="filename">js/rsh/rsh.js</code>, see also <a href="jsp.html#systemTags" title="4.2.&nbsp;System Tags">System tags</a>).
+	</p><p>
+
+		The main interface of this context is <code class="literal">org.araneaframework.http.StateVersioningContext</code>,
+		and once enabled, it is accessible form the <code class="literal">Environment</code>, though one
+		generally does not need to access it. Every application may provide their own values
+		for costumizing the number of pages (default is 20) of the <code class="literal">StateVersioningContext</code>.
+		To enable state versioning, one must add following XML code to <code class="filename">aranea-conf.xml</code>:
+
+</p><pre class="programlisting"><pre><span class="syntax0">
+<span class="syntax10">&lt;</span><span class="syntax10">bean id</span>=<span class="syntax3">"araneaStateVersioningFilter"</span>
+<span class="syntax10">  class</span>=<span class="syntax3">"org.araneaframework.http.filter.StandardStateVersioningFilterWidget"</span>
+<span class="syntax10">  singleton</span>=<span class="syntax3">"false"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">property name</span>=<span class="syntax3">"maxVersionedStates"</span><span class="syntax10"> value</span>=<span class="syntax3">"10"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/bean</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p>
+
+		Note that it is defined as not being a singleton. This means that the
+		configuration is created for every context (user). Therefore, the
+		settings can be further customized to be more user specific.
+	</p><div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3><p>
+			Since the visited pages are serialized on the client side, do not set high values for
+			<code class="literal">maxVersionedStates</code> as it puts more stress on the client's browser. 
+			Therefore, <code class="literal">10</code> is normal, <code class="literal">20</code> should be maximum
+			value for this attribute.
+		</p></div><p>
+		In addition, an update region must be defined in your
+		<span class="emphasis"><em>root.jsp</em></span> that wraps system form and has a fixed
+		name: <code class="code">araneaGlobalClientHistoryNavigationUpdateRegion</code>.
+		This is the region that is updated when the user moves between pages
+		using the back button of the browser. Here's an example:
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax10">&lt;</span><span class="syntax10">ui:</span><span class="syntax9">body</span><span class="syntax10">&gt;</span>
+        ...
+        <span class="syntax10">&lt;</span><span class="syntax10">ui:</span><span class="syntax9">updateRegion</span><span class="syntax10"> globalId</span>=<span class="syntax3">"</span><span class="syntax3">araneaGlobalClientHistoryNavigationUpdateRegion</span><span class="syntax3">"</span><span class="syntax10">&gt;</span>
+                ...
+                <span class="syntax10">&lt;</span><span class="syntax10">ui:</span><span class="syntax9">systemForm</span><span class="syntax10"> method</span>=<span class="syntax3">"</span><span class="syntax3">post</span><span class="syntax3">"</span><span class="syntax10">&gt;</span>
+                        ...
+                <span class="syntax10">&lt;</span><span class="syntax10">/ui:</span><span class="syntax9">systemForm</span><span class="syntax10">&gt;</span>
+                ...
+        <span class="syntax10">&lt;</span><span class="syntax10">/ui:</span><span class="syntax9">updateRegion</span><span class="syntax10">&gt;</span>
+        ...
+<span class="syntax10">&lt;</span><span class="syntax10">/ui:</span><span class="syntax9">body</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p>
+	</p><p>
+		Finally, you also need to copy <span class="emphasis"><em>etc/js/rsh/blank.html</em></span>
+		from the Aranea 1.2 release package and place it in the root directory of
+		your WAR bundle (the same directory where WEB-INF is located). This HTML
+		file is needed for compatibility with Internet Explorer.
+	</p></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="framework-assembly"></a>3.3.&nbsp;Framework Assembly</h2></div></div></div><p>Aranea framework is made up of the same Components, Services and
+    Widgets that are also used to develop Aranea applications. Each component
+    performs a single well-defined function and depends on its parents only
+    through the <code class="literal">Environment</code> where component lives. The
+    framework components mostly fall in one of the
+    three following categories:</p><div class="variablelist"><dl><dt><span class="term">Filter</span></dt><dd><p>Filter components are the simplest. The component (typically <code class="literal">Service</code>, see <a href="core.html#core-services" title="2.5.&nbsp;Services">Section&nbsp;2.5, &#8220;Services&#8221;</a>) contains a
+            single unnamed child and implements the
+            <span class="emphasis"><em>Filter</em></span> pattern by either passing each call to
+            the child or not. However in addition it may enrich the child's
+            environment with contexts and provide more functionality like
+            exception handling or synchronization. Typical examples of filters
+            are localization filter (provides a localization context),
+            synchronization filter (synchronizes on <code class="literal">action()</code> method) and transactional filter that
+            does not let through double submits.</p></dd><dt><span class="term">Router</span></dt><dd><p>Router typically contains many named children, and chooses
+            only one to propagate the calls to according to some
+            <code class="literal">InputData</code> parameter. Router may have the
+            children either statically preconfigured or created dynamically
+            when the request comes (the latter is the case with session
+            service router). It may also allow us to add/remove children while
+            the application is running. A typical application of a router is
+            to distinguish among major application parts by some attribute
+            (like component corresponding to a user session, or one of the
+            popup window of current user).</p></dd><dt><span class="term">Container</span></dt><dd><p>Container can have one or many children, but it typically
+            will do more with them than just passing the calls to one of them.
+            A typical example is the <span class="emphasis"><em>widget container</em></span>
+            service which translates <code class="literal">action()</code> calls into
+            widget <code class="literal">update()/event()/render()</code>
+            cycle.</p></dd></dl></div><p>The frameworks itself is assembled using a hierarchy of components
+    (this hierarchy is mostly flat, except for the routers and application
+    components). The hierarchy is arranged simply by containment, with each
+    component containing its chidren as fields as illustrated on <a href="framework.html#figure-framework-assembly" title="Figure&nbsp;3.1.&nbsp;Framework assembly example">Figure&nbsp;3.1, &#8220;Framework assembly example&#8221;</a>.</p><div class="figure"><a name="figure-framework-assembly"></a><div class="mediaobject" align="center"><img src="../images/widget-conf.png" align="middle" alt="Framework assembly example"></div><p class="title"><b>Figure&nbsp;3.1.&nbsp;Framework assembly example</b></p></div><p>Of course this illustration is simplified, omitting most of the
+    components described in <a href="framework.html#framework-components">Section&nbsp;3.5, &#8220;Framework Components&#8221;</a>. If you
+    want to find out more about the way framework is built and assembled, see
+    the <a href="http://www.araneaframework.org/docs/aranea-technical-paper.pdf" target="_top">Aranea
+    Technical Paper</a>.</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="framework-configuration"></a>3.4.&nbsp;Framework Configuration</h2></div></div></div><p>Aranea framework is assembled into a mostly-flat hierarchy using
+    Spring beans. The default Aranea configuration is loaded by the
+    <code class="literal">AraneaSpringDispatcherServlet</code>, but it can be overriden
+    with the custom configuration in <code class="literal">aranea-conf.xml</code>. The
+    dispatcher servlet loads the configuration in such a way that same named
+    beans in <code class="literal">aranea-conf.xml</code> override the ones specified in
+    the default configuration. However, not all beans can be safely or
+    comfortably overriden, since many of them will also refer to their child
+    beans.</p><p>It is always safe to override filters, as they should never refer
+    directly to their children. To override a filter just make a bean
+    definition with the same name as in default configuration (filters and
+    their default configuration names among other components are described in
+    <a href="framework.html#framework-components">Section&nbsp;3.5, &#8220;Framework Components&#8221;</a>). For instance to override the
+    default localization context with a custom-made one, one would need to add
+    the following lines:</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax10">&lt;</span><span class="syntax10">bean class</span>=<span class="syntax3">"example.LocalizationFilterService"</span>
+<span class="syntax10">  id</span>=<span class="syntax3">"araneaLocalizationFilter"</span><span class="syntax10"> singleton</span>=<span class="syntax3">"false"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">property name</span>=<span class="syntax3">"languageName"</span><span class="syntax10"> value</span>=<span class="syntax3">"ee"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/bean</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p>There is no good way in Spring to undefine a bean, so instead we use
+    a "No OPeration" filter to nullify a filter from the default
+    configuration:</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax10">&lt;</span><span class="syntax10">bean class</span>=<span class="syntax3">"org.araneaframework.framework.core.NopFilterWidget"</span>
+<span class="syntax10">  id</span>=<span class="syntax3">"araneaTransactionFilter"</span><span class="syntax10"> singleton</span>=<span class="syntax3">"false"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+</span></pre></pre><div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3><p>Since filters can be both services and widgets, you have to be
+        careful to use the appropriate one for the current context. In current
+        case you have override service filters with
+        <code class="literal">NopFilterService</code> and widget filters with
+        <code class="literal">NopFilterWidget</code>.</p></div><p>There is no generic way to insert filters into an arbitrary
+    place in the framework component hierarchy. However there are several
+    predefined places left for optional bean insertion at various levels of
+    the hierarchy, which should cover most of customization needs. To allow
+    inserting more than one filter at a time a filter chain bean is provided
+    that allows putting together an arbitrary long chain of filters:</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax10">&lt;</span><span class="syntax10">bean id</span>=<span class="syntax3">"araneaCustomSessionFilters"</span><span class="syntax10"> singleton</span>=<span class="syntax3">"false"</span>
+<span class="syntax10">  class</span>=<span class="syntax3">"org.araneaframework.framework.filter.StandardFilterChainService"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">property name</span>=<span class="syntax3">"filterChain"</span><span class="syntax10">&gt;</span>     
+    <span class="syntax10">&lt;</span><span class="syntax10">list</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">ref bean</span>=<span class="syntax3">"araneaSerializingAudit"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">ref bean</span>=<span class="syntax3">"myCustomFilter1"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">ref bean</span>=<span class="syntax3">"myCustomFilter2"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/list</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/property</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/bean</span><span class="syntax10">&gt;</span>
+</span></pre></pre><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Use <code class="literal">StandardFilterChainService</code> for hosting
+        service filters and <code class="literal">StandardFilterChainWidget</code> for
+        hosting widget filters.</p></div><p>Follows a description of the insertion point beans and their
+    scope:</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th align="left">Bean name</th><th align="left">Scope and Description</th></tr></thead><tbody><tr><td><code class="literal">araneaCustomApplicationFilters</code></td><td><p>These filters are created only once and live as
+              long as the application does. They are not synchronized and
+              should be use to add features generic to the whole application,
+              not specific users. The exceptions thrown by this filters are
+              intepreted as critical and are handled by the critical exception
+              handler.</p><p><span class="bold"><strong>Examples:</strong></span>
+              <a href="framework.html#araneaFileUploadFilter" title="3.5.5.&nbsp;File Uploading Filter">araneaFileUploadFilter</a>,
+              <a href="framework.html#araneaStatisticFilter" title="3.5.11.&nbsp;Statistics Logging Filter">araneaStatisticFilter</a>.</p></td></tr><tr><td><code class="literal">araneaCustomSessionFilters</code></td><td><p>These filters are created for every HTTP user
+              session and live as long as the session does. They are generally
+              synchronized and should be used to add features specific to the
+              current user session.</p><p><span class="bold"><strong>Examples:</strong></span> <a href="integration.html#araneaLocalizationFilter" title="8.1.2.&nbsp;Spring Localization Filter">araneaLocalizationFilter</a>.</p></td></tr><tr><td><code class="literal">araneaCustomThreadFilters</code></td><td><p>These filters are created for every user browser
+              window and live as long as the window does. They are
+              synchronized and should be used to add features specific to the
+              individual browser window (e.g. most rendering filters will fall
+              into this category).</p><p><span class="bold"><strong>Examples:</strong></span> <a href="framework.html#araneaThreadCloningFilter" title="3.5.12.&nbsp;Browser Window Cloning Filter">araneaThreadCloningFilter</a>
+              .</p></td></tr><tr><td><code class="literal">araneaCustomWidgetFilters</code></td><td><p>These filters are created for every user browser
+              window and live as long as the window does. They are
+              synchronized and should be used to add features specific to the
+              individual browser window. Unlike the rest of the filters this
+              can be widgets and thus can take advantage of the widget
+              update/event/process/render cycle.</p><p><span class="bold"><strong>Examples:</strong></span> <a href="framework.html#araneaTransactionFilter" title="3.5.13.&nbsp;Multi-submit Protection Filter">araneaTransactionFilter</a>,
+              <a href="framework.html#araneaMessagingFilter" title="3.5.8.&nbsp;User Messages Filter">araneaMessagingFilter</a>.</p></td></tr></tbody></table></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e2858"></a>3.5.&nbsp;Framework Components</h2></div></div></div><p>Aranea configuration is determined by request-processing components
+    that can be assembled in many different ways. Following sections are a
+    brief reference for pre-existing standard components, most of which are
+    also used in Aranea framework default configuration.</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaSpringLocalizationFilter"></a>3.5.1.&nbsp;Localization Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardLocalizationFilterService</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaLocalizationFilter</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td><code class="literal">LocalizationContext</code></td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td>-</td></tr></tbody></table></div><p>Provides localization services to children. See <a href="core.html#LocalizationContext" title="2.8.2.&nbsp;LocalizationContext">Section&nbsp;2.8.2, &#8220;LocalizationContext&#8221;</a>.</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>languageName <p> <code class="literal">java.lang.String</code>
+              </p></td><td>A valid ISO Language Code. Sets <code class="literal">Locale</code>
+              according to given language.</td></tr><tr><td>resourceBundleName
+              <p><code class="literal">java.lang.String</code></p></td><td>Name of the used resource bundle used to localize the
+              application.</td></tr><tr><td>locale
+              <p><code class="literal">java.util.Locale</code></p></td><td><code class="literal">Locale</code> to use. Either that or
+              <span class="emphasis"><em>languageName</em></span> should be specified, but not
+              both.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaUpdateRegionFilter"></a>3.5.2.&nbsp;AJAX Update Regions Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+                class:</strong></span></td><td><code class="literal">StandardUpdateRegionFilterWidget</code></td></tr><tr><td align="right"><span class="bold"><strong>Default
+                configuration name:</strong></span></td><td><code class="literal">araneaUpdateRegionFilter</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td><code class="literal">UpdateRegionContext</code></td></tr><tr><td align="right"><span class="bold"><strong>Depends
+                on:</strong></span></td><td>-</td></tr></tbody></table></div><p>When framework receives an event(request) that has <span class="emphasis"><em>update region</em></span> parameters defined,
+      this filter is activated and takes care that only the smallest renderable unit that defines 
+      named <span class="emphasis"><em>update region</em></span> is actually rendered. Generated response also contains only 
+      the rendered content of particular component(s) that needed to be rendered for updating the regions.
+      </p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>characterEncoding <p>
+              <code class="literal">java.lang.String</code> </p></td><td>The character encoding for responses served by this
+              filter, default being "UTF-8".</td></tr></tbody></table></div><span class="emphasis"><em>
+        Notes: In Aranea 1.1 this filter has changed from <code class="literal">Service</code> to
+        <code class="literal">Widget</code>. Also, the configuration parameter <code class="literal">existingRegions</code>
+        only exists in 1.0 branch (TODO: elaborate why? (imho it should remain anyway)).
+      </em></span></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaEnvContextFilter"></a>3.5.3.&nbsp;Environment Configuration Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardContextMapFilterWidget</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaEnvContextFilter</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td>-</td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td>-</td></tr></tbody></table></div><p>Filter widget that enriches children environment with specified
+      context entries.</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>contexts <p> <code class="literal">java.util.Map</code>
+              </p></td><td>A map of contexts that will be added to environment. The
+              keys can contains strings of kind "package.ClassName.class",
+              which will use a Class object of the specified classname as the
+              context key. The context value should be an object instance of
+              the context interface. By convention a context should be
+              registered under a key that is an interface it
+              implements.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaCriticalErrorHandler"></a>3.5.4.&nbsp;Critical Exception Handler</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardCriticalExceptionHandlingFilterService</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaCriticalErrorHandler</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td>-</td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td>-</td></tr></tbody></table></div><p>Catches the exceptions (if any) occuring while executing children
+      methods; passes the exceptions on to <code class="literal">Service</code> that
+      deals with exception handling (obtained from
+      <code class="literal">ExceptionHandlerFactory</code>).</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>exceptionHandlerFactory<p><code class="literal">ExceptionHandlerFactory</code>
+              </p></td><td>A factory for creating exception handlers. An exception
+              handler is a service, which handles the user notification and
+              recovery.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaFileUploadFilter"></a>3.5.5.&nbsp;File Uploading Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardFileUploadFilterService</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaFileUploadFilter</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td><code class="literal">FileUploadContext</code>,
+              <code class="literal">FileUploadInputExtension</code></td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td>-</td></tr></tbody></table></div><p>Enriches child environment with
+      <code class="literal">FileUploadContext</code> (which is just a marker interface).
+      When incoming request is multi-part request, children's
+      <code class="literal">InputData</code> is extended with
+      <code class="literal">FileUploadInputExtension</code> that allows children easy
+      access to uploaded files.</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>multipartEncoding <p>
+              <code class="literal">java.lang.String</code> </p></td><td>Character encoding that will be used to decode the
+              <code class="literal">multipart/form-data</code> encoded strings. The
+              default encoding is determined by <span class="emphasis"><em>Apache
+              Commons</em></span> <code class="literal">FileUpload</code> class.</td></tr><tr><td>useRequestEncoding
+              <p><code class="literal">boolean</code></p></td><td>When set to "true" request character encoding will be
+              used to parse the <code class="literal">multipart/form-data</code> encoded
+              strings.</td></tr><tr><td>maximumCachedSize
+              <p><code class="literal">java.lang.Integer</code></p></td><td>Maximum size of file that may be cached in
+              memory.</td></tr><tr><td>maximumSize
+              <p><code class="literal">java.lang.Long</code></p></td><td>Maximum size of file that may be uploaded to
+              server.</td></tr><tr><td>maximumRequestSize
+              <p><code class="literal">java.lang.Long</code></p></td><td>Maximum size of the request that server will
+              parse to the end.</td></tr><tr><td>tempDirectory
+              <p><code class="literal">java.lang.String</code></p></td><td>Temporary directory to use when uploading files.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaResponseHeaderFilter"></a>3.5.6.&nbsp;HTTP Response Headers Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardHttpResponseFilterService</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaResponseHeaderFilter</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td>-</td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td>-</td></tr></tbody></table></div><p>Filter that sets necessay headers of the response.</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>cacheable <p> <code class="literal">boolean</code>
+              </p></td><td>Whether the response is cacheable or not. By default it
+              is not cacheable.</td></tr><tr><td>contentType
+              <p><code class="literal">java.lang.String</code></p></td><td>Sets the content type of the response. Default is
+              "text/html; charset=UTF-8".</td></tr><tr><td>cookies
+              <p><code class="literal">java.util.Map</code></p></td><td>Constructs cookies from the &lt;cookieName,
+              cookieValue&gt; pairs in the map and sets them in
+              response.</td></tr><tr><td>headers
+              <p><code class="literal">java.util.Map</code></p></td><td>Sets the headers of the response from the map of
+              &lt;headerName, headerValue&gt;.</td></tr><tr><td>cacheHoldingTime
+              <p><code class="literal">long</code></p></td><td>Sets the cache-control's max-age parameter, value is in
+              milliseconds. Response must be cacheable for this to have any
+              effect.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaJspConfigFilter"></a>3.5.7.&nbsp;JSP Configuration Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardJspFilterService</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaJspConfigFilter</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td><code class="literal">JspContext</code></td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td><code class="literal">LocalizationContext</code></td></tr></tbody></table></div><p>Provides JSP specific information to children.</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>submitCharset <p> <code class="literal">java.lang.String</code>
+              </p></td><td>Sets the "accept-charset" attribute value that will be
+              used for rendering Aranea JSP specific <a href="jsp.html#systemForm">systemForm</a>.</td></tr><tr><td>jspPath
+              <p><code class="literal">java.lang.String</code></p></td><td>Path where widgets rendering themselves with jsp
+              templates should search for them. Default is
+              "/WEB-INF/jsp".</td></tr><tr><td>jspExtension
+              <p><code class="literal">java.lang.String</code></p></td><td>File name extension jsp templates are assumed to have. 
+              Default is ".jsp".</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaMessagingFilter"></a>3.5.8.&nbsp;User Messages Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardMessagingFilterWidget</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaMessagingFilter</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td><code class="literal">MessageContext</code></td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td>-</td></tr></tbody></table></div><p>See <a href="core.html#MessageContext" title="2.8.1.&nbsp;MessageContext">Section&nbsp;2.8.1, &#8220;MessageContext&#8221;</a>.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaPopupFilter"></a>3.5.9.&nbsp;Popup Windows Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardPopupFilterWidget</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaPopupFilter</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td><code class="literal">PopupWindowContext</code></td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td><code class="literal">ThreadContext</code>,
+              <code class="literal">TopServiceContext</code>,
+              <code class="literal">TransactionContext</code></td></tr></tbody></table></div><p>Provides methods for opening new session-threads and renders these
+      in different browser windows at client-side.</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>threadServiceFactory
+              <p><code class="literal">ServiceFactory</code> </p></td><td>Factory that should build the component chain according
+              to effective Aranea configuration, beginning with
+              sessionthread-level filters.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaSerializingAudit"></a>3.5.10.&nbsp;Component Serialization Auditing Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardSerializingAuditFilterService</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaSerializingAudit</code> (not included
+              in default filter chain)</td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td>-</td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td>-</td></tr></tbody></table></div><p>Always serializes the the session during the request routing. This filter
+      helps to be aware of serializing issues during development as when the
+      session does not serialize, exception is always thrown. In production
+      configuration, this filter should never be enabled, thus it is disabled
+      by default.</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>testXmlSessionPath
+              <p><code class="literal">java.lang.String</code> </p></td><td>The path where the serialized sessions should be logged
+              in XML format. If not specified, serialization tests are
+              performed in-memory.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaStatisticFilter"></a>3.5.11.&nbsp;Statistics Logging Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardStatisticFilterService</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaStatisticFilter</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td>-</td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td>-</td></tr></tbody></table></div><p>Filter that logs the time it takes for the child service to serve
+      the request (complete its action method).</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>message <p><code class="literal">java.lang.String</code>
+              </p></td><td>The prefix of the statistics log statement.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaThreadCloningFilter"></a>3.5.12.&nbsp;Browser Window Cloning Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardThreadCloningFilterService</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaThreadCloningFilter</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td><code class="literal">ThreadCloningContext</code></td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td><code class="literal">ThreadContext</code>,
+              <code class="literal">TopServiceContext</code></td></tr></tbody></table></div><p>Implementation of a service that clones currently running session
+      thread upon request and sends a response that redirects to cloned
+      session thread. It can be used to support "open link in new window"
+      feature in browsers. Cloning is generic and resource demanding, as whole
+      tree of session thread components is recreated. Custom applications may
+      find that they can implement some application specific cloning strategy
+      that demands less memory and processing power.</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>timeToLive <p><code class="literal">java.lang.Long</code>
+              </p></td><td>Inactivity time for cloned thread after which thread
+              router may kill the thread service. This is specified in
+              milliseconds. If unset, threads created by cloning service
+              usually live until HTTP session in which they were spawned
+              expires.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaTransactionFilter"></a>3.5.13.&nbsp;Multi-submit Protection Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardTransactionFilterWidget</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaTransactionFilter</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td><code class="literal">TransactionContext</code></td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td><code class="literal">SystemFormContext</code></td></tr></tbody></table></div><p><span class="emphasis"><em>TransactionContext</em></span> implementation that
+      filters routing of duplicate requests. The detection of duplicate
+      requests is achieved through defining new transaction ID in each
+      response and checking that next request submits the consistent
+      transaction ID. Missing (<span class="emphasis"><em>null</em></span>) transaction ID is
+      always considered inconsistent. For purposes of asynchronous requests,
+      <code class="literal">override</code> transaction ID is always considered
+      consistent.</p><p>Transactions work in Aranea application by default. You may notice
+			it in a web page as a hidden field, for example:
+			</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax10">&lt;</span><span class="syntax10">input name</span><span class="syntax11">=</span><span class="syntax3">"araTransactionId"</span><span class="syntax10"> type</span><span class="syntax11">=</span><span class="syntax3">"hidden"</span><span class="syntax10"> value</span><span class="syntax11">=</span><span class="syntax3">"-8629560801569274688"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p>
+			The value is random, and a <code class="literal">TransactionContext</code> checks
+			every request whether it is the same as expected (it remembers the previous
+			<code class="literal">transactionId</code> value it gave to the page). If it is not the
+			same, the request will be ignored. Therefore, one may notice when
+			transactions are inconsistent: the pages won't update itself (on first click).
+			</p><p>Sometimes, however, a <code class="literal">transactionId</code> may become
+			inconsistent (for various reasons, such as due to a background request).
+			Then the solution would be to change the <code class="literal">transactionId</code>
+			value to <code class="literal">"override"</code> (for example, by using JavaScript).
+			(In the next response, the <code class="literal">transactionId</code> will still have a
+			new random numeric value.)
+			</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Request parameter name</th><th>Description</th></tr></thead><tbody><tr><td><code class="literal">transactionId</code></td><td>Transaction id must be equal to the last one generated
+              for the transaction to be consistent.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaClassReloadingFilter"></a>3.5.14.&nbsp;Class Reloading Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardClassReloadingFilterWidget</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td>-</td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td>-</td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td>-</td></tr></tbody></table></div><p>This filter allows to reload the underlying object classes
+      dynamically. This means that you can just change the widget source file,
+      compile it (e.g. with IDE built-in compiler) and it will be reloaded
+      seamlessly in Aranea. This will apply only to Aranea widget classes
+      under this filter and the classes they contain (but not e.g. Spring
+      beans). This filter must be registered instead of the
+      <code class="literal">araneaApplicationStart</code> to function.</p><div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3><p>None of the classes under this filter may be configured by
+        Spring or anything else using its own classloader!</p></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>childClass
+              <p><code class="literal">java.lang.String</code></p></td><td>The full names of the child widget class.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaClientStateFilter"></a>3.5.15.&nbsp;Client State Serialization Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardClientStateFilterWidget</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaClientStateFilter</code> (not included
+              in default filter chain)</td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td>-</td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td><code class="literal">SystemFormContext</code></td></tr></tbody></table></div><p>This filter will serialize the state of underlying widgets onto
+      client-side. This significantly decreases the server-side session size
+      and thus memory use. It is especially useful in intranet applications
+      with lots of spare bandwidth. The filter should be positioned as the
+      first custom widget filter for most gain.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The filter will protect against tampering with the serialized
+          state and will throw an exception if modified state is submitted
+          from the client-side. As a bonus this filter will also allow a user
+          to make up to 10 steps back and forward in browser history,
+          restoring the correct state.</p></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>compress <p><code class="literal">boolean</code> </p></td><td>If true the serialized state will also be GZIP'ed,
+              trading processor time for bandwidth. False by default.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaFileImportFilter"></a>3.5.16.&nbsp;Extension File Import Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java class:</strong></span></td><td><code class="literal">StandardFileImportFilterService</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration name:</strong></span></td><td><code class="literal">araneaFileImportFilter</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td>-</td></tr><tr><td align="right"><span class="bold"><strong>Depends on:</strong></span></td><td>-</td></tr></tbody></table></div><p>This filter is responsible for providing a virtual file system so
+      that extensions could make use of the resources included in .JAR files.
+      See <a href="framework.html#framework-extensions" title="3.6.1.&nbsp;Extension Resources">Section&nbsp;3.6.1, &#8220;Extension Resources&#8221;</a></p><p>When the file importer is used to provide aranea resources
+	(styles/JavaScripts) it also defines cache time, after which the browser
+	reloads the resources. You can configure this value through
+	<code class="literal">web.xml</code> configuration parameter (the default time is 1 hour):
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax10">&lt;</span><span class="syntax10">context-param</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">param-name</span><span class="syntax10">&gt;</span>fileImporterCacheInMillis<span class="syntax10">&lt;</span><span class="syntax10">/param-name</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">param-value</span><span class="syntax10">&gt;</span>10800000<span class="syntax10">&lt;</span><span class="syntax10">/param-value</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/context-param</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p>
+	</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaMountingFilter"></a>3.5.17.&nbsp;Bookmarking/URL Mounting Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardMountingFilterService</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaMountingFilter</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td><code class="literal">MountContext</code></td></tr><tr><td align="right"><span class="bold"><strong>Depends on:</strong></span></td><td>-</td></tr></tbody></table></div><p>Implementation of a service that allows to "mount" flow components
+      to a publicly accessible URL. It is used when it is needed that some (read-only) parts of application
+      are accessible to users who are not able to enter the session-based conversation with application.</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>mounts<p><code class="literal">java.util.Map&lt;String, MountContext.MessageFactory&gt;</code></p></td><td>
+              	Keys in the map are URL prefixes under which the flow component is mapped.
+              	Values are <code class="literal">org.araneaframework.Message</code> factories of type <code class="literal">MountContext.MessageFactory</code>&#8212;producing
+              	messages that generate component hierarchy for serving wanted content.
+              </td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaRootFlowContainer"></a>3.5.18.&nbsp;Root Flow Container</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">RootFlowContainerWidget</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaRootFlowContainer</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td><code class="literal">RootFlowContext</code>,
+              <code class="literal">FlowContext</code></td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td>-</td></tr></tbody></table></div><p>See <a href="core.html#FlowContext" title="2.8.3.&nbsp;FlowContext">Section&nbsp;2.8.3, &#8220;FlowContext&#8221;</a> for purpose and philosophy
+      behind <code class="literal">FlowContext</code>.
+      <code class="literal">RootFlowContext</code> is same as
+      <code class="literal">FlowContext</code>, but allows acces to the root flow
+      container at any time. Remember that <code class="literal">RootFlowContext</code>
+      is the topmost flow context that everything else depends on. One can find
+      it from the <code class="literal">Environment</code>.</p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>Flow containers are not generally a part of the framework and
+          can be used in your application as needed. In a typical Aranea
+          application the menu will inherit from
+          <code class="literal">ExceptionHandlingFlowContainerWidget</code> that besides
+          providing the flow container functionality also allows to handle
+          flow exceptions inside the container, preserving the menus and
+          current state. See business application tutorial for more
+          information.</p></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>top <p><code class="literal">org.araneaframework.Widget</code>
+              </p></td><td>First widget to be started in this container.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="StandardOverlayContainerWidget"></a>3.5.19.&nbsp;Overlay Container</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardOverlayContainerWidget</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaOverlayContainer</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td><code class="literal">OverlayContext</code></td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td>-</td></tr></tbody></table></div><p>Supports running processes in "overlay" layer (in parallel FlowContext of the same session thread). Allows
+      construction of modal dialogs and modal processes.</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Injectable properties</th><th>Description</th></tr></thead><tbody><tr><td>main<p><code class="literal">Widget</code> </p></td><td>Widget corresponding to main process running outside overlay.</td></tr><tr><td>overlay
+              <p><code class="literal">FlowContextWidget</code> </p></td><td>Component responsible for running processes in overlay layer.</td></tr></tbody></table></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="StandardSystemFormFilterService"></a>3.5.20.&nbsp;System Form Field Storage Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardSystemFormFilterService</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaSystemFormFilter</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td><code class="literal">SystemFormContext</code> (for adding/examining managed form fields).</td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td><code class="literal">TopServiceContext</code>, <code class="literal">ThreadContext</code></td></tr></tbody></table></div><p>Stores system form fields that will be written out when <code class="literal">&lt;ui:systemForm&gt;</code> tag is used. 
+      Form fields that indicate service levels (<code class="code">topServiceId</code> and <code class="code">threadServiceId</code>) are
+      always automatically added to every response by this implementation.</p><p>
+				This filter does not have any special injectable properties (except the usual <code class="literal">childService</code>).
+				<code class="literal">SystemFormContext</code> interface is accessible from the <code class="literal">Environment</code>
+				when this filter is present in the hierarchy and provides <code class="literal">addField(String key, String value);</code>
+				and <code class="literal">Map getFields();</code> methods for managing special form fields. See also information 
+				about <a href="jsp.html#systemForm">systemForm</a> tag.
+			</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="StandardWindowScrollPositionFilterWidget"></a>3.5.21.&nbsp;Window Scroll Position Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">StandardWindowScrollPositionFilterWidget</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td><code class="literal">araneaScrollingFilter</code></td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td>WindowScrollPositionContext</td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td>-</td></tr></tbody></table></div><p>
+      This filter provides a way to preserve the scroll position of the window so that the
+      user would not have to scroll back to the same place on the page every time they click
+      on something. With every submit, the page sends its scroll coordinates so that the next
+      response would know where to scroll the page. All-in-all, you can consider it a nice
+      feature to have.
+      </p><p>
+			To enable this feature, one must define it in <code class="literal">aranea-conf.xml</code>:
+
+</p><pre class="programlisting"><pre><span class="syntax0"> <span class="syntax10">&lt;</span><span class="syntax10">bean id</span>=<span class="syntax3">"araneaCustomWidgetFilters"</span><span class="syntax10"> singleton</span>=<span class="syntax3">"false"</span>
+<span class="syntax10">    class</span>=<span class="syntax3">"org.araneaframework.framework.filter.StandardFilterChainWidget"</span><span class="syntax10">&gt;</span>
+   <span class="syntax10">&lt;</span><span class="syntax10">property name</span>=<span class="syntax3">"filterChain"</span><span class="syntax10">&gt;</span>
+     <span class="syntax10">&lt;</span><span class="syntax10">list</span><span class="syntax10">&gt;</span>
+       <span class="syntax10">&lt;</span><span class="syntax10">ref bean</span>=<span class="syntax3">"araneaScrollingFilter"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+     <span class="syntax10">&lt;</span><span class="syntax10">/list</span><span class="syntax10">&gt;</span>
+   <span class="syntax10">&lt;</span><span class="syntax10">/property</span><span class="syntax10">&gt;</span>
+ <span class="syntax10">&lt;</span><span class="syntax10">/bean</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p>
+
+			Note the <code class="literal">araneaScrollingFilter</code>, which you do not have
+			to define yourself (just reference it).
+			</p><p>
+			In addition, this feature must be registered in a (root) JSP page:
+
+</p><pre class="programlisting"><pre><span class="syntax0"> ...
+  <span class="syntax10">&lt;</span><span class="syntax10">ui:</span><span class="syntax9">body</span><span class="syntax10">&gt;</span>
+
+    <span class="syntax10">&lt;</span><span class="syntax10">div id</span>=<span class="syntax3">"</span><span class="syntax3">cont1</span><span class="syntax3">"</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">ui:</span><span class="syntax9">systemForm</span><span class="syntax10"> method</span>=<span class="syntax3">"</span><span class="syntax3">POST</span><span class="syntax3">"</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">ui:</span><span class="syntax9">registerScrollHandler</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">ui:</span><span class="syntax9">registerPopups</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">ui:</span><span class="syntax9">registerOverlay</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+...
+</span></pre></pre><p>
+
+			Notice the <code class="literal">&lt;ui:registerScrollHandler/&gt;</code> tag!
+			</p></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e4306"></a>3.6.&nbsp;Other</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="framework-extensions"></a>3.6.1.&nbsp;Extension Resources</h3></div></div></div><p>External resources, such as javascript, style and image files of
+      Aranea components are managed through different configuration files. The
+      resources are listed in XML files and can be accessed through
+      <code class="literal">StandardFileImportFilterService</code>. This approach makes
+      it possible to package all the resources into the aranea
+      <code class="literal">jar</code> archives and no manual copying of necessary files
+      to fixed locations is needed.</p><p>Aranea comes bundled with a
+      <code class="literal">aranea-resources.xml</code> file which defines all the
+      external resources. </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">resources</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">files content-type</span>=<span class="syntax3">"text/css"</span><span class="syntax10"> group</span>=<span class="syntax3">"defaultStyles"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">file path</span>=<span class="syntax3">"styles/_styles_global.css"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    ...
+    <span class="syntax10">&lt;</span><span class="syntax10">file path</span>=<span class="syntax3">"styles/_styles_screen.css"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/files</span><span class="syntax10">&gt;</span>
+
+  <span class="syntax10">&lt;</span><span class="syntax10">files content-type</span>=<span class="syntax3">"image/gif"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">file path</span>=<span class="syntax3">"gfx/i01.gif"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    ...
+    <span class="syntax10">&lt;</span><span class="syntax10">file path</span>=<span class="syntax3">"gfx/i02.gif"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/files</span><span class="syntax10">&gt;</span>
+  ...
+<span class="syntax10">&lt;</span><span class="syntax10">/resources</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p> All the files listed in the configuration
+      files are allowed to be loaded through the
+      <code class="literal">FileImportFilter</code>. Some are grouped by name to provide
+      an easy access for reading files in bulk.</p><p>To <span class="emphasis"><em>override</em></span> specific files in the
+      configuration file, the new file should be placed in a subdirectory
+      <code class="literal">override</code>. When loading a file, Aranea first trys to
+      open the file in the <code class="literal">override</code> directory and on
+      failure trys to read the file without the prefix directory.</p><p>To <span class="emphasis"><em>add</em></span> files to the defined list, construct a
+      configuration file and name it <code class="literal">aranea-resources.xml</code>.
+      All such configuration files from the classpath are parsed for the
+      resources. If two file groups are defined with the same name, the group
+      is formed by taking a union from the files in the group.</p><p>Groupnames <code class="literal">defaultStyles</code> and
+      <code class="literal">defaultScripts</code> are predefined groups for managing the
+      necessary core files that must be included for Aranea to work
+      correctly.</p><p>For custom loading a resource, the URL to use is
+      <code class="literal">/fileimporter/filepath</code>. The
+      <code class="literal">fileimporter</code> is
+      <code class="literal">StandardFileImportFilterService.FILE_IMPORTER_NAME</code>
+      and <code class="literal">filepath</code> is the path that is defined for the file
+      in the resource configuration file.</p><p>Extensions of the framework provide their own configuration files
+      for configuring their resources. New extensions cannot be defined right
+      now on the fly.</p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="core.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="jsp.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;2.&nbsp;Components, Widgets and Services&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;4.&nbsp;JSP and Custom Tags</td></tr></table></div></body></html>

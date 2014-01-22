@@ -1,0 +1,725 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;4.&nbsp;JSP and Custom Tags</title><link rel="stylesheet" href="../css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"><link rel="start" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="up" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="prev" href="framework.html" title="Chapter&nbsp;3.&nbsp;Framework and Configuration"><link rel="next" href="forms.html" title="Chapter&nbsp;5.&nbsp;Forms and Data Binding"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;4.&nbsp;JSP and Custom Tags</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="framework.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="forms.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="jsp"></a>Chapter&nbsp;4.&nbsp;JSP and Custom Tags</h2></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e4284"></a>4.1.&nbsp;Aranea Standard Tag Library</h2></div></div></div><p>Aranea supports JSP rendering by providing a JSP 1.2 custom tag
+    library that tries to abstract away from HTML and allow programming in
+    terms of widgets, layouts and logical GUI elements. The tag library URI is
+    "http://araneaframework.org/tag-library/standard" and it is contained in
+    <code class="literal">aranea-presentation.jar</code>, so putting this JAR in the
+    classpath (e.g. <code class="literal">WEB-INF/lib</code>) is enough to put it to
+    work. Library tags support JSP Expression Language that is used in JSTL
+    1.0.</p><p>Aranea examples use JSP XML form and in such form importing the
+    library should look like this: </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">jsp</span><span class="syntax10">:root </span><span class="syntax5">xmlns</span><span class="syntax10">:jsp</span>=<span class="syntax3">"http://java.sun.com/JSP/Page"</span><span class="syntax10"> </span>
+<span class="syntax10">  </span><span class="syntax5">xmlns</span><span class="syntax10">:ui</span>=<span class="syntax3">"http://araneaframework.org/tag-library/standard"</span><span class="syntax10"> version</span>=<span class="syntax3">"1.2"</span><span class="syntax10">&gt;</span>
+  ...
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">jsp</span><span class="syntax10">:root</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p> In a usual JSP file it should look like
+    this: </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">&lt;%@</span><span class="syntax10"> </span><span class="syntax6">taglib</span><span class="syntax10"> </span><span class="syntax7">uri</span>=<span class="syntax3">"</span><span class="syntax3">http://araneaframework.org/tag-library/standard</span><span class="syntax3">"</span><span class="syntax10"> </span><span class="syntax7">prefix</span>=<span class="syntax3">"</span><span class="syntax3">ui</span><span class="syntax3">"</span><span class="syntax10"> </span><span class="syntax6">%&gt;</span>
+...
+</span></pre></pre><p> The suggested prefix for the tag library is "ui".</p><p>
+        There is otherwise identical taglib that has <code class="literal">&lt;rtexprvalue&gt;</code> set to <code class="literal">true</code>
+        for each tag attribute. URI for that taglib is <code class="literal">http://araneaframework.org/tag-library/standard_rt</code>.
+        When using JSP version 2.0 or higher, this taglib should be used, otherwise EL in attributes is rejected by
+        containers.
+    </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="systemTags"></a>4.2.&nbsp;System Tags</h2></div></div></div><p>Aranea JSP rendering should start from some root JSP (<span class="emphasis"><em>root template</em></span>) that will 
+    include the root widget(s) (which typically are some kind of flowcontainers or menus). To
+    support widgets and other custom tags one needs to make sure that the
+    template looks something like this: </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">jsp</span><span class="syntax10">:root </span>
+<span class="syntax10">  </span><span class="syntax5">xmlns</span><span class="syntax10">:jsp</span>=<span class="syntax3">"http://java.sun.com/JSP/Page"</span><span class="syntax10"> </span>
+<span class="syntax10">  </span><span class="syntax5">xmlns</span><span class="syntax10">:ui</span>=<span class="syntax3">"http://araneaframework.org/tag-library/standard"</span><span class="syntax10"> version</span>=<span class="syntax3">"1.2"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">html</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">head</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">title</span><span class="syntax10">&gt;</span>Aranea Template Application<span class="syntax10">&lt;</span><span class="syntax10">/title</span><span class="syntax10">&gt;</span>
+         
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:importScripts/</span><span class="syntax10">&gt;</span>      
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:importStyles/</span><span class="syntax10">&gt;</span>      
+   
+      <span class="syntax10">&lt;</span><span class="syntax10">/head</span><span class="syntax10">&gt;</span>
+    
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:body</span><span class="syntax10">&gt;</span>
+          <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:systemForm method</span>=<span class="syntax3">"POST"</span><span class="syntax10">&gt;</span>
+            <span class="syntax10">&lt;</span><span class="syntax10">h1</span><span class="syntax10">&gt;</span>Aranea Application<span class="syntax10">&lt;</span><span class="syntax10">/h1</span><span class="syntax10">&gt;</span>
+              
+            <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:messages/</span><span class="syntax10">&gt;</span>
+
+            <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:widgetInclude id</span>=<span class="syntax3">"root"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+          <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:systemForm</span><span class="syntax10">&gt;</span>
+          
+      <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:body</span><span class="syntax10">&gt;</span>   
+    <span class="syntax10">&lt;</span><span class="syntax10">/html</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">jsp</span><span class="syntax10">:root</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p> Next are described all these tags except
+    &lt;ui:widgetInclude&gt;, which is described in the following
+    section.</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e4325"></a>4.2.1.&nbsp;&lt;ui:importScripts&gt;</h3></div></div></div><p>Aranea comes bundled with different external resources: javascript
+      libraries, stylesheets and images. To automate the process of loading
+      the javascript files without the manual copying of them to specific
+      webapp locations, a special filter is used. The filter is able to read
+      files from aranea <code class="literal">jar</code> files.</p><p>&lt;ui:importScripts&gt; depends on the filter
+      <span class="emphasis"><em>StandardServletFileImportFilterService</em></span> being set.
+      The filter provides the functionality of reading files from the jars on
+      the server.</p><p>If no attributes specified, the default group of javascript files
+      are loaded.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e4340"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>file</td><td><span class="emphasis"><em>no</em></span></td><td>Writes HTML <code class="literal">&lt;script&gt;</code> tag to
+                load the specific file.</td></tr><tr><td>group</td><td><span class="emphasis"><em>no</em></span></td><td>Writes HTML <code class="literal">&lt;script&gt;</code> tag to
+                load a group of javascript files.</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e4379"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:importScripts/</span><span class="syntax10">&gt;</span> <span class="syntax1">&lt;!-- imports files from 'defaultScripts' group --&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:importScripts group</span>=<span class="syntax3">"debugScripts"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span> <span class="syntax1">&lt;!-- imports additional debug scripts (js logger) --&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e4384"></a>4.2.2.&nbsp;&lt;ui:importStyles&gt;</h3></div></div></div><p>Aranea comes bundled with CSS files to provide custom look for
+      different predefined components (the template app, calendar, htmleditor,
+      etc.). Just as with javascript, to use them one would have to extract
+      them from the jars and use them just like any other css file would be
+      used. To automate this process with aranea css files one can use the
+      &lt;ui:importStyles&gt; tag to include the css files
+      <span class="emphasis"><em>automatically</em></span>.</p><p>&lt;ui:importStyles&gt; depends on the filter
+      <span class="emphasis"><em>StandardServletFileImportFilterService</em></span> being set.
+      The filter provides the functionality of reading files from the jars on
+      the server.</p><p>If no are attributes specified, the default group of css files are
+      loaded.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e4399"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>file</td><td><span class="emphasis"><em>no</em></span></td><td>Writes out the HTML's CSS handling
+                <code class="literal">link</code> to load the specific file.</td></tr><tr><td>group</td><td><span class="emphasis"><em>no</em></span></td><td>Writes out the HTML's CSS handling
+                <code class="literal">link</code> to load the group of files.</td></tr><tr><td>media</td><td><span class="emphasis"><em>no</em></span></td><td>Media type to which imported styles are applied.</td></tr></tbody></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e4446"></a>4.2.3.&nbsp;&lt;ui:body&gt;</h3></div></div></div><p>This tag will render an HTML &lt;body&gt; tag with Aranea JSP
+      specific <span class="emphasis"><em>onload</em></span> and <span class="emphasis"><em>onunload</em></span>
+      events attached. It usually writes out some other page initialization
+      scripts too, depending on the circumstances. It must be present in
+      a JSP template, otherwise most client-side functionality will cease to function.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e4457"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>onload</td><td><span class="emphasis"><em>no</em></span></td><td>Overwrite the standard Aranea JSP HTML body onload
+                event. Use with caution.</td></tr><tr><td>onunload</td><td><span class="emphasis"><em>no</em></span></td><td>Overwrite the standard Aranea JSP HTML body onload
+                event. Use with caution.</td></tr><tr><td>id</td><td><span class="emphasis"><em>no</em></span></td><td>HTML BODY id.</td></tr><tr><td>dir</td><td><span class="emphasis"><em>no</em></span></td><td>HTML BODY dir attribute.</td></tr><tr><td>lang</td><td><span class="emphasis"><em>no</em></span></td><td>HTML BODY lang attribute.</td></tr><tr><td>title</td><td><span class="emphasis"><em>no</em></span></td><td>HTML BODY title attribute.</td></tr></tbody></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="systemForm"></a>4.2.4.&nbsp;&lt;ui:systemForm&gt;</h3></div></div></div><p>This tag will render an HTML &lt;form&gt; tag along with some
+      Aranea-specific hidden fields. When making custom web applications it is
+      strongly suggested to have only one system form in the template and have
+      it submit using <span class="emphasis"><em>POST</em></span>. This will ensure that no
+      matter what user does no data is ever lost. However Aranea does not
+      impose this idiom and one may just as well submit using
+      <span class="emphasis"><em>GET</em></span>, define system forms in widgets and use usual
+      HTML links instead of JavaScript. See <a href="jsp.html#systemTags" title="4.2.&nbsp;System Tags">Section&nbsp;4.2, &#8220;System Tags&#8221;</a> for
+      usage example and <a href="framework.html#StandardSystemFormFilterService" title="3.5.20.&nbsp;System Form Field Storage Filter">Section&nbsp;3.5.20, &#8220;System Form Field Storage Filter&#8221;</a> about a
+      filter that provides some essential hidden fields.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e4537"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>no</em></span></td><td>The HTML "id" of the <code class="literal">&lt;form&gt;</code>
+                tag that may be used in JavaScript. It will be autogenerated
+                if omitted.</td></tr><tr><td>method</td><td><span class="emphasis"><em>yes</em></span></td><td>HTTP submit method, either <code class="literal">GET</code> or
+                <code class="literal">POST</code>.</td></tr><tr><td>enctype</td><td><span class="emphasis"><em>no</em></span></td><td>Same as HTML <code class="literal">&lt;form&gt;</code> attribute
+                <code class="literal">enctype</code>, defines how form data is
+                encoded.</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e4593"></a>Variables</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col align="center"></colgroup><thead><tr><th>Variable</th><th>Description</th><th align="center">Type</th></tr></thead><tbody><tr><td>systemFormId</td><td>SystemForm FORM id.</td><td align="center"><code class="literal">String</code></td></tr></tbody></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="uimessagesjsp"></a>4.2.5.&nbsp;&lt;ui:messages&gt;</h3></div></div></div><p>This tag will render messages of given type if they are present in
+      current <code class="literal">MessageContext</code>. When type is not specified,
+      all types of messages are rendered. As <code class="literal">MessageContext</code>
+      is typically used for error messages, it is common to render these
+      messages somewhere near top of the page, where they can easily be
+      spotted.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e4629"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>type</td><td><span class="emphasis"><em>no</em></span></td><td>Message type.</td></tr><tr><td>styleClass</td><td><span class="emphasis"><em>no</em></span></td><td>CSS class applied to rendered messages, default being
+                <code class="literal">aranea-messages</code>.</td></tr><tr><td>divId</td><td><span class="emphasis"><em>no</em></span></td><td>Sets the id of the HTML <span class="emphasis"><em>&lt;div&gt;</em></span> inside which the messages are rendered.
+                If left unspecified, no id is assigned.</td></tr><tr><td>style</td><td><span class="emphasis"><em>no</em></span></td><td>CSS inline style applied to rendered messages. Use <code class="literal">styleClass</code> instead.</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e4687"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+...
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:messages type</span>=<span class="syntax3">"info"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:messages type</span>=<span class="syntax3">"error"</span><span class="syntax10"> styleClass</span>=<span class="syntax3">"custom-error-message-class"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:messages/</span><span class="syntax10">&gt;</span>
+...
+</span></pre></pre></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e4692"></a>4.3.&nbsp;Basic Tags</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e4695"></a>4.3.1.&nbsp;&lt;ui:attribute&gt;</h3></div></div></div><p>Defines an attribute of the containing element, where possible.
+      See also <a href="jsp.html#uielementTag" title="4.3.3.&nbsp;<ui:element&gt;">Section&nbsp;4.3.3, &#8220;&lt;ui:element&gt;&#8221;</a>. Most form element tags accept
+      attributes set by this tag too, see <a href="jsp.html#attribute_examples" title="Examples">the section called &#8220;Examples&#8221;</a>.</p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>name</td><td><span class="emphasis"><em>yes</em></span></td><td>Attribute name.</td></tr><tr><td>value</td><td><span class="emphasis"><em>yes</em></span></td><td>Attribute value.</td></tr></tbody></table></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="attribute_examples"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+...
+  <span class="syntax1">&lt;!-- set the onkeypress attribute for HTML input produced by ui:textInput--&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:textInput</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:attribute name</span>=<span class="syntax3">"onkeypress"</span><span class="syntax10"> value</span>=<span class="syntax3">"upperCase(this);"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:textInput</span><span class="syntax10">&gt;</span>
+...
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e4740"></a>4.3.2.&nbsp;&lt;ui:elementContent&gt;</h3></div></div></div><p>Defines an HTML element content, meaning the body of the HTML
+      element where text and other tags go.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="uielementTag"></a>4.3.3.&nbsp;&lt;ui:element&gt;</h3></div></div></div><p>Defines HTML node, can be used together with
+      <code class="literal">&lt;ui:attribute&gt;</code> and
+      <code class="literal">&lt;ui:elementContent&gt;</code> to define a full HTML
+      node.</p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>name</td><td><span class="emphasis"><em>no</em></span></td><td>HTML element name.</td></tr></tbody></table></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="element_attribute_examples"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:element name</span>=<span class="syntax3">"span"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:attribute name</span>=<span class="syntax3">"class"</span><span class="syntax10"> value</span>=<span class="syntax3">"fancy"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:elementContent</span><span class="syntax10">&gt;</span>Contents of fancy span.<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:elementContent</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:element</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="keyboardHandlerTag"></a>4.3.4.&nbsp;&lt;ui:keyboardHandler&gt;</h3></div></div></div><p>Registers a simple javascript keyboard handler.</p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>scope</td><td><span class="emphasis"><em>no</em></span></td><td>When a keyboard event happens, it is usually associated
+                with a certain form element / form / widget / etc. The object
+                with which an event is associated is identified by a
+                hierarchical id (e.g. there may be widget 'somelist',
+                containing form 'somelist.form', containing textbox
+                'somelist.form.textbox'. The scope is a prefix of that id that
+                must match in order for the handler to be triggered. For
+                example, the handler with scope='somelist.form.textbox' will
+                be triggered only when the event in the textbox occurs, but
+                the handler with scope="somelist" will be triggered when any
+                event in any of the elements inside any of the forms of
+                "somelist" occurs. I.e. for any element with ID beginning with
+                'somelist'. When scope is not specified, a global handler is
+                registered, that reacts to an event in any
+                form/widget.</td></tr><tr><td>handler</td><td><span class="emphasis"><em>yes</em></span></td><td>A javascript handler function that takes two parameters
+                - the event object and the element id for which the event was
+                fired. Example: <pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">function</span>(event<span class="syntax11">,</span> elementId) <span class="syntax11">{</span> <span class="syntax9">alert</span>(elementId)<span class="syntax11">;</span> <span class="syntax11">}</span>
+</span></pre></pre></td></tr><tr><td>keyCode</td><td><span class="emphasis"><em>no</em></span></td><td>Keycode to which the event must be triggered. 13 means
+                enter. Either keyCode or key must be specified, but not
+                both.</td></tr><tr><td>key</td><td><span class="emphasis"><em>no</em></span></td><td>Key, to which the event must be triggered. Key is
+                specified as a certain 'alias'. The alias may be an ASCII
+                character or a digit (this will denote the corresponding key
+                on a US keyboard), a space (' '), or one of the following:
+                'return', 'escape', 'backspace', 'tab', 'shift', 'control',
+                'space', 'f1', 'f2', ..., 'f12'.</td></tr><tr><td>keyCombo</td><td><span class="emphasis"><em>no</em></span></td><td>Key combination, which should trigger the event. It can
+                is specified with key aliases separated with "+" signs.
+                For example "ctrl+alt+f1", "alt+r" etc.</td></tr></tbody></table></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="keyboardHandler_examples"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax1">&lt;!-- Globally-scoped F2 listener --&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:keyboardHandler </span>
+<span class="syntax10">  scope</span>=<span class="syntax3">""</span><span class="syntax10"> </span>
+<span class="syntax10">  key</span>=<span class="syntax3">"f2"</span><span class="syntax10"> </span>
+<span class="syntax10">  handler</span>=<span class="syntax3">"function() { alert('You pressed F2. Do it again if you dare!');}"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e4851"></a>4.3.5.&nbsp;&lt;ui:eventKeyboardHandler&gt;</h3></div></div></div><p>Registers a 'server-side' keyboard handler that sends an event to
+      the specified widget.</p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>scope</td><td><span class="emphasis"><em>no</em></span></td><td><a href="jsp.html#keyboardHandlerTag" title="4.3.4.&nbsp;<ui:keyboardHandler&gt;">Section&nbsp;4.3.4, &#8220;&lt;ui:keyboardHandler&gt;&#8221;</a></td></tr><tr><td>widgetId</td><td><span class="emphasis"><em>no</em></span></td><td>Id of Widget that is target of event produced by
+                keyboard handler.</td></tr><tr><td>eventId</td><td><span class="emphasis"><em>no</em></span></td><td>Id of event that should be sent to target
+                widget.</td></tr><tr><td>eventParam</td><td><span class="emphasis"><em>no</em></span></td><td>Event parameters</td></tr><tr><td>updateRegions</td><td><span class="emphasis"><em>no</em></span></td><td>Enumerates the regions of markup to be updated in this
+                widget scope. Please see &lt;ui:updateRegion&gt; for
+                details.</td></tr><tr><td>globalUpdateRegions</td><td><span class="emphasis"><em>no</em></span></td><td>Enumerates the regions of markup to be updated
+                globally. Please see &lt;ui:updateRegion&gt; for
+                details.</td></tr><tr><td>keyCode</td><td><span class="emphasis"><em>no</em></span></td><td>Keycode to which the event must be triggered. 13 means
+                enter. Either keyCode or key must be specified, but not
+                both.</td></tr><tr><td>key</td><td><span class="emphasis"><em>no</em></span></td><td>Key, to which the event must be triggered. Key is
+                specified as a certain 'alias'. The alias may be an ASCII
+                character or a digit (this will denote the corresponding key
+                on a US keyboard), a space (' '), or one of the following:
+                'return', 'escape', 'backspace', 'tab', 'shift', 'control',
+                'space', 'f1', 'f2', ..., 'f12'.</td></tr><tr><td>keyCombo</td><td><span class="emphasis"><em>no</em></span></td><td>Key combination, which should trigger the event. It can
+                is specified with key aliases separated with "+" signs.
+                For example "ctrl+alt+f1", "alt+r" etc.</td></tr></tbody></table></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="eventKeyboardHandler_examples"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax1">&lt;!-- F2 listener that sends event 'add' to context widget upon activation --&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:eventKeyboardHandler eventId</span>=<span class="syntax3">"add"</span><span class="syntax10"> key</span>=<span class="syntax3">"f2"</span><span class="syntax10"> widgetId</span>=<span class="syntax3">"${widgetId}"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e4948"></a>4.4.&nbsp;Widget Tags</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e4951"></a>4.4.1.&nbsp;&lt;ui:widgetContext&gt;</h3></div></div></div><p>This tag should generally be the root of every widget JSP. It
+      makes the widget view model accessible as an EL variable. It can also be
+      used to render a descendant widget in the same JSP with the current
+      widget. In the latter case you should set the <span class="emphasis"><em>id</em></span>
+      attribute to the identifier path of the descendant widget in question.
+      Note that all widget-related tags inside of this tag will assume that
+      the widget in question is their parent or ancestor (that is all the
+      identifier paths will start from it).</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e4959"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>no</em></span></td><td>A dot-separated widget identifier path leading from the
+                current context widget to the new one.</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e4984"></a>Variables</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Variable</th><th>Description</th></tr></thead><tbody><tr><td>widget</td><td>The context widget instance. Can be used to access
+                JavaBean property data from the widget (e.g.
+                <code class="literal">${widget.foo}</code> will translate to a
+                <code class="literal">getFoo()</code> widget call}.</td></tr><tr><td>widgetId</td><td>The full dot-separated identifier of the context
+                widget.</td></tr><tr><td>viewData</td><td>The view data of the context widget (see
+                <code class="literal">BaseApplicationWidget.putViewData()</code>).</td></tr><tr><td>viewModel</td><td>The view model of the context widget.</td></tr><tr><td>scopedWidgetId</td><td>The scoped id of the context widget.</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5032"></a>Examples</h4></div></div></div>
+
+         The most common usage of &lt;ui:widgetContext&gt; is as root tag for widget JSPs: 
+
+        <pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+...
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext</span><span class="syntax10">&gt;</span>
+    ...
+    <span class="syntax10">&lt;</span><span class="syntax5">c</span><span class="syntax10">:out value</span>=<span class="syntax3">"${viewData.myMessage}"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    ...
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext</span><span class="syntax10">&gt;</span>
+...
+</span></pre></pre>
+
+         The other use case is to render a descendant widget: 
+
+        <pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+...
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext</span><span class="syntax10">&gt;</span>
+    ...
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext id</span>=<span class="syntax3">"child.ofMyChild"</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax5">c</span><span class="syntax10">:out value</span>=<span class="syntax3">"${viewData.messageFromChildOfMyChild}"</span>
+<span class="syntax10">    &lt;/</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext</span><span class="syntax10">&gt;</span>
+    ...
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext</span><span class="syntax10">&gt;</span>
+...
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5041"></a>4.4.2.&nbsp;&lt;ui:widget&gt;</h3></div></div></div><p>This tag is used when one needs to render a child or descendant
+      widget while still retaining in both current widget context and JSP. It
+      publishes the widget view model and full identifier as EL variables, but
+      does little else and does not setup a widget context (e.g.
+      <code class="literal">&lt;ui:widgetInclude&gt;</code> tag will not take it into
+      account).</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5049"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>yes</em></span></td><td>A dot-separated widget identifier path leading from the
+                current context widget to the target widget.</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5074"></a>Variables</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Variable</th><th>Description</th></tr></thead><tbody><tr><td>widget</td><td>The widget instance. Can be used to access JavaBean
+                property data from the widget (e.g.
+                <code class="literal">${widget.foo}</code> will translate to a
+                <code class="literal">getFoo()</code> widget call}.</td></tr><tr><td>widgetId</td><td>The full dot-separated identifier of the
+                widget.</td></tr><tr><td>viewData</td><td>The view data of the widget (see
+                <code class="literal">BaseApplicationWidget.putViewData()</code>).</td></tr><tr><td>viewModel</td><td>The view model of the widget.</td></tr><tr><td>scopedWidgetId</td><td>The scoped id of the context widget.</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5122"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+...
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext</span><span class="syntax10">&gt;</span>
+    ...
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:widget id</span>=<span class="syntax3">"child.ofMyChild"</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax5">c</span><span class="syntax10">:out value</span>=<span class="syntax3">"${viewData.messageFromChildOfMyChild}"</span>
+<span class="syntax10">          </span><span class="syntax5">&lt;ui</span><span class="syntax10">:widgetInclude id</span>=<span class="syntax3">"child"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:widget</span><span class="syntax10">&gt;</span>
+    ...
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext</span><span class="syntax10">&gt;</span>
+...
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5127"></a>4.4.3.&nbsp;&lt;ui:widgetInclude&gt;</h3></div></div></div><p>This tag is used to render some child or descendant widget. It
+      will call the widget's <code class="literal">render()</code> method, which will
+      allow the target widget to choose how to render itself.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5135"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>yes</em></span></td><td>A dot-separated widget identifier path leading from the
+                current context widget to the target widget.</td></tr><tr><td>path</td><td><span class="emphasis"><em>no</em></span></td><td>Path to JSP, relative to <code class="literal">jspPath</code> of <code class="literal">StandardJspFilterService</code>.</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5174"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+...
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext</span><span class="syntax10">&gt;</span>
+    ...
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:widgetInclude id</span>=<span class="syntax3">"child.ofMyChild"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    ...
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext</span><span class="syntax10">&gt;</span>
+...
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5179"></a>4.4.4.&nbsp;&lt;ui:globalWidgetInclude&gt;</h3></div></div></div>
+
+       Much like 
+
+      <code class="literal">&lt;ui:widgetInclude&gt;</code>
+
+      , but this tag allows to include not only descendants of current context widget but any widget that is accessible from global scope. 
+      
+            <div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5186"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>yes</em></span></td><td>A dot-separated full widget identifier.</td></tr></tbody></table></div></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e5211"></a>4.5.&nbsp;Event-producing Tags</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5214"></a>4.5.1.&nbsp;&lt;ui:eventButton&gt; and &lt;ui:eventLinkButton&gt;</h3></div></div></div><p>These tags will render a button (or a link) that when clicked will
+      send a specified event to the target widget with an optional
+      <code class="literal">String</code> parameter.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5222"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>no</em></span></td><td>HTML "id" of the element that can be used to access it
+                via DOM.</td></tr><tr><td>labelId</td><td><span class="emphasis"><em>no</em></span></td><td>The key of the localizable label that will be displayed
+                on the button.</td></tr><tr><td>eventId</td><td><span class="emphasis"><em>no</em></span></td><td>The identifier of the event that will be sent to the
+                target widget.</td></tr><tr><td>eventParam</td><td><span class="emphasis"><em>no</em></span></td><td><code class="literal">String</code> event parameter that will
+                accompany the event.</td></tr><tr><td>eventTarget</td><td><span class="emphasis"><em>no</em></span></td><td>ID of receiving widget. Almost never set directly.
+                Defaults to current context widget.</td></tr><tr><td>disabled</td><td><span class="emphasis"><em>no</em></span></td><td>If set to a not null value will show the button
+                disabled.</td></tr><tr><td>renderMode</td><td><span class="emphasis"><em>no</em></span></td><td>Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button.
+                This attribute only applies to <code class="literal">&lt;ui:eventButton&gt;</code>, <code class="literal">&lt;ui:eventLinkButton&gt;</code>
+                is always rendered with HTML link.
+                </td></tr><tr><td>styleClass</td><td><span class="emphasis"><em>no</em></span></td><td>The CSS class that will override the default one.</td></tr><tr><td>updateRegions</td><td><span class="emphasis"><em>no</em></span></td><td>Comma separated list of update regions that should be
+                updated upon button receiving event. This attribute is only
+                needed when using AJAX features&#8212;ordinary HTTP requests always
+                update whole page.</td></tr><tr><td>globalUpdateRegions</td><td><span class="emphasis"><em>no</em></span></td><td>Comma separated list of global update regions that
+                should be updated upon button receiving event. This attribute
+                is only needed when using AJAX features&#8212;ordinary HTTP requests
+                always update whole page.</td></tr><tr><td>onClickPrecondition</td><td><span class="emphasis"><em>no</em></span></td><td>Precondition for deciding whether onclick event should
+                go server side or not. If left unspecified, this is considered
+                to be <code class="literal">true</code>.</td></tr><tr><td>tabindex</td><td><span class="emphasis"><em>no</em></span></td><td>This attribute specifies the position of the current element in the tabbing order for the current document. This value must be a number between 0 and 32767.</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5346"></a>HTML, Styles and JavaScript</h4></div></div></div><p>The <code class="literal">eventButton</code> tag writes out an HTML
+        <code class="literal">&lt;button&gt;</code> closed tag with a default CSS class
+        of "aranea-button".</p><p>The <code class="literal">eventLinkButton</code> tag writes out an HTML
+        <code class="literal">&lt;a&gt;</code> open tag with a default CSS class of
+        "aranea-link-button".</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5365"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+...
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext</span><span class="syntax10">&gt;</span>
+    ...
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:eventButton eventId</span>=<span class="syntax3">"test"</span><span class="syntax10"> eventParam</span>=<span class="syntax3">"${bean.id}"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:eventLinkButton eventId</span>=<span class="syntax3">"edit"</span><span class="syntax10"> eventParam</span>=<span class="syntax3">"${bean.id}"</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">img src</span>=<span class="syntax3">"editButton.png"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:eventLinkButton</span><span class="syntax10">&gt;</span>
+    ...
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext</span><span class="syntax10">&gt;</span>
+...
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5371"></a>4.5.2.&nbsp;&lt;ui:onLoadEvent&gt;</h3></div></div></div><p>This tag will register events that are executed when HTML page
+      body has completely loaded. This tag can be used multiple times, all
+      specified events will be added to event queue and executed in order of
+      addition.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5376"></a>Attributes</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>event</td><td><span class="emphasis"><em>yes</em></span></td><td>Event to register.</td></tr></tbody></table></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5401"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+...
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:onLoadEvent event</span>=<span class="syntax3">"activateFlashLights();"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:onLoadEvent event</span>=<span class="syntax3">"changeMenuBackGroundColor();"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+...
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5406"></a>4.5.3.&nbsp;&lt;ui:registerPopups&gt;</h3></div></div></div><p>This tag checks presence of server-side session-threads that
+      represent popups and adds system loadevent for opening them in new
+      browser window at client-side. For tag to have an effect, HTML page
+      <code class="literal">BODY</code> tag must have attribute onload event set to
+      <span class="emphasis"><em>AraneaPage</em></span> (See <a href="javascript.html#aranea_clientside_js">Aranea Clientside Javascript</a>) onload event. Also, this tag only
+      works inside &lt;ui:systemForm&gt; tag.</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5419"></a>Attributes</h4></div></div></div><p>This tag has no attributes.</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5424"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+...
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:body</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:systemForm method</span>=<span class="syntax3">"POST"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:registerPopups/</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:systemForm</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:body</span><span class="syntax10">&gt;</span>
+...
+</span></pre></pre></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e5429"></a>4.6.&nbsp;HTML entity Tags</h2></div></div></div><p>HTML entities can be inserted by using the predefined entity tags or
+    using the &lt;ui:entity&gt; for entities that have not been defined by
+    Aranea JSP library.</p><p>The <code class="literal">entity</code> tag accepts a attribute
+    <code class="literal">code</code> which is used as &amp;<code class="literal">code</code>; to
+    get the HTML entity.</p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>code</td><td><span class="emphasis"><em>no</em></span></td><td>HTML entity code, e.g. <span class="emphasis"><em>nbsp</em></span> or
+            <span class="emphasis"><em>#012</em></span>.</td></tr><tr><td>count</td><td><span class="emphasis"><em>no</em></span></td><td>Number of times to repeat the entity.</td></tr></tbody></table></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5481"></a>4.6.1.&nbsp;Predefined entity tags</h3></div></div></div><p>The following predefined entities also accept the
+      <code class="literal">count</code> attribute. It defines the number of times to
+      repeat the entity.</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Tag</th><th>Description</th></tr></thead><tbody><tr><td>&lt;ui:acute&gt;</td><td>HTML <code class="literal">&amp;acute;</code> entity.</td></tr><tr><td>&lt;ui:copyright&gt;</td><td>HTML <code class="literal">&amp;copyright;</code> entity.</td></tr><tr><td>&lt;ui:gt&gt;</td><td>HTML <code class="literal">&amp;gt;</code> entity.</td></tr><tr><td>&lt;ui:laquo&gt;</td><td>HTML <code class="literal">&amp;laquo;</code> entity.</td></tr><tr><td>&lt;ui:lt&gt;</td><td>HTML <code class="literal">&amp;lt;</code> entity.</td></tr><tr><td>&lt;ui:nbsp&gt;</td><td>HTML <code class="literal">&amp;nbsp;</code> entity.</td></tr><tr><td>&lt;ui:raquo&gt;</td><td>HTML <code class="literal">&amp;raquo;</code> entity.</td></tr><tr><td>&lt;ui:acute&gt;</td><td>HTML <code class="literal">&amp;acute;</code> entity.</td></tr></tbody></table></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e5564"></a>4.7.&nbsp;Putting Widgets to Work with JSP</h2></div></div></div><p>Now we have defined enough JSP tags to render our example widget
+    (see <a href="core.html#widgets-example-widget" title="2.7.8.&nbsp;Putting It All Together">Section&nbsp;2.7.8, &#8220;Putting It All Together&#8221;</a>): </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">jsp</span><span class="syntax10">:root </span>
+<span class="syntax10">  </span><span class="syntax5">xmlns</span><span class="syntax10">:jsp</span>=<span class="syntax3">"http://java.sun.com/JSP/Page"</span><span class="syntax10"> </span>
+<span class="syntax10">  </span><span class="syntax5">xmlns</span><span class="syntax10">:c</span>=<span class="syntax3">"http://java.sun.com/jstl/core"</span>
+<span class="syntax10">  </span><span class="syntax5">xmlns</span><span class="syntax10">:ui</span>=<span class="syntax3">"http://araneaframework.org/tag-library/standard"</span><span class="syntax10"> version</span>=<span class="syntax3">"1.2"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">h3</span><span class="syntax10">&gt;</span>Test widget<span class="syntax10">&lt;</span><span class="syntax10">/h3</span><span class="syntax10">&gt;</span>
+    
+    Data field: <span class="syntax10">&lt;</span><span class="syntax5">c</span><span class="syntax10">:out value</span>=<span class="syntax3">"${viewData.myData.field}"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:eventButton labelId</span>=<span class="syntax3">"#Test"</span><span class="syntax10"> eventId</span>=<span class="syntax3">"test"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>      
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:widgetContext</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">jsp</span><span class="syntax10">:root</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p> We can use just usual JSTL Core library
+    tags to access the widget view data, as long as the
+    <code class="literal">&lt;ui:widgetContext&gt;</code> is present via the
+    <code class="literal">viewData</code> EL variable.</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e5580"></a>4.8.&nbsp;Layout Tags</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5583"></a>4.8.1.&nbsp;&lt;ui:layout&gt;</h3></div></div></div><p>Represents a layout. Layouts allow to describe the way content
+      will be placed on the page.</p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Applicable to:</th></tr></thead><tbody><tr><td>width</td><td><span class="emphasis"><em>no</em></span></td><td>Layout width.</td></tr><tr><td>rowClasses</td><td><span class="emphasis"><em>no</em></span></td><td>Default style of rows in this layout.</td></tr><tr><td>cellClasses</td><td><span class="emphasis"><em>no</em></span></td><td>Default style of cells in this layout.</td></tr><tr><td>styleClass</td><td><span class="emphasis"><em>no</em></span></td><td>CSS class for tag.</td></tr></tbody></table></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5635"></a>Variables</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col align="center"></colgroup><thead><tr><th>Variable</th><th>Description</th><th align="center">Type</th></tr></thead><tbody><tr><td>rowClassProvider</td><td>Provides row class, usually should not be used from JSP.</td><td align="center"><code class="literal">RowClassProvider</code></td></tr><tr><td>cellClassProvider</td><td>Provides cell class, usually should not be used from JSP.</td><td align="center"><code class="literal">CellClassProvider</code></td></tr></tbody></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5668"></a>4.8.2.&nbsp;&lt;ui:row&gt;</h3></div></div></div><p>Represents a row in layout.</p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Applicable to:</th></tr></thead><tbody><tr><td>height</td><td><span class="emphasis"><em>no</em></span></td><td>Row height.</td></tr><tr><td>cellClasses</td><td><span class="emphasis"><em>no</em></span></td><td>Default style of cells in this row..</td></tr><tr><td>styleClass</td><td><span class="emphasis"><em>no</em></span></td><td>Cell css class, defines the way the cell will be
+                rendered.</td></tr><tr><td>overrideLayout</td><td><span class="emphasis"><em>no</em></span></td><td>Boolean that determines whether row's own styleClass
+                completely overrides styleClass provided by surrounding layout
+                (default behaviour), or is appended to layout's
+                styleClass.</td></tr></tbody></table></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5720"></a>Variables</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col align="center"></colgroup><thead><tr><th>Variable</th><th>Description</th><th align="center">Type</th></tr></thead><tbody><tr><td>cellClassProvider</td><td>Provides cell class, usually should not be used from JSP.</td><td align="center"><code class="literal">CellClassProvider</code></td></tr></tbody></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5745"></a>4.8.3.&nbsp;&lt;ui:cell&gt;</h3></div></div></div><p>Represents a cell in layout.</p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Applicable to:</th></tr></thead><tbody><tr><td>height</td><td><span class="emphasis"><em>no</em></span></td><td>Row height.</td></tr><tr><td>width</td><td><span class="emphasis"><em>no</em></span></td><td>Row width.</td></tr><tr><td>colSpan</td><td><span class="emphasis"><em>no</em></span></td><td>Cell colspan, same as in HTML.</td></tr><tr><td>rowSpan</td><td><span class="emphasis"><em>no</em></span></td><td>Cell rowspan, same as in HTML.</td></tr><tr><td>styleClass</td><td><span class="emphasis"><em>no</em></span></td><td>Cell css class, defines the way the cell will be
+                rendered.</td></tr><tr><td>overrideLayout</td><td><span class="emphasis"><em>no</em></span></td><td>Boolean that determines whether cells's own styleClass
+                completely overrides styleClass provided by surrounding layout
+                or row (default behaviour), or is appended to layout's or
+                row's styleClass.</td></tr></tbody></table></div><p>
+        </p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e5814"></a>Examples</h4></div></div></div>
+
+         Layouts, rows and cells are used together like this: 
+
+        <pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+...
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:layout rowClasses</span>=<span class="syntax3">"even,odd"</span><span class="syntax10"> cellClasses</span>=<span class="syntax3">"one,two,three,four"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+         <span class="syntax1">&lt;!-- cell content --&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:layout</span><span class="syntax10">&gt;</span>
+...
+</span></pre></pre></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5820"></a>4.8.4.&nbsp;&lt;ui:updateRegion&gt; and &lt;ui:updateRegionRows&gt;</h3></div></div></div><p>These two tags define the update regions in the output that can be
+      updated via AJAX requests. The update regions chosen to be updated when
+      some event occurs is decided by tags that take the
+      <code class="literal">updateRegion</code> attribute (See <a href="forms.html#common-formelement-attributes" title="5.2.1.&nbsp;Common attributes for all form element rendering tags.">Section&nbsp;5.2.1, &#8220;Common attributes for all form element rendering tags.&#8221;</a>).</p><p>The <code class="literal">&lt;ui:updateRegion&gt;</code> should be used when
+      defining updateregion when the region is not contained in HTML table
+      (layout). The <code class="literal">&lt;ui:updateRegionRows&gt;</code> is for
+      defining a region which is contained in HTML table and contains table
+      rows itself. Updating just cells is not possible.</p><div class="sect3" lang="en"><div class="titlepage"></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>The id of the region. Will be used to reference the
+                region when POST'ing a form.</td></tr><tr><td>globalId</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>When not using the <code class="literal">globalId</code>, the
+                full id will be formed by concatenating the context widget id
+                with the specified <code class="literal">id</code>. If for a reason you
+                would want to avoid that, then you specify the id with the
+                <code class="literal">globalId</code> attribute.</td></tr></tbody></table></div></div><p>
+        Either <code class="literal">id</code> or <code class="literal">globalId</code> attribute is required.
+      </p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="updateRegionTag_examples"></a>Examples</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax1">&lt;!-- First update region, placed outside HTML table --&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:updateRegion id</span>=<span class="syntax3">"outsideTable"</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:updateRegion</span><span class="syntax10">&gt;</span>
+
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:layout</span><span class="syntax10">&gt;</span>
+  <span class="syntax1">&lt;!-- Second update region, placed inside HTML table --&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:updateRegionRows id</span>=<span class="syntax3">"insideTable"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+      ...
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:updateRegionRows</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:layout</span><span class="syntax10">&gt;</span>
+
+<span class="syntax1">&lt;!-- Button that makes a background submit of specified event. </span>
+<span class="syntax1">     When response arrives specified updateregions are updated --&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:eventButton id</span>=<span class="syntax3">"test"</span><span class="syntax10"> updateRegions</span>=<span class="syntax3">"outsideTable,insideTable"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e5895"></a>4.9.&nbsp;Presentation Tags</h2></div></div></div>
+
+     Aranea JSP library contains synonyms for some (deprecated) HTML presentation tags. 
+
+    <div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5899"></a>4.9.1.&nbsp;&lt;ui:bold&gt;</h3></div></div></div><p>Acts as the HTML  <span class="emphasis"><em>&lt;b&gt;</em></span> tag.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5907"></a>4.9.2.&nbsp;&lt;ui:italic&gt;</h3></div></div></div><p>Acts as <span class="emphasis"><em>&lt;i&gt;</em></span> HTML tag.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5915"></a>4.9.3.&nbsp;&lt;ui:font&gt;</h3></div></div></div><p>Acts as <span class="emphasis"><em>&lt;font&gt;</em></span> HTML tag.</p><p>
+        </p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Applicable to:</th></tr></thead><tbody><tr><td>face</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>The font face of the font.</td></tr><tr><td>color</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>The color of the font.</td></tr></tbody></table></div><p>
+      </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5960"></a>4.9.4.&nbsp;&lt;ui:style&gt;</h3></div></div></div><p>Sets a CSS class for the tag content, acts as a
+      <span class="emphasis"><em>&lt;span&gt;</em></span> HTML tag with the
+      <span class="emphasis"><em>class</em></span> atribute set.</p><p>
+        </p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Applicable to:</th></tr></thead><tbody><tr><td>styleClass</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>CSS class for tag.</td></tr></tbody></table></div><p>
+      </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e5998"></a>4.9.5.&nbsp;&lt;ui:newline&gt;</h3></div></div></div><p>Puts a visual new line (<code class="literal">&lt;br/&gt;</code>).</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="tooltiphtmltag"></a>4.9.6.&nbsp;&lt;ui:tooltip&gt;</h3></div></div></div><p>Defines tooltip that is shown when web application user hovers mouse over element to which the tooltip is attached.</p><p>
+        </p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Applicable to:</th></tr></thead><tbody><tr><td>element</td><td>
+                  <span class="emphasis"><em>yes</em></span>
+                </td><td>HTML id of DOM element that is target of the tooltip.</td></tr><tr><td>text</td><td>
+                  <span class="emphasis"><em>yes</em></span>
+                </td><td>Tooltip content.</td></tr><tr><td>options</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Options for tooltip (including tooltip classname, title, etc -- see prototip.js for details).</td></tr></tbody></table></div><p>
+      </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e6058"></a>4.9.7.&nbsp;&lt;ui:basicButton&gt;</h3></div></div></div><p>Represents an HTML form button.</p><p>
+        </p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Applicable to:</th></tr></thead><tbody><tr><td>renderMode</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Allowed values are (button | input) - the corresponding
+                HTML tag will be used for rendering. Default is
+                button.</td></tr><tr><td>id</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Button id, allows to access button from
+                JavaScript.</td></tr><tr><td>labelId</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Id of button label.</td></tr><tr><td>onclick</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td><code class="literal">onClick</code> Javascript action.</td></tr><tr><td>styleClass</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>CSS class for button.</td></tr><tr><td>style</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Inline CSS style for button.</td></tr></tbody></table></div><p>
+      </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e6142"></a>4.9.8.&nbsp;&lt;ui:basicLinkButton&gt;</h3></div></div></div><p>Represents a link with an onClick JavaScript action.</p><p>
+        </p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Applicable to:</th></tr></thead><tbody><tr><td>id</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Button id, allows to access button from
+                JavaScript.</td></tr><tr><td>styleClass</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>CSS class for tag.</td></tr><tr><td>style</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Inline CSS style for tag.</td></tr><tr><td>onclick</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td><code class="literal">onClick</code> Javascript action.</td></tr><tr><td>labelId</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Id of button label.</td></tr></tbody></table></div><p>
+      </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e6216"></a>4.9.9.&nbsp;&lt;ui:link&gt;</h3></div></div></div><p>Usual HTML link, acts as a <span class="emphasis"><em>&lt;a&gt;</em></span> HTML
+      tag.</p><p>
+        </p><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Applicable to:</th></tr></thead><tbody><tr><td>disabledStyleClass</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>CSS class for disabled link.</td></tr><tr><td>id</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Link id, allows to access link from JavaScript.</td></tr><tr><td>href</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Link target URL.</td></tr><tr><td>target</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Link target, same as <span class="emphasis"><em>&lt;a&gt;</em></span>
+                HTML tag <span class="emphasis"><em>target</em></span> attribute.</td></tr><tr><td>disabled</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Controls whether the link is disabled, disabled link
+                doesn't link anywhere.</td></tr><tr><td>styleClass</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>CSS class for tag.</td></tr><tr><td>style</td><td>
+                  <span class="emphasis"><em>no</em></span>
+                </td><td>Inline CSS style for tag.</td></tr></tbody></table></div><p>
+      </p></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e6317"></a>4.10.&nbsp;Programming JSPs without HTML</h2></div></div></div><p>Aranea standard tag library should mostly be enough to shelter
+    end-users from the need to write HTML inside JSPs. Snippets of HTML are
+    alright but using it too often tends to lead to inflexible UI; instead of
+    embedding HTML in JSPs custom tags should be written if the need
+    arises.</p><p>When writing JSPs without embedded HTML, programmers best friends
+    are <span class="emphasis"><em>styleClass</em></span> attributes of presentation tags,
+    allowing tuning of tag appearances and <span class="emphasis"><em>layout</em></span>
+    tags.</p><p>Layout tags are tags extending <code class="literal">BaseLayoutTag</code>.
+    Layout tags allow placing of rows inside them (and rows allow using of
+    cells inside). Standard layout tag (&lt;ui:layout&gt;) outputs HTML
+    <span class="emphasis"><em>table</em></span>, and standard row and cell tags output HTML
+    <span class="emphasis"><em>tr</em></span> and <span class="emphasis"><em>td</em></span> tags, respectively.
+    This is by no means a requirement for layout tags&#8212;there are probably ways
+    to achieve the same behaviour with correctly styled HTML
+    <span class="emphasis"><em>div</em></span> tags; but the tables should do just fine for
+    majority of needs.</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e6347"></a>4.11.&nbsp;Customizing Tag Styles</h2></div></div></div><p>Presentation tags (tags extending <code class="literal">PresentationTag</code>
+    or implementing <code class="literal">StyledTagInterface</code>) have attribute
+    <code class="literal">styleClass</code> that specifies the CSS style class used for
+    rendering the tag. When <code class="literal">styleClass</code> attribute for tag is
+    not specified, some default style bundled with Aranea is used; or in some
+    cases no HTML <code class="literal">class</code> attribute is output at all&#8212;allowing
+    cascading styles from some parent (HTML) tag to take over the
+    presentation.</p><p>Presentation tags also have <code class="literal">style</code> attribute for
+    specifying inline style for tag. Using it is discouraged&#8212;tweaking style
+    classes to fit ones specific needs is highly recommended.</p><p>Some tags may have more than one attributes for defining tag style.
+    For example <code class="literal">&lt;ui:layout&gt;</code> tag and other layout tags
+    that extend <code class="literal">LayoutHtmlTag</code> or
+    <code class="literal">BaseLayoutTag</code> have attributes
+    <code class="literal">rowClasses</code> and <code class="literal">cellClasses</code> that
+    specify the default styles for <code class="literal">&lt;ui:row&gt;</code> and
+    <code class="literal">&lt;ui:cell&gt;</code> tags used within the layout. These can
+    be overriden with row and cell own <code class="literal">styleClass</code>
+    attribute.</p><p>To actually use new style(s) for some tag one often can just write a
+    new CSS style (i.e. <code class="literal">"somestyle { background: #ffc; color: #900;
+    text-decoration: none; }"</code>)&#8212;apply that and be done with it. For
+    more complicated tags, one may need to take a quick peek at tag source
+    code to see what HTML tags are output and design their styles accordingly.
+    Most of the time that should not be necessary.</p><p>Changing default tag styles can be done in two ways&#8212;modifying CSS
+    files or extending the tag one wants to customize with dynamic initializer
+    like this:</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax11">{</span>
+    styleClass <span class="syntax11">=</span> <span class="syntax3">"some-wanted-style"</span>;
+<span class="syntax11">}</span>
+</span></pre></pre><p>needless to say, first method is very much preferred because
+    creating custom tags just for changing tag styles is quite
+    pointless.</p><p>There is also a <code class="literal">renderMode</code> attribute; in current
+    tag library there are very few tags supporting this attribute. One of
+    those is <code class="literal">ButtonHtmlTag</code>
+    (<code class="literal">&lt;ui:basicButton&gt;</code>)&#8212;its renderMode should have
+    value <code class="literal">"input"</code> or <code class="literal">"button"</code> (default)
+    and it specifies whether the button should be rendered in HTML with
+    <code class="literal">&lt;input type=button ... &gt;</code> or <code class="literal">&lt;button
+    ... &gt;</code> tag. In the future, number of JSP tags having
+    renderMode attribute will probably increase (this can be used to get rid
+    of multiple JSP tags for rendering different types of (multi)selects,
+    inputs and displays).</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e6432"></a>Attributes defining tag styles</h4></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Applicable to:</th></tr></thead><tbody><tr><td>style</td><td>Inline CSS style applied to tag. Avoid.</td><td>Presentation tags.</td></tr><tr><td>styleClass</td><td>CSS class applied to tag.</td><td>Presentation tags.</td></tr><tr><td>rowClass</td><td>CSS class applied to rows inside the tag.</td><td>Layout tags.</td></tr><tr><td>cellClass</td><td>CSS class applied to cells inside the tag.</td><td>Layout tags, row tags.</td></tr><tr><td>renderMode</td><td>Defines the renderMode used for rendering the
+              tag.</td><td><code class="literal">&lt;ui:basicButton&gt;</code>,
+              <code class="literal">&lt;ui:eventButton&gt;</code>,
+              <code class="literal">&lt;ui:button&gt;</code>.</td></tr></tbody></table></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e6492"></a>4.12.&nbsp;Making New JSP Tags</h2></div></div></div>
+
+     JSP tags are very application specific, need for additional or modified JSP tags arises quite often. Due to presentational nature of HTML and Javascript, extending the tags that really output HTML instead of providing some information to subtags is messy. We look here at some more general tags and contracts that should be followed when writing Aranea JSP tags. 
+
+    <div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e6496"></a>4.12.1.&nbsp;Utilities and base classes</h3></div></div></div><p>Custom tags should extend at least
+      <span class="emphasis"><em>org.araneaframework.jsp.tag.BaseTag</em></span> that provides
+      methods for registering subtags, manipulation of pagecontext and
+      attribute evaluation. </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax7">import</span> java.io.Writer;
+<span class="syntax7">import</span> org.araneaframework.jsp.tag.entity.NbspEntityHtmlTag;
+<span class="syntax7">import</span> org.araneaframework.jsp.util.JspUtil;
+
+<span class="syntax6">public</span> <span class="syntax8">class</span> DummyTag <span class="syntax6">extends</span> BaseTag <span class="syntax11">{</span>
+  <span class="syntax6">public</span> <span class="syntax6">static</span> String KEY <span class="syntax11">=</span> <span class="syntax3">"org.araneaframework.jsp.tag.DummyTag"</span>;
+  
+  BaseTag subTag;
+  
+  @Override
+  <span class="syntax6">protected</span> <span class="syntax8">int</span> <span class="syntax9">doStartTag</span>(Writer out) <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+    <span class="syntax8">int</span> result <span class="syntax11">=</span> <span class="syntax4">super</span>.<span class="syntax9">doStartTag</span>(out);
+
+    <span class="syntax1">// make this tag implementation accessible to subtags which </span>
+    <span class="syntax1">// is quite pointless since this tag does not implement any useful interface.</span>
+    <span class="syntax1">// it demonstrates Aranea JSP convention for providing info to subtags</span>
+    <span class="syntax9">addContextEntry</span>(KEY, <span class="syntax4">this</span>);
+    
+    <span class="syntax1">// write some real output that ends up at the served web page</span>
+    JspUtil.<span class="syntax9">writeOpenStartTag</span>(out, <span class="syntax3">"div"</span>);
+    JspUtil.<span class="syntax9">writeAttribute</span>(out, <span class="syntax3">"id"</span>, <span class="syntax3">"dummyDivId"</span>);
+    JspUtil.<span class="syntax9">writeCloseStartTag</span>(out);
+    
+    <span class="syntax1">// it is possible to register in JAVA code too, this one just writes out nbsp entity.</span>
+    subTag <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">NbspEntityHtmlTag</span>();
+    <span class="syntax9">registerSubtag</span>(subTag);
+    <span class="syntax9">executeStartSubtag</span>(subTag);
+    
+    <span class="syntax6">return</span> result;
+  <span class="syntax11">}</span>
+
+  @Override
+  <span class="syntax6">protected</span> <span class="syntax8">int</span> <span class="syntax9">doEndTag</span>(Writer out) <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+    <span class="syntax9">executeEndTagAndUnregister</span>(subTag);
+    
+    JspUtil.<span class="syntax9">writeEndTag</span>(out, <span class="syntax3">"div"</span>);
+    
+    <span class="syntax6">return</span> <span class="syntax4">super</span>.<span class="syntax9">doEndTag</span>(out);
+    <span class="syntax1">// Now everything about this tag ceases to exist, </span>
+    <span class="syntax1">// context entries are removed, souls are purged.</span>
+  <span class="syntax11">}</span>
+<span class="syntax11">}</span>
+</span></pre></pre><p><code class="literal">org.araneaframework.jsp.util.JspUtil</code> that was
+      used here is an utility class containing some functions for writing out
+      (XML) tags with somewhat less room for errors than just
+      <code class="literal">out.write()</code>. Other notable methods provided by
+      <code class="literal">BaseTag</code> are <code class="literal">getOutputData()</code> that
+      returns response data, <code class="literal">getConfiguration()</code> and
+      <code class="literal">getLocalizationContext()</code>. For tags with attributes,
+      attribute evaluation functions that support <span class="emphasis"><em>Expression
+      Language (EL)</em></span> expressions are provided in
+      <code class="literal">BaseTag</code>. Typical usage of these functions is
+      following: </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">void</span> <span class="syntax9">setWidth</span>(String width) <span class="syntax6">throws</span> JspException <span class="syntax11">{</span>
+  <span class="syntax4">this</span>.width <span class="syntax11">=</span> (String)<span class="syntax9">evaluate</span>(<span class="syntax3">"width"</span>, width, String.<span class="syntax8">class</span>);
+<span class="syntax11">}</span>
+</span></pre></pre><p>Another common base tag for tags that output real HTML is
+      <code class="literal">org.araneaframework.jsp.PresentationTag</code>. The
+      <code class="literal">DummyTag</code> should really extend it too, since it
+      outputs some HTML. <code class="literal">PresentationTag</code> defines
+      <span class="emphasis"><em>style</em></span> and <span class="emphasis"><em>styleClass</em></span>
+      attributes that can be applied to most HTML tags.</p><p>Important tag cleanup method is <code class="literal">doFinally()</code>
+      that is called after rendering. It should be used to clear references to
+      objects that should no longer be referenced after rendering. As in
+      containers tag instances can live very long time, they can leak quite a
+      lot of memory unless resources are deallocated.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="tagattributeinheritance"></a>4.12.2.&nbsp;Inheriting tag attributes from base tags.</h3></div></div></div><p>
+      	Custom tags extending Aranea tags are able to accept all supertag attributes,
+      	but these must be also defined in TLD, otherwise the JSP containers
+      	will complain. As some base tags may be abstract, information about
+      	their attributes cannot be deduced from Aranea JSP standard TLD. 
+      	To address this problem, Aranea distribution does the following: 
+      	aranea.jar and aranea-jsp.jar include the file META-INF/aranea-standard.tcd
+      	(<span class="emphasis"><em>TCD</em></span> stands for <span class="emphasis"><em>Tag Class Descriptor</em></span>)
+      	which includes the attribute information for all Aranea Standard JSP classes.
+      	To make use of this information, one first generates TLD for custom tag classes and then
+      	merges the TCD information into it. It is done with <code class="literal">org.araneaframework.buildutil.TcdAndTldMerger</code>
+      	utility included in aranea.jar (since 1.0.10, previously it had to be compiled separately after downloading distribution).
+      	All custom compiled tag classes as well as Aranea JSP tag classes must be available on classpath when using this utility.
+      </p><p>
+        Example of using the <code class="literal">TcdAndTldMerger</code> utility:
+      </p><p>
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax10">&lt;</span><span class="syntax10">target name</span>=<span class="syntax3">"tld"</span><span class="syntax10">&gt;</span>
+  <span class="syntax1">&lt;!-- generate TLD without parent attribute information --&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">webdoclet destdir</span>=<span class="syntax3">"somedir"</span><span class="syntax10"> force</span>=<span class="syntax3">"false"</span><span class="syntax10"> </span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">fileset dir</span>=<span class="syntax3">"${src.dir}"</span><span class="syntax10"> includes</span>=<span class="syntax3">"**/*Tag.java"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+
+    <span class="syntax10">&lt;</span><span class="syntax10">jsptaglib validatexml</span>=<span class="syntax3">"true"</span>
+<span class="syntax10">      shortName</span>=<span class="syntax3">"shortName"</span>
+<span class="syntax10">      filename</span>=<span class="syntax3">"filename.tld"</span>
+<span class="syntax10">      uri</span>=<span class="syntax3">"customuri"</span>
+<span class="syntax10">      description</span>=<span class="syntax3">"description"</span>
+<span class="syntax10">    /</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/webdoclet</span><span class="syntax10">&gt;</span>
+
+  <span class="syntax1">&lt;!-- invoke the TcdAndTldMerger utility --&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">java classname</span>=<span class="syntax3">"org.araneaframework.buildutil.TcdAndTldMerger"</span><span class="syntax10"> fork</span>=<span class="syntax3">"true"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">arg value</span>=<span class="syntax3">"META-INF/aranea-standard.tcd"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>    <span class="syntax1">&lt;!-- Tag class descriptor to merge with --&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">arg value</span>=<span class="syntax3">"somedir/filename.tld"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>            <span class="syntax1">&lt;!-- Source TLD --&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">arg value</span>=<span class="syntax3">"somedir/filename.tld"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>            <span class="syntax1">&lt;!-- Destination TLD --&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">classpath</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">path refid</span>=<span class="syntax3">"araneaclasspath"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">path refid</span>=<span class="syntax3">"compiledcustomtagclasses"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">path refid</span>=<span class="syntax3">"varia"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/classpath</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/java</span><span class="syntax10">&gt;</span>
+
+<span class="syntax10">&lt;</span><span class="syntax10">/target</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p>
+      </p><p>
+      When running given target, one should see messages similar to following:
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax12">8</span> attributes <span class="syntax6">for</span> <span class="syntax3">'custom.RandomTag'</span> found from <span class="syntax3">'org.araneaframework.jsp.tag.presentation.PresentationTag'</span>.
+</span></pre></pre><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e6584"></a>4.12.3.&nbsp;Widgets and events</h3></div></div></div><p>Sending events to widgets is accomplished with javascript submit
+      functions, helpful utility being
+      <code class="literal">org.araneaframework.jsp.util.JspUtil</code> and
+      <code class="literal">org.araneaframework.jsp.util.JspWidgetCallUtil</code>. First
+      one would construct <code class="literal">org.araneaframework.jsp.UiEvent</code>
+      and (in case of HTML element which receives only one event) calls
+      <code class="literal">JspUtil.writeEventAttributes(Writer out, UiEvent
+      event)</code> and afterwards
+      <code class="literal">writeSubmitScriptForEvent(Writer out, String
+      attributeName)</code>. </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax1">//public UiEvent(String eventId, String eventTargetWidget, String eventParameter)</span>
+UiEvent event <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">UiEvent</span>(<span class="syntax3">"hello"</span>, <span class="syntax3">"contextWidgetId"</span>, <span class="syntax3">"name"</span>);
+<span class="syntax1">// long way to ouput custom attributes version</span>
+JspUtil.<span class="syntax9">writeEventAttributes</span>(out, event);
+JspWidgetCallUtil.<span class="syntax9">writeSubmitScriptForEvent</span>(out, attributeName);
+<span class="syntax1">// short version</span>
+JspWidgetCallUtil.<span class="syntax9">writeSubmitScriptForEvent</span>(out, <span class="syntax3">"onclick"</span>, event);
+
+<span class="syntax1">// both will output something like this:</span>
+    <span class="syntax1">// arn-evntId="hello" </span>
+    <span class="syntax1">// arn-trgtwdgt="contextWidgetId" </span>
+    <span class="syntax1">// arn-evntPar="name" </span>
+    <span class="syntax1">// onclick="return _ap.event(this);"</span>
+</span></pre></pre></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e6606"></a>4.12.4.&nbsp;Layouts</h3></div></div></div><p>New layouts are mostly concerned with styles or render layouts
+      with some additional tags instead plain <code class="literal">table, tr,
+      td</code>. As simple example, we define a layout that applies a class
+      "error" to cells which contain invalid <code class="literal">FormElement</code>.
+      Note that approach we use only works when cell tag is aware of the
+      surrounding <code class="literal">FormElement</code> at the moment of rendering,
+      meaning that <code class="literal">FormElement</code> is rendered in JSP something
+      like this:</p><p>
+        </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+...
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:formElement id</span>=<span class="syntax3">"someId"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:label/</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:textInput/</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:formElement</span><span class="syntax10">&gt;</span>
+...
+</span></pre></pre><p>
+      </p><p>What is needed foremost is a decorator for cells that are used
+      inside invalid <code class="literal">FormElement</code>. </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">class</span> ErrorMarkingCellClassProviderDecorator <span class="syntax6">implements</span> CellClassProvider <span class="syntax11">{</span>
+  <span class="syntax6">protected</span> CellClassProvider superProvider;
+  <span class="syntax6">protected</span> PageContext pageContext;
+
+  <span class="syntax1">// constructs a decorator for superProvider, makes pageContext accessible</span>
+  <span class="syntax6">public</span> <span class="syntax9">ErrorMarkingCellClassProviderDecorator</span>(CellClassProvider superProvider, PageContext pageContext) <span class="syntax11">{</span>
+    <span class="syntax4">this</span>.superProvider <span class="syntax11">=</span> superProvider;
+    <span class="syntax4">this</span>.pageContext <span class="syntax11">=</span> pageContext;
+  <span class="syntax11">}</span>
+
+  <span class="syntax6">public</span> String <span class="syntax9">getCellClass</span>() <span class="syntax6">throws</span> JspException <span class="syntax11">{</span>
+    FormElement.ViewModel formElementViewModel <span class="syntax11">=</span> (FormElement.ViewModel)
+      pageContext.<span class="syntax9">getAttribute</span>(FormElementTag.VIEW_MODEL_KEY, PageContext.REQUEST_SCOPE);
+    <span class="syntax1">// superProvider.getCellClass() may only be called once, otherwise moves on to next cell's style</span>
+    String superClass <span class="syntax11">=</span> superProvider.<span class="syntax9">getCellClass</span>();
+
+    <span class="syntax6">if</span> (formElementViewModel <span class="syntax11">!=</span> <span class="syntax4">null</span> <span class="syntax11">&amp;&amp;</span> <span class="syntax11">!</span>formElementViewModel.<span class="syntax9">isValid</span>()) <span class="syntax11">{</span>
+      <span class="syntax6">if</span> (superClass <span class="syntax11">!=</span> <span class="syntax4">null</span>)
+        <span class="syntax6">return</span> superClass <span class="syntax11">+</span> <span class="syntax3">" error"</span>;
+      <span class="syntax6">else</span>
+        <span class="syntax6">return</span> <span class="syntax3">"error"</span>;
+    <span class="syntax11">}</span>
+
+    <span class="syntax6">return</span> superClass;
+  <span class="syntax11">}</span>
+<span class="syntax11">}</span>
+</span></pre></pre><p>Actual layout tag that decorates its cells according to described
+      logic: </p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">class</span> CustomLayoutTag <span class="syntax6">extends</span> LayoutHtmlTag <span class="syntax11">{</span>
+  <span class="syntax6">protected</span> <span class="syntax8">int</span> <span class="syntax9">doStartTag</span>(Writer out) <span class="syntax6">throws</span> Exception <span class="syntax11">{</span>
+    <span class="syntax8">int</span> result <span class="syntax11">=</span> <span class="syntax4">super</span>.<span class="syntax9">doStartTag</span>(out);
+    <span class="syntax9">addContextEntry</span>(CellClassProvider.KEY, <span class="syntax6">new</span> <span class="syntax9">ErrorMarkingCellClassProviderDecorator</span>(<span class="syntax4">this</span>, pageContext));
+
+    <span class="syntax6">return</span> result;
+  <span class="syntax11">}</span>
+<span class="syntax11">}</span>
+</span></pre></pre></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="framework.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="forms.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;3.&nbsp;Framework and Configuration&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;5.&nbsp;Forms and Data Binding</td></tr></table></div></body></html>

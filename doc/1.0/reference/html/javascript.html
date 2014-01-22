@@ -1,0 +1,134 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;9.&nbsp;Javascript Libraries</title><link rel="stylesheet" href="../css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"><link rel="start" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="up" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="prev" href="integration.html" title="Chapter&nbsp;8.&nbsp;Third-party Integration"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;9.&nbsp;Javascript Libraries</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="integration.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;</td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="javascript"></a>Chapter&nbsp;9.&nbsp;Javascript Libraries</h2></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e11526"></a>9.1.&nbsp;Third-party Javascript Libraries</h2></div></div></div><p>
+           Aranea distribution includes some third party Javascript libraries. Most of these are not needed for using Aranea 
+           functionality, but extend the functionality of both framework and <span class="emphasis"><em>UiLib</em></span>.
+           </p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e11534"></a>9.1.1.&nbsp;Behaviour (<a href="http://bennolan.com/behaviour/" target="_top">http://bennolan.com/behaviour/</a>)</h3></div></div></div><p>
+              Neat little library allowing usage of CSS selectors for applying behaviour to HTML page elements. It is required
+              for full function of Aranea pages rendered with Aranea JSP tags. With standard Behaviour rules, following
+              functionality is provided:
+
+              </p><div class="itemizedlist"><ul type="disc" compact><li>
+                  keyboard handlers are registered for form elements.
+                </li><li>
+                  addition of urls (&lt;href="...") to page elements that allow cloning of the session thread (opening
+                  link in new window&#8212;and in different session thread).
+                </li></ul></div><p>
+            </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="ajaxanywhere"></a>9.1.2.&nbsp;AjaxAnywhere (<a href="http://ajaxanywhere.sourceforge.net/" target="_top">http://ajaxanywhere.sourceforge.net/</a>)</h3></div></div></div><p>
+               AjaxAnywhere allows separating web page into multiple zones, and refreshing only those zones that needs to be updated.
+               Inclusion of this library is required for building AJAX capable web-page with Aranea JSP tags.
+            </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e11556"></a>9.1.3.&nbsp;The DHTML Calendar (<a href="http://www.dynarch.com/projects/calendar/" target="_top">http://www.dynarch.com/projects/calendar/</a>)</h3></div></div></div><p>
+               Nice DHTML calendar, required if one wants to use Aranea JSP <span class="emphasis"><em>&lt;ui:dateInput&gt;</em></span> or <span class="emphasis"><em>&lt;ui:dateTimeInput&gt;</em></span> tags.
+            </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e11570"></a>9.1.4.&nbsp;Prototype (<a href="http://www.prototypejs.org/" target="_top">http://www.prototypejs.org/</a>)</h3></div></div></div><p>
+               Prototype is a JavaScript framework that aims to ease development of dynamic web applications. Aranea JSP
+               aims to make more use of it in the future. It is a prerequisite for using Uilib's <span class="emphasis"><em>AutoCompleteTextControl</em></span> 
+               and action-enabled <span class="emphasis"><em>TreeWidget</em></span> components. 
+            </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e11584"></a>9.1.5.&nbsp;script.aculo.us (<a href="http://script.aculo.us/" target="_top">http://script.aculo.us/</a>)</h3></div></div></div><p>
+               script.aculo.us provides easy-to-use, cross-browser user interface JavaScript libraries. Only subset of script.aculo.us
+               libraries are included&#8212;only JSP tag that depends on it is <span class="emphasis"><em>&lt;ui:autoCompleteTextInput&gt;</em></span>.
+            </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e11595"></a>9.1.6.&nbsp;TinyMCE (<a href="http://tinymce.moxiecode.com/" target="_top">http://tinymce.moxiecode.com/</a>)</h3></div></div></div><p>
+               TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor control. Required for using Aranea 
+               JSP <span class="emphasis"><em>&lt;ui:richTextarea&gt;</em></span> tag.
+            </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e11606"></a>9.1.7.&nbsp;log4javascript (<a href="http://www.timdown.co.uk/log4javascript/" target="_top">http://www.timdown.co.uk/log4javascript/</a>)</h3></div></div></div><p>
+               log4javascript is a JavaScript logging framework similar to Java logging framework log4j. Include log4javascript
+               scripts and call <span class="emphasis"><em>AraneaPage.setDefaultLogger()</em></span> to receive a popup window where
+               Aranea JS debug output is logged.
+            </p></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="aranea_clientside_js"></a>9.2.&nbsp;Aranea Clientside Javascript</h2></div></div></div><p>
+			Aranea uses javascript to do form submits. This provides AJAX enabled webapps and more control over
+			form submitting logic. Each page served with Aranea has associated <span class="emphasis"><em>AraneaPage</em></span> object:
+		</p><p>
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax1">/* AraneaPage object is present on each page served by Aranea and contains common</span>
+<span class="syntax1"> * functionality for setting/getting page related variables, events and functions. */</span>
+<span class="syntax6">function</span> <span class="syntax9">AraneaPage</span>() <span class="syntax11">{</span>
+  <span class="syntax1">/* Getters and setters for URL of aranea dispatcher servlet serving current page. */</span> 
+  <span class="syntax6">function</span> <span class="syntax9">getServletURL</span>()<span class="syntax11">;</span>
+  <span class="syntax6">function</span> <span class="syntax9">setServletURL</span>(url)<span class="syntax11">;</span>
+  
+  <span class="syntax1">/** Indicates whether the page is completely loaded or not. Page is considered to </span>
+<span class="syntax1">   * be loaded when all system onload events have completed execution. */</span>
+  <span class="syntax6">function</span> <span class="syntax9">isLoaded</span>()<span class="syntax11">;</span>
+  <span class="syntax6">function</span> <span class="syntax9">setLoaded</span>(loaded)<span class="syntax11">;</span>
+  
+  <span class="syntax1">/* Returns the server-side reported locale (AraneaLocale). */</span>
+  <span class="syntax6">function</span> <span class="syntax9">getLocale</span>()<span class="syntax11">;</span>
+
+  <span class="syntax1">/** Indicates whether some form on page is (being) submitted already</span>
+<span class="syntax1">    * by traditional HTTP request. */</span>
+  <span class="syntax6">function</span> <span class="syntax9">isSubmitted</span>()<span class="syntax11">;</span>
+  <span class="syntax1">/* Custom submit functions using plain HTTP request should call this before submit. */</span>
+  <span class="syntax6">function</span> <span class="syntax9">setSubmitted</span>()<span class="syntax11">;</span>
+  
+  <span class="syntax1">/** Returns Aranea JSP specific DOM tree traverser (AraneaTraverser). */</span>
+  <span class="syntax6">function</span> <span class="syntax9">getTraverser</span>()<span class="syntax11">;</span>
+
+  <span class="syntax1">/** Add events that should be executed upon page load/unload to execution queue. */</span>
+  <span class="syntax6">function</span> <span class="syntax9">addSystemLoadEvent</span>(event)<span class="syntax11">;</span>
+  <span class="syntax6">function</span> <span class="syntax9">addClientLoadEvent</span>(event)<span class="syntax11">;</span>
+  <span class="syntax6">function</span> <span class="syntax9">addSystemUnLoadEvent</span>(event)<span class="syntax11">;</span>
+
+  <span class="syntax1">/** Called on page load, executes registered system -- after which page is considered </span>
+<span class="syntax1">    * loaded and client load events are executed too. */</span>
+  <span class="syntax6">function</span> <span class="syntax9">onload</span>()<span class="syntax11">;</span>
+  <span class="syntax1">/** Called on page load, executes registered unload events. */</span>
+  <span class="syntax6">function</span> <span class="syntax9">onunload</span>()<span class="syntax11">;</span>
+  
+  <span class="syntax1">/** Adds general callback executed before any form submit. */</span>
+  <span class="syntax6">function</span> <span class="syntax9">addSubmitCallback</span>(callback)<span class="syntax11">;</span>
+
+  <span class="syntax1">/** Adds general callback executed before form with given id is submitted. */</span>
+  <span class="syntax6">function</span> <span class="syntax9">addSubmitCallback</span>(systemFormId<span class="syntax11">,</span> callback)<span class="syntax11">;</span>
+
+  <span class="syntax1">/** Executes all callbacks that should run before submitting the form with given id. */</span>
+  <span class="syntax6">function</span> <span class="syntax9">executeCallbacks</span>(systemFormId)<span class="syntax11">;</span>
+
+  <span class="syntax1">/** </span>
+<span class="syntax1">   * Chooses appropriate submitting method and submittable form given the HTML element</span>
+<span class="syntax1">   * that initiated the submit request. */</span>
+  <span class="syntax6">function</span> <span class="syntax9">event</span>(element)<span class="syntax11">;</span>
+
+  <span class="syntax1">/** </span>
+<span class="syntax1">   * Called by event() to determine the appropriate form submitter.</span>
+<span class="syntax1">   */</span>
+  <span class="syntax6">function</span> <span class="syntax9">findSubmitter</span>(element<span class="syntax11">,</span> systemForm)<span class="syntax11">;</span>
+
+  <span class="syntax1">/** another submit function, takes all params that are possible to </span>
+<span class="syntax1">    * use with Aranea JSP currently. */</span>
+  <span class="syntax6">function</span> <span class="syntax9">event_6</span>(systemForm<span class="syntax11">,</span> eventId<span class="syntax11">,</span> eventTarget<span class="syntax11">,</span> 
+                    eventParam<span class="syntax11">,</span> eventPrecondition<span class="syntax11">,</span> eventUpdateRegions)<span class="syntax11">;</span>
+                    
+  <span class="syntax1">/** </span>
+<span class="syntax1">   * Provides preferred way of overriding AraneaPage object functions. </span>
+<span class="syntax1">   * @param functionName name of AraneaPage function that should be overridden. </span>
+<span class="syntax1">   * @param f replacement function </span>
+<span class="syntax1">   */</span>
+  <span class="syntax6">function</span> <span class="syntax9">override</span>(functionName<span class="syntax11">,</span> f)<span class="syntax11">;</span>
+  
+  <span class="syntax1">/** </span>
+<span class="syntax1">   * Adds keepalive function f that is executed periodically after time </span>
+<span class="syntax1">   * milliseconds has passed </span>
+<span class="syntax1">   */</span>
+  <span class="syntax6">function</span> <span class="syntax9">addKeepAlive</span>(f<span class="syntax11">,</span> time)<span class="syntax11">;</span>
+
+  <span class="syntax1">/** Clears/removes all registered keepalive functions. */</span>
+  <span class="syntax6">function</span> <span class="syntax9">clearKeepAlives</span>()<span class="syntax11">;</span>
+  
+  <span class="syntax1">/** Logs message on DEBUG level, if logger is present. */</span>
+  <span class="syntax6">function</span> <span class="syntax9">debug</span>(message)<span class="syntax11">;</span>
+<span class="syntax11">}</span>
+
+<span class="syntax1">/** Random request id generator. Sent only with AA ajax requests.</span>
+<span class="syntax1">  * Currently only purpose of it is easier debugging (identifying requests). */</span>
+<span class="syntax6">function</span> AraneaPage<span class="syntax11">.</span><span class="syntax9">getRandomRequestId</span>()<span class="syntax11">;</span>
+
+<span class="syntax1">/* Returns a default keepalive function -- to make periodical requests to expiring thread</span>
+<span class="syntax1"> * or top level services. */</span>
+AraneaPage<span class="syntax11">.</span>getDefaultKeepAlive <span class="syntax11">=</span> <span class="syntax6">function</span>(topServiceId<span class="syntax11">,</span> threadServiceId<span class="syntax11">,</span> keepAliveKey)<span class="syntax11">;</span>
+
+<span class="syntax1">/** Page initialization function, should be called upon page load. */</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">init</span>()<span class="syntax11">;</span>
+
+<span class="syntax1">/* Aranea page object is accessible in two ways -- _ap and araneaPage() */</span>
+_ap <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">AraneaPage</span>()<span class="syntax11">;</span>
+<span class="syntax6">function</span> <span class="syntax9">araneaPage</span>() <span class="syntax11">{</span> <span class="syntax6">return</span> _ap<span class="syntax11">;</span> <span class="syntax11">}</span>
+</span></pre></pre><p>
+      </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="integration.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;</td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;8.&nbsp;Third-party Integration&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;</td></tr></table></div></body></html>

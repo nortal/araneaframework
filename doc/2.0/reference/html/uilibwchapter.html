@@ -1,0 +1,281 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;7.&nbsp;Other Uilib Widgets</title><link rel="stylesheet" href="../css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"><link rel="start" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="up" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="prev" href="lists.html" title="Chapter&nbsp;6.&nbsp;Lists and Query Browsing"><link rel="next" href="integration.html" title="Chapter&nbsp;8.&nbsp;Third-party Integration"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;7.&nbsp;Other Uilib Widgets</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="lists.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="integration.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="uilibwchapter"></a>Chapter&nbsp;7.&nbsp;Other Uilib Widgets</h2></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="trees"></a>7.1.&nbsp;Trees</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="treewidget_and_treenodewidget"></a>7.1.1.&nbsp;TreeWidget &amp; TreeNodeWidget</h3></div></div></div><p>
+           	<code class="classname">org.araneaframework.uilib.tree.TreeWidget</code> allows representation of hierarchical data in a manner that has become 
+			traditional in GUIs, as an expandable/collapsable tree. <code class="literal">TreeWidget</code> represents trees' root node, which is special 
+			in that it is not usually really rendered on-screen but serves as point where child nodes are attached. 
+			Child nodes of <code class="literal">TreeWidget</code>
+			are <code class="literal">TreeNodeWidget</code>s acquired from associated <code class="literal">TreeDataProvider</code> or could be attached by the developer.
+			The <code class="literal">TreeWidget</code> supports expanding and collapsing of all those nodes.
+           </p><p>
+           <code class="literal">TreeDataProvider</code> is a simple interface with ability to return data belonging to any given node of the tree.
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">public</span> <span class="syntax8">interface</span> TreeDataProvider <span class="syntax6">extends</span> Serializable <span class="syntax11">{</span>
+  <span class="syntax2">/**</span>
+<span class="syntax2">   * Returns a list of child nodes for specified parent node.</span>
+<span class="syntax2">   </span><span class="syntax2">*/</span>
+  List<span class="syntax11">&lt;</span>TreeNodeWidget<span class="syntax11">&gt;</span> <span class="syntax9">getChildren</span>(TreeNodeContext parent);
+
+  <span class="syntax2">/**</span>
+<span class="syntax2">   * Returns whether the specified tree node has any children.</span>
+<span class="syntax2">   </span><span class="syntax2">*/</span>
+  <span class="syntax8">boolean</span> <span class="syntax9">hasChildren</span>(TreeNodeContext parent);
+<span class="syntax11">}</span>
+</span></pre></pre><p>
+           </p><p>
+           	As is apparent from the definition of <code class="literal">TreeDataProvider</code>, descendants of the <code class="literal">TreeWidget</code>
+           	that are to be presented in a tree, must be of type <code class="literal">TreeNodeWidget</code>. <code class="literal">TreeNodeWidget</code>
+           	is the superclass of <code class="literal">TreeWidget</code> that also has child nodes and will be rendered too. Node rendering is done with
+           	display widget that is passed to <code class="literal">TreeNodeWidget</code> in its constructor. 
+           	
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax2">/**</span><span class="syntax2"> Childless collapsed node, rendered by display widget. </span><span class="syntax2">*/</span>
+<span class="syntax6">public</span> <span class="syntax9">TreeNodeWidget</span>(Widget display);
+<span class="syntax2">/**</span><span class="syntax2"> Node with children. Expanded by default. </span><span class="syntax2">*/</span>
+<span class="syntax6">public</span> <span class="syntax9">TreeNodeWidget</span>(Widget display, List nodes);
+<span class="syntax2">/**</span><span class="syntax2"> Node with children, expand/collapse state can be set with corresponding flag. </span><span class="syntax2">*/</span>
+<span class="syntax6">public</span> <span class="syntax9">TreeNodeWidget</span>(Widget display, List nodes, <span class="syntax8">boolean</span> collapsed);
+</span></pre></pre><p>
+
+			Display widget can be any widget that can render itself, it is rendered in the place of tree node instead of
+			<code class="literal">TreeNodeWidget</code>, which is just a data holder. Very often, display widget is <code class="literal">BaseUIWidget</code>
+			 which renders itself according to some JSP template.
+           	
+           	<code class="literal">TreeNodeWidget</code> does not accept independent <code class="literal">TreeDataProvider</code>, its children are acquired 
+           	from <code class="literal">TreeWidget</code>'s <code class="literal">TreeDataProvider</code>.
+           </p><p>
+           		<code class="literal">TreeWidget</code> enriches the <code class="literal">Environment</code> with <code class="literal">TreeContext</code>.
+           		<code class="literal">TreeNodeWidget</code> enriches the <code class="literal">Environment</code> of its display widget
+           		with <code class="literal">TreeNodeContext</code>. Through these contexts display widgets have access to
+           		owning tree node and root of the tree.
+           </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="treeJSPtags"></a>7.1.2.&nbsp;Tree JSP tags</h3></div></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e13222"></a>&lt;ui:tree&gt;</h4></div></div></div><p>Renders tree with given id.</p><div class="sect4" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e13227"></a>Attributes</h5></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>yes</em></span></td><td>ID of the tree widget.</td></tr></tbody></table></div></div><div class="sect4" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e13252"></a>Examples</h5></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:tree id</span>=<span class="syntax3">"simpleTree"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+<span class="syntax1">&lt;!-- nothing more required, nodes' display widgets will take care of rendering the tree nodes.&gt;</span>
+</span></pre></pre></div></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="tabs"></a>7.2.&nbsp;Tabs</h2></div></div></div>
+     Tabs provide the tabbed interface for switching between different content. 
+
+    <div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="TabContainerWidget"></a>7.2.1.&nbsp;TabContainerWidget</h3></div></div></div><p>
+		<code class="literal">TabContainerWidget</code> manages widgets that are to be displayed and manipulated in separate tabs.
+		It provides basic operations like adding, removing, disabling, enabling and switching between tabs. 
+		Its main operation mode is stateful, where switching between tabs preserves state in inactive tabs. It can be 
+		made to operate statelessly (or with custom state management) by constructing new tab with <code class="literal">WidgetFactory</code>
+		instead of <code class="literal">Widget</code>.
+		</p><p>
+		Following methods are available for adding tabs:
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">void</span> <span class="syntax9">addTab</span>(String id, String labelId, Widget contentWidget);
+<span class="syntax8">void</span> <span class="syntax9">addTab</span>(String id, Widget labelWidget, Widget contentWidget);
+<span class="syntax8">void</span> <span class="syntax9">addTab</span>(String id, String labelId, WidgetFactory contentWidgetFactory);
+<span class="syntax8">void</span> <span class="syntax9">addTab</span>(String id, Widget labelWidget, WidgetFactory contentWidgetFactory);
+</span></pre></pre><p>
+		</p><p>
+			And for common tab operations:
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax8">boolean</span> <span class="syntax9">removeTab</span>(String id);
+<span class="syntax8">boolean</span> <span class="syntax9">disableTab</span>(String id);
+<span class="syntax8">boolean</span> <span class="syntax9">enableTab</span>(String id);
+<span class="syntax8">boolean</span> <span class="syntax9">selectTab</span>(String id);
+</span></pre></pre><p>
+		</p><p>
+			For its children, TabContainerWidget is accessible from <code class="literal">Environment</code> as <code class="literal">TabContainerContext</code>.
+		</p><p>
+			Since Aranea 1.2.2, one can also add a tab switch listener. The listener is invoked right before the current tab is about to be
+			replaced with a new tab. Here note that the current tab may be <code class="literal">null</code> (when the <code class="literal">selectTab()</code>
+			method was not called before). The listener is defined as a sub-interface of <code class="literal">TabContainerContext</code>:
+		</p><pre class="programlisting"><pre><span class="syntax0">
+  <span class="syntax2">/**</span>
+<span class="syntax2">   * An interface for tab switch listeners. Tab switch occurs when the currently</span>
+<span class="syntax2">   * selected tab changes.</span>
+<span class="syntax2">   * </span><span class="syntax5">@since</span><span class="syntax2"> 1.2.2</span>
+<span class="syntax2">   </span><span class="syntax2">*/</span>
+  <span class="syntax8">interface</span> TabSwitchListener <span class="syntax6">extends</span> Serializable <span class="syntax11">{</span>
+
+    <span class="syntax2">/**</span>
+<span class="syntax2">     * A listener for tab switching. Before the selected tab will be replaced</span>
+<span class="syntax2">     * with a new one, this method is called to check whether the switch is</span>
+<span class="syntax2">     * allowed. Note that the </span><span class="syntax10">&lt;</span><span class="syntax10">code</span><span class="syntax10">&gt;</span><span class="syntax2">selectedTab</span><span class="syntax10">&lt;</span><span class="syntax10">/code</span><span class="syntax10">&gt;</span><span class="syntax2"> parameter may be</span>
+<span class="syntax2">     * </span><span class="syntax10">&lt;</span><span class="syntax10">code</span><span class="syntax10">&gt;</span><span class="syntax2">null</span><span class="syntax10">&lt;</span><span class="syntax10">/code</span><span class="syntax10">&gt;</span><span class="syntax2"> if no tab is currently selected.</span>
+<span class="syntax2">     * </span><span class="syntax10">&lt;</span><span class="syntax10">p</span><span class="syntax10">&gt;</span>
+<span class="syntax2">     * The last parameter is a tab switch closure that is executed only when the</span>
+<span class="syntax2">     * listener returns </span><span class="syntax10">&lt;</span><span class="syntax10">code</span><span class="syntax10">&gt;</span><span class="syntax2">true</span><span class="syntax10">&lt;</span><span class="syntax10">/code</span><span class="syntax10">&gt;</span><span class="syntax2"> or when the listener executes it</span>
+<span class="syntax2">     * itself. Therefore, this closure can also be used with</span>
+<span class="syntax2">     * {</span><span class="syntax5">@link</span><span class="syntax2"> ConfirmationContext#confirm(Closure, String)}.</span>
+<span class="syntax2">     * </span>
+<span class="syntax2">     * </span><span class="syntax5">@param</span><span class="syntax2"> selectedTab The currently selected tab. May be </span><span class="syntax10">&lt;</span><span class="syntax10">code</span><span class="syntax10">&gt;</span><span class="syntax2">null</span><span class="syntax10">&lt;</span><span class="syntax10">/code</span><span class="syntax10">&gt;</span><span class="syntax2">.</span>
+<span class="syntax2">     * </span><span class="syntax5">@param</span><span class="syntax2"> newTab The tab that will replace the current one.</span>
+<span class="syntax2">     * </span><span class="syntax5">@param</span><span class="syntax2"> switchClosure A closure that handles tab switch.</span>
+<span class="syntax2">     * </span><span class="syntax5">@return</span><span class="syntax2"> </span><span class="syntax10">&lt;</span><span class="syntax10">code</span><span class="syntax10">&gt;</span><span class="syntax2">true</span><span class="syntax10">&lt;</span><span class="syntax10">/code</span><span class="syntax10">&gt;</span><span class="syntax2">, if the switch is allowed.</span>
+<span class="syntax2">     </span><span class="syntax2">*/</span>
+    <span class="syntax8">boolean</span> <span class="syntax9">onSwitch</span>(TabWidget selectedTab, TabWidget newTab, Closure switchClosure);
+
+  <span class="syntax11">}</span>     
+</span></pre></pre><p>
+		The default implementation is <code class="literal">DefaultTabSwitchListener</code>, which basically corresponds to the default behaviour.
+		However, one can easily write and set their own handler for a tab container. In addition, the <code class="literal">switchClosure</code> parameter
+		helps integrating this solution with the <a href="core.html#ConfirmationContext" title="2.8.7.&nbsp;ConfirmationContext">ConfirmationContext</a>.
+	</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="TabJsptags"></a>7.2.2.&nbsp;Tab JSP tags</h3></div></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="uitabcontainer"></a>&lt;ui:tabContainer&gt;</h4></div></div></div><p>
+				Opens the tab container context and renders the labels for all tabs inside this container.
+			</p><div class="sect4" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="uitabcontainerattrs"></a>Attributes</h5></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>yes</em></span></td><td>ID of the tab container widget.</td></tr></tbody></table></div></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="uitabbody"></a>&lt;ui:tabBody&gt;</h4></div></div></div><p>
+    			Renders the body of currently active (selected) tab. Must be used inside tab container context.
+    		</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="uitabs"></a>&lt;ui:tabs&gt;</h4></div></div></div><p>
+    			Renders specified tab container fully&#8212;writes out tab labels and active tab's content.
+    		</p><div class="sect4" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="uitabsattrs"></a>Attributes</h5></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>yes</em></span></td><td>ID of the tab container widget.</td></tr></tbody></table></div></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="tabtagexamples"></a>Usage of tab tags in JSP templates.</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:tabs id</span>=<span class="syntax3">"tabContainer"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+
+<span class="syntax1">&lt;!-- equivalent to previous, but one could add custom content before and after tab body --&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:tabContainer id</span>=<span class="syntax3">"tabContainer"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:tabBody/</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:tabContainer</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="contextmenu"></a>7.3.&nbsp;Context Menu</h2></div></div></div>
+     Context menu is the menu that pops up when mouse right-click is made 
+     on some item (widget) in an UI.
+
+    <div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="ContextMenuWidget_ContextMenuItem"></a>7.3.1.&nbsp;ContextMenuWidget &amp; ContextMenuItem</h3></div></div></div><p>
+			Widget that represents context menu content is called <code class="literal">ContextMenuWidget</code>. By convention, it is
+			usually added to component hierarchy as a child of the widget for which it provides context menu.
+</p><pre class="programlisting"><pre><span class="syntax0">widgetWithContextMenu.<span class="syntax9">addWidget</span>(<span class="syntax3">"contextmenu"</span>, <span class="syntax6">new</span> <span class="syntax9">ContextMenuWidget</span>(...));
+</span></pre></pre><p>	
+		</p><p>
+			<code class="literal">ContextMenuWidget</code> sole constructor has a single <code class="literal">ContextMenuItem</code> parameter.
+			<code class="literal">ContextMenuItem</code> is a hierarchical container for menu items, consisting of menu entries and entry
+			labels. There are two types of menu entries: <code class="literal">ContextMenuEventEntry</code> and <code class="literal">ContextMenuActionEntry</code> 
+			&#8212;which respectively produce events (see  <a href="core.html#EventListeners" title="2.7.2.&nbsp;Event Listeners">Section&nbsp;2.7.2, &#8220;Event Listeners&#8221;</a>) or actions (see <a href="core.html#actionlisteners" title="2.7.3.&nbsp;Action Listeners">Section&nbsp;2.7.3, &#8220;Action Listeners&#8221;</a>)  
+			upon selection of context menu item. Except for produced event type, these entries are constructed identically.
+			
+			Creating context menu entry which tries to invoke widget event listener of <code class="literal">someWidget</code> without supplying
+			any event parameters is done as follows:</p><pre class="programlisting"><pre><span class="syntax0">ContextMenuEntry entry <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">ContextMenuEventEntry</span>(<span class="syntax3">"someEvent"</span>, someWidget);
+</span></pre></pre><p>
+		</p><p>
+			When menu entry produced event requires some parameters, 
+			javascript function must be defined that returns desired parameters. When left undefined,
+			<code class="literal">function() { return null; }</code> is used. Sample javascript function which always
+			returns value of some fixed DOM element as event parameter looks like this:
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax6">var</span> contextMenuEventParameterSupplier <span class="syntax11">=</span> <span class="syntax6">function</span>() <span class="syntax11">{</span>
+  <span class="syntax1">// make sure that function call was really triggered by menu selection</span>
+  <span class="syntax6">if</span> (araneaContextMenu<span class="syntax11">.</span><span class="syntax9">getTriggeringElement</span>()) <span class="syntax11">{</span>
+    <span class="syntax1">// supply value of DOM element 'someElement' as event parameter</span>
+    <span class="syntax6">return</span> <span class="syntax9">$</span>(<span class="syntax3">'someElement'</span>)<span class="syntax11">.</span>value<span class="syntax11">;</span>
+  <span class="syntax11">}</span>
+  <span class="syntax6">return</span> <span class="syntax4">null</span><span class="syntax11">;</span>
+<span class="syntax11">};</span>
+</span></pre></pre><p>
+		</p><p>Corresponding menu entry which detects and submits event parameters is created similarly to previous:
+		</p><pre class="programlisting"><pre><span class="syntax0">ContextMenuEntry entry <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">ContextMenuEventEntry</span>(<span class="syntax3">"someEvent"</span>, someWidget, <span class="syntax3">"contextMenuEventParameterSupplier"</span>);
+</span></pre></pre><p>
+		</p><p>
+			Whole construction of single multi-element and multi-level <code class="literal">ContextMenuWidget</code> will look similar to this:
+</p><pre class="programlisting"><pre><span class="syntax0">ContextMenuItem root <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">ContextMenuItem</span>();
+<span class="syntax1">// entry that produces event when clicked on</span>
+ContextMenuItem firstEntry <span class="syntax11">=</span> 
+  <span class="syntax6">new</span> <span class="syntax9">ContextMenuItem</span>(
+    <span class="syntax9">getL10nCtx</span>().<span class="syntax9">localize</span>(<span class="syntax3">"someLabel"</span>), <span class="syntax1">// label </span>
+    <span class="syntax6">new</span> <span class="syntax9">ContextMenuEventEntry</span>(<span class="syntax3">"someEvent"</span>, <span class="syntax4">this</span>));
+<span class="syntax1">// entry that just functions as submenu</span>
+ContextMenuItem secondEntry <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">ContextMenuItem</span>(<span class="syntax9">getL10nCtx</span>().<span class="syntax9">localize</span>(<span class="syntax3">"submenu"</span>));
+<span class="syntax1">// action producing entry in a submenu</span>
+ContextMenuItem thirdEntry <span class="syntax11">=</span> 
+  <span class="syntax6">new</span> <span class="syntax9">ContextMenuItem</span>(
+    <span class="syntax9">getL10nCtx</span>().<span class="syntax9">localize</span>(<span class="syntax3">"someOtherLabel"</span>), 
+    <span class="syntax6">new</span> <span class="syntax9">ContextMenuActionEntry</span>(<span class="syntax3">"someAction"</span>, <span class="syntax4">this</span>, <span class="syntax3">"contextMenuActionParameterSupplier"</span>));
+secondEntry.<span class="syntax9">addMenuItem</span>(thirdEntry);
+root.<span class="syntax9">addMenuItem</span>(firstEntry);
+root.<span class="syntax9">addMenuItem</span>(secondEntry);
+</span></pre></pre><p>
+		</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="ContextMenuJSP"></a>7.3.2.&nbsp;Rendering context menus with JSP template</h3></div></div></div>
+    	
+    	To get functional context menus on client-side, template must define the sections belonging to a widget which has the context
+    	menu and register the context menu. Context menus are known to work in Internet Explorer and Mozilla Firefox browsers.
+
+    	<div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="uicontextmenu"></a>&lt;ui:contextMenu&gt;</h4></div></div></div><p>
+    			Registers the context menu in current template for widget with <code class="literal">id</code>.
+    		</p><div class="sect4" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="uicontextmenuattrs"></a>Attributes</h5></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>yes</em></span></td><td>ID of the <code class="literal">ContextMenuWidget</code></td></tr><tr><td>updateRegions</td><td><span class="emphasis"><em>no</em></span></td><td>Regions which should be updated when context menu event has been processed.</td></tr><tr><td>globalUpdateRegions</td><td><span class="emphasis"><em>no</em></span></td><td>Global regions which should be updated when context menu event has been processed.</td></tr></tbody></table></div></div></div><p>
+    	As one widget might be rendered in separate sections in a template, all these sections need to be identified so that
+    	correct context menu can be detected at all times. This is done with <code class="literal">&lt;ui:widgetMarker&gt;</code> tag
+    	surrounding the widget sections.
+    	</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="uiwidgetmarker"></a>&lt;ui:widgetMarker&gt;</h4></div></div></div><p>
+    			Defines the surrounded section as belonging to a widget with <code class="code">id</code>. It writes out some
+    			HTML tag with <code class="literal">class</code> attribute value set to <code class="literal">widgetMarker</code>.
+    		</p><div class="sect4" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="uiwidgetmarkerattrs"></a>Attributes</h5></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td><span class="emphasis"><em>yes</em></span></td><td>ID of the widget which section is surrounded by this marker tag.</td></tr><tr><td>tag</td><td><span class="emphasis"><em>no</em></span></td><td>HTML tag to render the marker with. Default is HTML <code class="literal">div</code>.</td></tr></tbody></table></div></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="contextmenuexamples"></a>Example: JSP template containing context menu.</h4></div></div></div><pre class="programlisting"><pre><span class="syntax0"><span class="syntax1">&lt;!-- Defines context menu for a ListWidget "list" --&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:list id</span>=<span class="syntax3">"list"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:listFilter</span><span class="syntax10">&gt;</span> ... <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:listFilter</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:listRows</span><span class="syntax10">&gt;</span>
+    <span class="syntax1">&lt;!-- marker surrounding widget with identifier "list" --&gt;</span>  
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:widgetMarker id</span>=<span class="syntax3">"list"</span><span class="syntax10"> tag</span>=<span class="syntax3">"tbody"</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:row id</span>=<span class="syntax3">"${listFullId}.row${rowRequestId}"</span><span class="syntax10">&gt;</span>
+                <span class="syntax1">&lt;!-- cells --&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:widgetMarker</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:listRows</span><span class="syntax10">&gt;</span>
+
+  <span class="syntax1">&lt;!-- Context menu widget with conventional id --&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:contextMenu id</span>=<span class="syntax3">"list.contextmenu"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:list</span><span class="syntax10">&gt;</span>
+</span></pre></pre></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="PartialRendering"></a>7.4.&nbsp;Partial Rendering</h2></div></div></div><p>
+	Imagine that you have a big web page with input form, and you want certain input controls
+	to update something on that page as user changes the value of the control. Now, would it be
+	efficient if the value changes, its <code class="code">onchange</code> event submits the data so that an
+	<code class="code">OnChangeEventListener</code> could read it and return the same page with slight changes?
+	The main problem here is that a small change should not force the user wait until the page
+	reloads. Here is the part where partial rendering comes in.
+	</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+		Partial rendering is more thoroughly described by Alar Kvell's bachelor thesis
+		<a href="http://www.araneaframework.org/docs/kvell-aranea-ajax.pdf" target="_top">Aranea Ajax</a>.
+		This section concentrates mostly on how a programmer can make partial rendering work.
+		</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="The_Two_Steps"></a>7.4.1.&nbsp;The Two Steps</h3></div></div></div><p>
+		First of all, a page must have a part (parts) that needs to be updated when an event occurs.
+		These regions are marked with the <code class="code">&lt;ui:updateRegion&gt;</code> tag by also indicating
+		its ID to reference it later.
+		</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+			It is not possible to update an HTML table cell. One needs to update the
+			entire row by using the <code class="code">&lt;ui:updateRegionRows&gt;</code> tag. 
+			</p></div><p>
+		Next, one needs to specify the <code class="code">updateRegions</code> attribute of the input control
+		that has an event registered. The attribute value should contain a comma-separated list of
+		update region IDs that need to be update due to the event. It is important for this value to
+		be specified, because otherwise the entire page would be posted to the server.
+		</p><p>
+		When the input control has the <code class="code">updateRegions</code> attribute defined, Aranea will use
+		Ajax to send the form data to the server, invoke the <code class="code">OnEventListener</code> associated
+		with the event, and return the parts of the pages defined as update regions. Finally,
+		the script on the client side will replace the update regions on the page with the received
+		ones. For everything else on the same page, it will remain the same.
+		</p><p>
+		Note that these two steps described above are all that need to be taken to make partial rendering
+		possible with Aranea.
+		</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="Partial_Rendering_Example"></a>7.4.2.&nbsp;Partial Rendering Example</h3></div></div></div><p>
+		Now let's take a look at a short example where partial rendering is used. The following is the code
+		snippet from Aranea demo application component <span class="emphasis"><em>Easy AJAX w/ 'update regions'</em></span>.
+
+		</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:formElement id</span>=<span class="syntax3">"beastSelection"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell styleClass</span>=<span class="syntax3">"name"</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:label /</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:select updateRegions</span>=<span class="syntax3">"ajaxBeasts"</span><span class="syntax10">/</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:formElement</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+
+<span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:updateRegionRows id</span>=<span class="syntax3">"ajaxBeasts"</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax5">c</span><span class="syntax10">:if test</span>=<span class="syntax3">"${not empty form.elements['concreteBeastControl']}"</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:formElement id</span>=<span class="syntax3">"concreteBeastControl"</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell styleClass</span>=<span class="syntax3">"centered-name"</span><span class="syntax10">&gt;</span>
+          <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:label /</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+          <span class="syntax10">&lt;</span><span class="syntax5">ui</span><span class="syntax10">:checkboxMultiSelect type</span>=<span class="syntax3">"vertical"</span><span class="syntax10"> /</span><span class="syntax10">&gt;</span>
+        <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:cell</span><span class="syntax10">&gt;</span>
+      <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:formElement</span><span class="syntax10">&gt;</span>
+    <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:row</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">c</span><span class="syntax10">:if</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/</span><span class="syntax5">ui</span><span class="syntax10">:updateRegionRows</span><span class="syntax10">&gt;</span>
+</span></pre></pre><p>
+
+		In the example, you can see that it does not matter in which order the update region
+		is declared and referenced. Also, because data (form elements) is displayed using table rows,
+		we must use <code class="code">&lt;ui:updateRegionRows&gt;</code> tag here to make it work. However,
+		the most important part of this example is that the <code class="code">&lt;ui:select&gt;</code>
+		control defines the update region it wishes to update.
+		</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+			Currently file upload inputs don't work with update regions because the JavaScript cannot
+			read the unsubmitted file and serialize it to send it to the server. Therefore, if you
+			provide the <code class="code">updateRegions</code> attribute for a file upload input, the file won't
+			reach the server. We hope to find a solution to this limitation in near future.
+			</p></div></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="lists.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="integration.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;6.&nbsp;Lists and Query Browsing&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;8.&nbsp;Third-party Integration</td></tr></table></div></body></html>

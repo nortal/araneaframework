@@ -1,0 +1,510 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;9.&nbsp;Javascript Libraries</title><link rel="stylesheet" href="../css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"><link rel="start" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="up" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="prev" href="integration.html" title="Chapter&nbsp;8.&nbsp;Third-party Integration"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;9.&nbsp;Javascript Libraries</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="integration.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;</td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="javascript"></a>Chapter&nbsp;9.&nbsp;Javascript Libraries</h2></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e13608"></a>9.1.&nbsp;Third-party Javascript Libraries</h2></div></div></div><p>
+           Aranea distribution includes some third party Javascript libraries. Most of these are not needed for using Aranea 
+           functionality, but extend the functionality of both framework and <span class="emphasis"><em>UiLib</em></span>.
+           </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p><span class="emphasis"><em>Behaviour</em></span> library was removed since 1.2.1 because it was out-of-date and because
+				<span class="emphasis"><em>Prototype</em></span> can now do its work. To reduce the scripts on the client-side, it was
+				reasonable to avoid <span class="emphasis"><em>Behaviour</em></span>.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="dhtmlcalendar"></a>9.1.1.&nbsp;The DHTML Calendar (<a href="http://www.dynarch.com/projects/calendar/" target="_top">http://www.dynarch.com/projects/calendar/</a>)</h3></div></div></div><p>
+               Nice DHTML calendar, required if one wants to use Aranea JSP <span class="emphasis"><em>&lt;ui:dateInput&gt;</em></span> or <span class="emphasis"><em>&lt;ui:dateTimeInput&gt;</em></span> tags.
+            </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="prototype"></a>9.1.2.&nbsp;Prototype (<a href="http://www.prototypejs.org/" target="_top">http://www.prototypejs.org/</a>)</h3></div></div></div><p>
+               Prototype is a JavaScript framework that aims to ease development of dynamic web applications. Aranea partial rendering
+               model uses its <span class="emphasis"><em>XMLHttpRequest</em></span> facilities for generating requests and defining update callbacks. 
+               It is also needed for using Uilib's <span class="emphasis"><em>AutoCompleteTextControl</em></span> and action-enabled 
+               <span class="emphasis"><em>TreeWidget</em></span> components.
+            </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="scriptaculous"></a>9.1.3.&nbsp;script.aculo.us (<a href="http://script.aculo.us/" target="_top">http://script.aculo.us/</a>)</h3></div></div></div><p>
+               script.aculo.us provides easy-to-use, cross-browser user interface JavaScript libraries. Only subset of script.aculo.us
+               libraries are included&#8212; JSP tags that depends on them are <span class="emphasis"><em>&lt;ui:autoCompleteTextInput&gt;</em></span>
+               and <span class="emphasis"><em>&lt;ui:tooltip&gt;</em></span>.
+            </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="tinymce"></a>9.1.4.&nbsp;TinyMCE (<a href="http://tinymce.moxiecode.com/" target="_top">http://tinymce.moxiecode.com/</a>)</h3></div></div></div><p>
+               TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor control. Required for using Aranea 
+               JSP <span class="emphasis"><em>&lt;ui:richTextarea&gt;</em></span> tag.
+            </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="prototip"></a>9.1.5.&nbsp;Prototip (<a href="http://www.nickstakenburg.com/projects/prototip/" target="_top">http://www.nickstakenburg.com/projects/prototip/</a>)</h3></div></div></div><p>
+          	  Prototip allows to easily create both simple and complex tooltips using the Prototype javascript 
+          	  framework. If one also uses Scriptaculous some nice effects can be added. This is required when
+          	  using JSP <span class="emphasis"><em>&lt;ui:tooltip&gt;</em></span> tag.
+          	</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="modalbox"></a>9.1.6.&nbsp;ModalBox (<a href="http://www.wildbit.com/labs/modalbox/" target="_top">http://www.wildbit.com/labs/modalbox/</a>)</h3></div></div></div><p>
+          	  ModalBox is a JavaScript technique for creating modern modal dialogs or even wizards 
+          	  (sequences of dialogs) without using conventional popups and page reloads.
+          	</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="log4javascript"></a>9.1.7.&nbsp;log4javascript (<a href="http://log4javascript.org/" target="_top">http://log4javascript.org/</a>)</h3></div></div></div><p>
+	            Note that this is now deprecated in favour of <a href="http://www.getfirebug.com/" target="_top">Firebug's</a> built in 
+	            logging facilities. Logging to Firebug console is enabled with <span class="emphasis"><em>AraneaPage.setFirebugLogger()</em></span>.
+            </p><p>
+               log4javascript is a JavaScript logging framework similar to Java logging framework log4j. 
+               Include log4javascript
+               scripts and call <span class="emphasis"><em>araneaPage().setDefaultLogger()</em></span> to receive a popup window where
+               Aranea JS debug output is logged. When <a href="www.getfirebug.com" target="_top">Firebug</a> is active, its 
+               logging to its console can be activated with <span class="emphasis"><em>AraneaPage.setFirebugLogger()</em></span>.
+            </p></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="aranea_clientside_js"></a>9.2.&nbsp;Aranea Clientside Javascript</h2></div></div></div><p>
+			Aranea uses javascript to do form submits. The code is sent to the client-side in compressed form. The script
+			enables AJAX enabled webapps and provides more control over form submitting logic. Each page served by Aranea has
+			associated <span class="emphasis"><em>AraneaPage</em></span> object:
+		</p><p>
+</p><pre class="programlisting"><pre><span class="syntax0"><span class="syntax1">/**</span>
+<span class="syntax1"> *  Exactly one AraneaPage object is present on each page served by Aranea and</span>
+<span class="syntax1"> *  contains common functionality for setting page related variables, events and</span>
+<span class="syntax1"> *  functions.</span>
+<span class="syntax1"> */</span>
+
+<span class="syntax1">// Servlet URL is set on every page load.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">getServletURL</span>()<span class="syntax11">;</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">setServletURL</span>(url)<span class="syntax11">;</span>
+
+<span class="syntax1">// If servlet URL is not enough for some purposes, encoding function should be overwritten.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">encodeURL</span>(url)
+
+<span class="syntax1">// Indicates whether the page is completely loaded or not. Page is considered to</span>
+<span class="syntax1">// be loaded when all system onload events have completed execution.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">isLoaded</span>()
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">setLoaded</span>(b)
+
+<span class="syntax1">// Dummy logger is practically no logger.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">setDummyLogger</span>()
+
+<span class="syntax1">// Makes Aranea scripts use log4javascript logger.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">setDefaultLogger</span>()
+
+<span class="syntax1">// Makes Aranea scripts use Firebug logger.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">setFirebugLogger</span>()
+
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">setLogger</span>(theLogger)
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">getLogger</span>()
+
+<span class="syntax1">// locale - should be used only for server-side reported locale.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">getLocale</span>()
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">setLocale</span>(locale)
+
+<span class="syntax1">// Indicates whether some form on page is (being) submitted already</span>
+<span class="syntax1">// by traditional HTTP request.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">isSubmitted</span>()
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">setSubmitted</span>()
+
+<span class="syntax1">// Returns the active system form in this AraneaPage</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">getSystemForm</span>()
+
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">setSystemForm</span>(_systemForm)
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">setSystemFormEncoding</span>(encoding)
+
+<span class="syntax1">// Returns the path of the component who should receive events generated by DOM element.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">getEventTarget</span>(element)
+
+<span class="syntax1">// Returns event id that should be sent to server when event(element) is called.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">getEventId</span>(element) <span class="syntax11">{</span>
+
+<span class="syntax1">// Returns event parameter that should be sent to server when event(element) is called.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">getEventParam</span>(element)
+
+<span class="syntax1">// Returns update regions that should be sent to server when event(element) is called.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">getEventUpdateRegions</span>(element)
+
+<span class="syntax1">// Returns closure that should be evaluated when event(element) is called and</span>
+<span class="syntax1">// needs to decide whether server-side event invocation is needed.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">getEventPreCondition</span>(element)
+
+<span class="syntax1">// Adds a load event listener that is executed once when the page loaded.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">addSystemLoadEvent</span>(event)
+
+<span class="syntax1">// Adds a load event listener that is executed once when the page or part of it is loaded.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">addClientLoadEvent</span>(event)
+
+<span class="syntax1">// Adds a unload event listener that is executed once when the page unloaded.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">addSystemUnLoadEvent</span>(event)
+
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">onload</span>()
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">onunload</span>()
+
+<span class="syntax1">// Adds callback executed before next form submit. */</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">addSubmitCallback</span>(callback)
+
+<span class="syntax1">// Add callback executed before form with given id is submitted next time.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">addSystemFormSubmitCallback</span>(systemFormId<span class="syntax11">,</span> callback) <span class="syntax11">{</span>
+
+<span class="syntax1">// Executes all callbacks that should run before submitting the form with given id.</span>
+<span class="syntax1">// Executed callbacks are removed.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">executeCallbacks</span>(systemFormId)
+
+<span class="syntax1">// Chooses appropriate submitting method and submittable form given the HTML element</span>
+<span class="syntax1">// that initiated the submit request. Applies the appropriate parameter values</span>
+<span class="syntax1">// and submits the systemForm which owns the element.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">event</span>(element)
+
+<span class="syntax1">// Returns either form submitter, AJAX submitter, or overlay submitter.</span>
+<span class="syntax1">// This function can be overwritten to support additional submit methods.</span>
+<span class="syntax1">// It is called by event() to determine the appropriate form submitter.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">findSubmitter</span>(element<span class="syntax11">,</span> systemForm)
+
+<span class="syntax1">// Another submit function, takes all params that are possible to use with Aranea JSP currently.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">event_6</span>(systemForm<span class="syntax11">,</span> eventId<span class="syntax11">,</span> eventTarget<span class="syntax11">,</span> eventParam<span class="syntax11">,</span> eventPrecondition<span class="syntax11">,</span> eventUpdateRegions)
+
+<span class="syntax1">// Returns URL that can be used to invoke full HTTP request with some predefined request parameters.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">getSubmitURL</span>(topServiceId<span class="syntax11">,</span> threadServiceId<span class="syntax11">,</span> araTransactionId<span class="syntax11">,</span> extraParams)
+
+<span class="syntax1">// Returns URL that can be used to make server-side action-invoking</span>
+<span class="syntax1">// XMLHttpRequest with some predefined request parameters.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">getActionSubmitURL</span>(systemForm<span class="syntax11">,</span> actionId<span class="syntax11">,</span> actionTarget<span class="syntax11">,</span> actionParam<span class="syntax11">,</span> sync<span class="syntax11">,</span> extraParams)
+
+<span class="syntax1">// Invokes server-side action listener by performing XMLHttpRequest with correct parameters.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">action</span>(element<span class="syntax11">,</span> actionId<span class="syntax11">,</span> actionTarget<span class="syntax11">,</span> actionParam<span class="syntax11">,</span> actionCallback<span class="syntax11">,</span> options<span class="syntax11">,</span> sync<span class="syntax11">,</span> extraParams)
+
+<span class="syntax1">// Invokes server-side action listener by performing XMLHttpRequest with correct parameters.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">action_6</span>(systemForm<span class="syntax11">,</span> actionId<span class="syntax11">,</span> actionTarget<span class="syntax11">,</span> actionParam<span class="syntax11">,</span> actionCallback<span class="syntax11">,</span> options<span class="syntax11">,</span> sync<span class="syntax11">,</span> extraParams)
+
+<span class="syntax1">// Method to log a message at DEBUG level.</span>
+<span class="syntax1">// A shortcut for araneaPage().getLogger().debug(message).</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">debug</span>(message)
+
+<span class="syntax1">// Adds keepalive function f that is executed periodically after time milliseconds has passed.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span>addKeepAlive<span class="syntax11">:</span> <span class="syntax6">function</span>(f<span class="syntax11">,</span> time)
+
+<span class="syntax1">// Clears/removes all registered keepalive functions.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">clearKeepAlives</span>()
+
+<span class="syntax1">// Returns the flag that determines whether background validation is used by</span>
+<span class="syntax1">// for all forms (FormWidgets) in the application.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">getBackgroundValidation</span>()
+
+<span class="syntax1">// Proivdes a way to turn on/off background validation. The parameter is a boolean.</span>
+<span class="syntax9">araneaPage</span>()<span class="syntax11">.</span><span class="syntax9">setBackgroundValidation</span>(useAjax)
+
+<span class="syntax1">// ============================================================================</span>
+<span class="syntax1">//                           STATIC METHODS</span>
+<span class="syntax1">// ============================================================================</span>
+
+<span class="syntax1">// Returns a default keepalive function -- to make periodical requests to</span>
+<span class="syntax1">// expiring thread or top level services.</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">getDefaultKeepAlive</span>(topServiceId<span class="syntax11">,</span> threadServiceId<span class="syntax11">,</span> keepAliveKey)
+
+<span class="syntax1">// Searches for widget marker around the given element. If found, returns the</span>
+<span class="syntax1">// marker DOM element, else returns null.</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">findWidgetMarker</span>(element)
+
+<span class="syntax1">// Random request ID generator. Sent only with XMLHttpRequests which apply to</span>
+<span class="syntax1">// certain update regions. Currently its only purpose is easier debugging</span>
+<span class="syntax1">// (identifying requests).</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">getRandomRequestId</span>()
+
+<span class="syntax1">// Returns the full URL for importing given file.</span>
+<span class="syntax1">// The same URL that &lt;ui:importScripts&gt; outputs.</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">getFileImportString</span>(filename)
+
+<span class="syntax1">// Page initialization function, it is called upon page load.</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">init</span>()
+
+<span class="syntax1">// Page deinitialization function, it is called upon page unload.</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">deinit</span>()
+
+<span class="syntax1">// Searches for system form in HTML page and registers it in the current</span>
+<span class="syntax1">// AraneaPage object as active systemForm. Also returns the found form.</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">findSystemForm</span>()
+
+<span class="syntax1">// RSH initialization for state versioning. Has effect only when "aranea-rsh.js"</span>
+<span class="syntax1">// is also included in the page.</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">initRSHURL</span>()
+
+<span class="syntax1">// Properties for loading message:</span>
+AraneaPage<span class="syntax11">.</span>loadingMessageContent<span class="syntax11">:</span> <span class="syntax3">'Loading...'</span><span class="syntax11">,</span>
+AraneaPage<span class="syntax11">.</span>loadingMessageId<span class="syntax11">:</span> <span class="syntax3">'aranea-loading-message'</span><span class="syntax11">,</span>
+AraneaPage<span class="syntax11">.</span>reloadOnNoDocumentRegions<span class="syntax11">:</span> <span class="syntax4">false</span><span class="syntax11">,</span>
+
+<span class="syntax1">// Add a handler that is invoked for custom data region in updateregions AJAX</span>
+<span class="syntax1">// request. process() function will be invoked on the handler</span>
+<span class="syntax1">// during processing the response. Data specific to this handler will be</span>
+<span class="syntax1">// passed as the first parameter to that function (String).</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">addRegionHandler</span>(key<span class="syntax11">,</span> handler)
+
+<span class="syntax1">// Process response of an updateregions AJAX request. Should be called only</span>
+<span class="syntax1">// on successful response. Invokes registered region handlers.</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">processResponse</span>(responseText)
+
+AraneaPage<span class="syntax11">.</span><span class="syntax9">handleRequestException</span>(request<span class="syntax11">,</span> exception)
+
+<span class="syntax1">// Create or show loading message at the top corner of the document. Called</span>
+<span class="syntax1">// before initiating an updateregions Ajax.Request.</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">showLoadingMessage</span>()
+
+<span class="syntax1">// Hide loading message. Called after the completion of updateregions Ajax.Request.</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">hideLoadingMessage</span>()
+
+<span class="syntax1">// Builds the loading message that is by default shown in the right-top corner.</span>
+<span class="syntax1">// The default loading message built here also depends on aranea.css.</span>
+<span class="syntax1">// This method is always called during AJAX request. You are free to override it.</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">buildLoadingMessage</span>()
+
+<span class="syntax1">// Perform positioning of loading message (if needed in addition to CSS).</span>
+<span class="syntax1">// Called before making the message element visible. This implementation</span>
+<span class="syntax1">// provides workaround for IE 6, which doesn't support</span>
+<span class="syntax1">// &lt;code&gt;position: fixed&lt;/code&gt; CSS attribute; the element is manually</span>
+<span class="syntax1">// positioned at the top of the document. If you don't need this, overwrite</span>
+<span class="syntax1">// this with an empty function:</span>
+<span class="syntax1">// </span>
+</span></pre><code class="code">Object.extend(AraneaPage, { positionLoadingMessage: Prototype.emptyFunction });</code><pre><span class="syntax0">
+AraneaPage<span class="syntax11">.</span><span class="syntax9">positionLoadingMessage</span>(element)
+
+
+<span class="syntax1">// ============================================================================</span>
+<span class="syntax1">//                           FORM SUBMITTERS</span>
+<span class="syntax1">// ============================================================================</span>
+
+<span class="syntax1">// Here are three submitter classes for the standard HTTP submit, AJAX update</span>
+<span class="syntax1">// region submit, and AJAX overlay submit.</span>
+
+<span class="syntax1">// The standard HTTP submitter. Whether it's POST or GET depends on the</span>
+<span class="syntax1">// "method" attribute of the "form" element. (The default is GET submit.)</span>
+<span class="syntax6">var</span> DefaultAraneaSubmitter <span class="syntax11">=</span> Class<span class="syntax11">.</span><span class="syntax9">create</span>(
+
+  <span class="syntax1">// Local variables:</span>
+
+  systemForm<span class="syntax11">:</span> <span class="syntax4">null</span><span class="syntax11">,</span>
+
+  widgetId<span class="syntax11">:</span> <span class="syntax4">null</span><span class="syntax11">,</span>
+
+  eventId<span class="syntax11">:</span> <span class="syntax4">null</span><span class="syntax11">,</span>
+
+  eventParam<span class="syntax11">:</span> <span class="syntax4">null</span><span class="syntax11">,</span>
+
+  <span class="syntax1">// Constructor:</span>
+
+  <span class="syntax9">initialize</span>(form)
+
+  <span class="syntax1">// Methods:</span>
+
+  <span class="syntax1">// "Private" method that is called by event to store event data in local</span>
+  <span class="syntax1">// variables.</span>
+  <span class="syntax9">storeEventData</span>(element)
+
+  <span class="syntax1">// Starts a submitting process. Here data is collected. Main work is done by</span>
+  <span class="syntax1">// event_4().</span>
+  <span class="syntax9">event</span>(element)
+
+  <span class="syntax1">// Does a plain form submit using given parameters.</span>
+  <span class="syntax9">event_4</span>(systemForm<span class="syntax11">,</span> eventId<span class="syntax11">,</span> widgetId<span class="syntax11">,</span> eventParam)
+<span class="syntax11">}</span>)<span class="syntax11">;</span>
+
+<span class="syntax1">// This class extends the default submitter, and overrides event() to initiate</span>
+<span class="syntax1">// an AJAX request and to process result specifically for the overlay mode.</span>
+<span class="syntax1">// It expects that aranea-modalbox.js is successfully loaded.</span>
+<span class="syntax6">var</span> DefaultAraneaOverlaySubmitter <span class="syntax11">=</span> Class<span class="syntax11">.</span><span class="syntax9">create</span>(DefaultAraneaSubmitter<span class="syntax11">,</span> <span class="syntax11">{</span>
+
+  <span class="syntax9">event</span>(element)
+
+  <span class="syntax9">event_7</span>(systemForm<span class="syntax11">,</span> eventId<span class="syntax11">,</span> eventTarget<span class="syntax11">,</span> eventParam<span class="syntax11">,</span> eventPrecondition<span class="syntax11">,</span> eventUpdateRegions)
+
+<span class="syntax11">}</span>)<span class="syntax11">;</span>
+
+<span class="syntax1">// This class extends the default submitter, and overrides event() to initiate</span>
+<span class="syntax1">// an AJAX request and to process result specifically for update regions.</span>
+<span class="syntax6">var</span> DefaultAraneaAJAXSubmitter <span class="syntax11">=</span> Class<span class="syntax11">.</span><span class="syntax9">create</span>(DefaultAraneaSubmitter<span class="syntax11">,</span> <span class="syntax11">{</span>
+
+  <span class="syntax1">// Local variable:</span>
+  updateRegions<span class="syntax11">:</span> <span class="syntax4">null</span><span class="syntax11">,</span>
+
+  <span class="syntax9">event</span>(element)
+
+  <span class="syntax9">event_5</span>(systemForm<span class="syntax11">,</span> eventId<span class="syntax11">,</span> widgetId<span class="syntax11">,</span> eventParam<span class="syntax11">,</span> updateRegions)
+
+  <span class="syntax1">// Returns AJAX parameters for the request.</span>
+  <span class="syntax9">getAjaxParameters</span>(neededAraTransactionId<span class="syntax11">,</span> ajaxRequestId<span class="syntax11">,</span>
+                  updateRegions<span class="syntax11">,</span> neededAraClientStateId)
+
+  <span class="syntax1">// Is called when the request completes successfully.</span>
+  <span class="syntax9">onAjaxSuccess</span>(ajaxRequestId<span class="syntax11">,</span> transport)
+
+  <span class="syntax1">// Is called when the request is completed.</span>
+  <span class="syntax9">onAjaxComplete</span>(transport)
+
+  <span class="syntax1">// Is called when the request fails.</span>
+  <span class="syntax9">onAjaxFailure</span>(transport)
+
+  <span class="syntax1">// Is called when an exception is called during request.</span>
+  <span class="syntax9">onAjaxException</span>(request<span class="syntax11">,</span> exception)
+
+<span class="syntax11">}</span>)<span class="syntax11">;</span>
+
+<span class="syntax1">// The delay after which Ajax.Request onComplete expects all the DOM updates</span>
+<span class="syntax1">// to have taken place, in milliseconds.</span>
+DefaultAraneaAJAXSubmitter<span class="syntax11">.</span>contentUpdateWaitDelay <span class="syntax11">=</span> <span class="syntax12">30</span>
+
+<span class="syntax1">// An HTTP transport processor looking for state versioning info.</span>
+DefaultAraneaAJAXSubmitter<span class="syntax11">.</span><span class="syntax9">ResponseHeaderProcessor</span>(transport)
+
+<span class="syntax1">// Region handler that updates transaction id of system form.</span>
+AraneaPage<span class="syntax11">.</span>TransactionIdRegionHandler <span class="syntax11">=</span> Class<span class="syntax11">.</span><span class="syntax9">create</span>(<span class="syntax11">{</span>
+  <span class="syntax9">process</span>(content)
+<span class="syntax11">}</span>)<span class="syntax11">;</span>
+
+<span class="syntax1">// The Region handler that updates DOM element content.</span>
+AraneaPage<span class="syntax11">.</span>DocumentRegionHandler <span class="syntax11">=</span> Class<span class="syntax11">.</span><span class="syntax9">create</span>(<span class="syntax11">{</span>
+  <span class="syntax9">process</span>(content)
+<span class="syntax11">}</span>)<span class="syntax11">;</span>
+
+<span class="syntax1">// Does DOM cleanup to avoid memory leaks when content is updated. An</span>
+<span class="syntax1">// "invisible" second parameter is used to detect whether the clean-up is</span>
+<span class="syntax1">// done with the element or not. If arguments.length = 1 then the input</span>
+<span class="syntax1">// element is not changed, only its child-elements will be checked.</span>
+<span class="syntax1">// Override this method (Object.extend()) to create your own cleanups.</span>
+AraneaPage<span class="syntax11">.</span>DocumentRegionHandler<span class="syntax11">.</span><span class="syntax9">doDOMCleanup</span>(element)
+
+<span class="syntax1">// Handles messages that came with an AJAX request. These are the messages from</span>
+<span class="syntax1">// the MessageContext. You do not need to put "messages" into your update</span>
+<span class="syntax1">// regions if you have marked your messages with class "aranea-messages" and</span>
+<span class="syntax1">// attribute "arn-msgs-type" with value of message type, because this handler</span>
+<span class="syntax1">// knows how to update these messages.</span>
+<span class="syntax1">// You may also override certain functionality to customize this class for your</span>
+<span class="syntax1">// own needs.</span>
+AraneaPage<span class="syntax11">.</span>MessageRegionHandler <span class="syntax11">=</span> Class<span class="syntax11">.</span><span class="syntax9">create</span>(<span class="syntax11">{</span>
+
+  regionClass<span class="syntax11">:</span> <span class="syntax3">'.aranea-messages'</span>
+
+  regionTypeAttribute<span class="syntax11">:</span> <span class="syntax3">'arn-msgs-type'</span>
+
+  messageSeparator<span class="syntax11">:</span> <span class="syntax3">'&lt;br/&gt;'</span>
+
+  <span class="syntax9">process</span>(content)
+
+  <span class="syntax1">// The input parameter is a map of messages by message type. This method goes</span>
+  <span class="syntax1">// through all elements where class="aranea-messages", adds new messages to</span>
+  <span class="syntax1">// them or hides messages if they were not in the response data.</span>
+  <span class="syntax9">updateRegions</span>(messagesByType)
+
+  <span class="syntax1">// This method adds messages (array) to given region (element).</span>
+  <span class="syntax9">showMessageRegion</span>(region<span class="syntax11">,</span> messages)
+
+  <span class="syntax1">// Hides given message region, and changes its content if necessary.</span>
+  <span class="syntax9">hideMessageRegion</span>(region)
+
+  <span class="syntax1">// Looks up the element that contains messages in given region.</span>
+  <span class="syntax1">// Its content will be updated with new messages.</span>
+  <span class="syntax9">findContentElement</span>(region)
+
+  <span class="syntax1">// Looks up the element of the region that is intented for wrapping the messages.</span>
+  <span class="syntax1">// It will be hidden, if no messages were in the response data.</span>
+  <span class="syntax9">findDisplayElement</span>(region)
+
+  <span class="syntax1">// Formats the messages (array) and returns them as String where messages are</span>
+  <span class="syntax1">// separated by messageSeparator. The result is used to update the content of</span>
+  <span class="syntax1">// content element (findContentElement(region)).</span>
+  <span class="syntax9">buildRegionContent</span>(messages)
+<span class="syntax11">}</span>)<span class="syntax11">;</span>
+
+<span class="syntax1">// Region handler that opens popup windows.</span>
+AraneaPage<span class="syntax11">.</span>PopupRegionHandler <span class="syntax11">=</span> Class<span class="syntax11">.</span><span class="syntax9">create</span>(<span class="syntax11">{</span>
+
+  <span class="syntax9">process</span>(content)
+
+  <span class="syntax9">openPopups</span>(popups)
+
+<span class="syntax11">}</span>)<span class="syntax11">;</span>
+
+<span class="syntax1">// Region handler that forces a reload of the page by submitting the system</span>
+<span class="syntax1">// form.</span>
+AraneaPage<span class="syntax11">.</span>ReloadRegionHandler <span class="syntax11">=</span> Class<span class="syntax11">.</span><span class="syntax9">create</span>(<span class="syntax11">{</span>
+  <span class="syntax9">process</span>(content)
+<span class="syntax11">}</span>)<span class="syntax11">;</span>
+
+<span class="syntax1">// A region handler for form background validation.</span>
+AraneaPage<span class="syntax11">.</span>FormBackgroundValidationRegionHandler <span class="syntax11">=</span> Class<span class="syntax11">.</span><span class="syntax9">create</span>(<span class="syntax11">{</span>
+
+  <span class="syntax9">process</span>(content)
+
+  <span class="syntax9">getParentSpan</span>(formelement)
+
+  <span class="syntax9">getLabelSpan</span>(formelement)
+
+  <span class="syntax9">getParentElement</span>(el<span class="syntax11">,</span> tagName<span class="syntax11">,</span> className)
+
+<span class="syntax11">}</span>)<span class="syntax11">;</span>
+
+
+<span class="syntax1">// Aranea page object is accessible in two ways: _ap and araneaPage().</span>
+<span class="syntax6">var</span> _ap <span class="syntax11">=</span> <span class="syntax6">new</span> <span class="syntax9">AraneaPage</span>()<span class="syntax11">;</span>
+<span class="syntax6">function</span> <span class="syntax9">araneaPage</span>() <span class="syntax11">{</span>
+  <span class="syntax6">return</span> _ap<span class="syntax11">;</span>
+<span class="syntax11">}</span>
+</span></pre></pre><p>
+      </p><p>
+			Since Aranea 1.2.2, the JavaScript API also includes submit callback API, which can be
+			used to provide more control over submitting. It contains methods that can be overridden
+			to change or add some some behaviour.
+		</p><p>
+			</p><pre class="programlisting"><pre><span class="syntax0">
+<span class="syntax1">/**</span>
+<span class="syntax1"> * A common callback for API submitters. The callback handles common data manipulation and validation.</span>
+<span class="syntax1"> * This callback should be used to add some custom features to submit data or submit response.</span>
+<span class="syntax1"> */</span>
+
+<span class="syntax1">// The only method that element-submitters should call. It takes the type of request, the form</span>
+<span class="syntax1">// containing the element to be submitted, and the function that does the submit work.</span>
+AraneaPage<span class="syntax11">.</span>SubmitCallback<span class="syntax11">.</span><span class="syntax9">doRequest</span>(type<span class="syntax11">,</span> form<span class="syntax11">,</span> element<span class="syntax11">,</span> eventFn)<span class="syntax11">;</span>
+
+<span class="syntax1">// This method is called to return the result of element-submit. Here is a nice place to implement</span>
+<span class="syntax1">// custom features depending on the element or request type. Feel free to override.</span>
+AraneaPage<span class="syntax11">.</span>SubmitCallback<span class="syntax11">.</span><span class="syntax9">getRequestResult</span>(type<span class="syntax11">,</span> element<span class="syntax11">,</span> result)<span class="syntax11">;</span>
+
+<span class="syntax1">// The method that is called by submitters to store submit data in the form.</span>
+AraneaPage<span class="syntax11">.</span>SubmitCallback<span class="syntax11">.</span><span class="syntax9">prepare</span>(type<span class="syntax11">,</span> form<span class="syntax11">,</span> widgetId<span class="syntax11">,</span> eventId<span class="syntax11">,</span> eventParam)
+
+<span class="syntax1">// Processes the submit data. It calls following methods of this object:</span>
+<span class="syntax1">// 1. processSubmitData - to optionally modify the submit data;</span>
+<span class="syntax1">// 2. storeSubmitData - to store the submit data in the form (if submit is allowed).</span>
+<span class="syntax1">// 3. Adds isSubmitAllowed, beforeSubmit, afterSubmit callbacks to data.</span>
+AraneaPage<span class="syntax11">.</span>SubmitCallback<span class="syntax11">.</span><span class="syntax9">processData</span>(data)
+
+<span class="syntax1">// A callback to optionally modify submit data. Feel free to override.</span>
+AraneaPage<span class="syntax11">.</span>SubmitCallback<span class="syntax11">.</span>processSubmitData<span class="syntax11">:</span> <span class="syntax6">function</span>(data) <span class="syntax11">{},</span>
+
+<span class="syntax1">// A callback to store submit data in the form.</span>
+AraneaPage<span class="syntax11">.</span>SubmitCallback<span class="syntax11">.</span><span class="syntax9">storeSubmitData</span>(data)
+
+<span class="syntax1">// A callback that is checked to enable or disable submit. Feel free to override.</span>
+<span class="syntax9">isSubmitAllowed</span>(data) <span class="syntax11">{</span>
+
+<span class="syntax1">// A callback that is called before each submit (no matter whether it is AJAX or not).</span>
+<span class="syntax1">// This method includes default behaviour. Feel free to override.</span>
+AraneaPage<span class="syntax11">.</span>SubmitCallback<span class="syntax11">.</span><span class="syntax9">beforeSubmit</span>(data)
+
+<span class="syntax1">// A callback that is called after each submit (no matter whether it is AJAX or not).</span>
+<span class="syntax1">// This method includes default behaviour. Feel free to override.</span>
+AraneaPage<span class="syntax11">.</span>SubmitCallback<span class="syntax11">.</span><span class="syntax9">afterSubmit</span>(data)
+                        
+</span></pre></pre><p>
+		</p><p>
+			The Aranea 1.2.2 release also introduced automatic file upload JavaScript API. You
+			usually don't have to modify it except for the upload options part, especially the
+			<code class="literal">onComplete</code> function. However, here's the entire API.
+		</p><pre class="programlisting"><pre><span class="syntax0">
+<span class="syntax1">// This method returns the URL where to submit the file. The element parameter is not used, but</span>
+<span class="syntax1">// you can modify the method to use the parameter. </span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">getAjaxUploadURL</span>(element)<span class="syntax11">;</span>
+
+<span class="syntax1">// This method provides the data as { formField1: value1, formField2: value2, ...} that will be</span>
+<span class="syntax1">// added to the form later. This data should be needed in the query.</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">getAjaxUploadFormData</span>(systemForm<span class="syntax11">,</span> element)
+
+<span class="syntax1">// This method is called by AraneaPage.init() to initialize file inputs with AJAX uplaod features.</span>
+<span class="syntax1">// You can modify here the logic that is used for file input lookup.</span>
+AraneaPage<span class="syntax11">.</span><span class="syntax9">ajaxUploadInit</span>()
+
+<span class="syntax1">// These are the default options that are used with the AJAX file upload. Feel free to override them.</span>
+AraneaPage<span class="syntax11">.</span>AjaxUploadOptions <span class="syntax11">=</span> <span class="syntax11">{</span>
+        disabled<span class="syntax11">:</span> <span class="syntax4">false</span><span class="syntax11">,</span>
+        autoSubmit<span class="syntax11">:</span> <span class="syntax4">true</span><span class="syntax11">,</span>
+        onChange<span class="syntax11">:</span> <span class="syntax6">function</span>(file<span class="syntax11">,</span> extension<span class="syntax11">,</span> options) <span class="syntax11">{},</span>
+        onSubmit<span class="syntax11">:</span> <span class="syntax6">function</span>(file<span class="syntax11">,</span> extension<span class="syntax11">,</span> options) <span class="syntax11">{},</span>
+        onComplete<span class="syntax11">:</span> <span class="syntax6">function</span>(file<span class="syntax11">,</span> responseText<span class="syntax11">,</span> failMsg<span class="syntax11">,</span> options) <span class="syntax11">{</span>
+                _ap<span class="syntax11">.</span><span class="syntax9">debug</span>(<span class="syntax3">'File upload completed. File="'</span> <span class="syntax11">+</span> file <span class="syntax11">+</span> <span class="syntax3">'"; response="'</span> <span class="syntax11">+</span> responseText <span class="syntax11">+</span> <span class="syntax3">'".'</span>)<span class="syntax11">;</span>
+                <span class="syntax6">if</span> (responseText <span class="syntax11">==</span> <span class="syntax3">'OK'</span>) <span class="syntax11">{</span> <span class="syntax1">// Otherwise responseText == 'FAIL'</span>
+                        <span class="syntax1">// Hides the file input and shows a link instead with the file name. Once the link is</span>
+                        <span class="syntax1">// clicked, the link will be removed and the file input will be shown again.</span>
+                        <span class="syntax9">$</span>(options<span class="syntax11">.</span>target)<span class="syntax11">.</span><span class="syntax9">hide</span>()<span class="syntax11">.</span><span class="syntax9">insert</span>(<span class="syntax11">{</span>after<span class="syntax11">:</span>
+                                <span class="syntax3">'&lt;a href="#" onclick="$(this).previous().show().next().remove(); return false;"&gt;'</span> <span class="syntax11">+</span> file <span class="syntax11">+</span> <span class="syntax3">'&lt;/a&gt;'</span><span class="syntax11">}</span>)<span class="syntax11">;</span>
+                <span class="syntax11">}</span> <span class="syntax6">else</span> <span class="syntax11">{</span>
+                        <span class="syntax6">if</span> (<span class="syntax11">!</span>failMsg) <span class="syntax11">{</span>
+                                failMsg <span class="syntax11">=</span> <span class="syntax3">'Uploading file "'</span> <span class="syntax11">+</span> file <span class="syntax11">+</span> <span class="syntax3">'" failed. There could have been a '</span>
+                                        <span class="syntax11">+</span> <span class="syntax3">'problem\nwith the connection or the file was too big. Please try again!'</span><span class="syntax11">;</span>
+                        <span class="syntax11">}</span>
+                        <span class="syntax9">alert</span>(failMsg)<span class="syntax11">;</span>
+                <span class="syntax11">}</span>
+        <span class="syntax11">}</span>
+<span class="syntax11">}</span>
+                
+</span></pre></pre></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="integration.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;</td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;8.&nbsp;Third-party Integration&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;</td></tr></table></div></body></html>

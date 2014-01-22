@@ -1,0 +1,64 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;8.&nbsp;Third-party Integration</title><link rel="stylesheet" href="../css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"><link rel="start" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="up" href="index.html" title="Aranea&#8212;Java Web Framework Construction and Integration Kit"><link rel="prev" href="uilibwchapter.html" title="Chapter&nbsp;7.&nbsp;Other Uilib Widgets"><link rel="next" href="javascript.html" title="Chapter&nbsp;9.&nbsp;Javascript Libraries"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;8.&nbsp;Third-party Integration</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="uilibwchapter.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="javascript.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="integration"></a>Chapter&nbsp;8.&nbsp;Third-party Integration</h2></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e13159"></a>8.1.&nbsp;Spring Application Framework</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e13162"></a>8.1.1.&nbsp;BeanFactory, ApplicationContext, WebApplicationContext</h3></div></div></div><p><code class="literal">AraneaSpringDispatcherServlet</code> will always add a
+      BeanFactory to the environment. It can be retrieved as follows: </p><pre class="programlisting"><pre><span class="syntax0">BeanFactory beanFactory <span class="syntax11">=</span> 
+  (BeanFactory) <span class="syntax9">getEnvironment</span>().<span class="syntax9">getEntry</span>(BeanFactory.<span class="syntax8">class</span>)
+</span></pre></pre><p>Or using the method <code class="literal">getBeanFactory()</code> in
+      <code class="literal">BaseUIWidget</code>. By default it will contain only beans
+      configured by Aranea, however if one also uses usual Spring
+      configuration:</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax10">&lt;</span><span class="syntax10">context-param</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">param-name</span><span class="syntax10">&gt;</span>contextConfigLocation<span class="syntax10">&lt;</span><span class="syntax10">/param-name</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">param-value</span><span class="syntax10">&gt;</span> 
+    /WEB-INF/services.xml
+  <span class="syntax10">&lt;</span><span class="syntax10">/param-value</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/context-param</span><span class="syntax10">&gt;</span>
+...
+<span class="syntax10">&lt;</span><span class="syntax10">listener</span><span class="syntax10">&gt;</span>
+  <span class="syntax10">&lt;</span><span class="syntax10">listener-class</span><span class="syntax10">&gt;</span>
+    org.springframework.web.context.ContextLoaderListener
+  <span class="syntax10">&lt;</span><span class="syntax10">/listener-class</span><span class="syntax10">&gt;</span>
+<span class="syntax10">&lt;</span><span class="syntax10">/listener</span><span class="syntax10">&gt;</span>
+...
+</span></pre></pre><p>Then the <code class="literal">AraneaSpringDispatcherServlet</code> will
+      integrate with Spring and make <code class="literal">BeanFactory</code> provide
+      all of the configure beans, as well as add
+      <code class="literal">ApplicationContext</code> and
+      <code class="literal">WebApplicationContext</code> to the environment.</p><div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3><p><code class="literal">AraneaSpringDispatcherServlet</code> must be
+        initialized after Spring context loader listener or servlet to
+        integrate with Spring successfully.</p></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="araneaLocalizationFilter"></a>8.1.2.&nbsp;Spring Localization Filter</h3></div></div></div><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td align="right"><span class="bold"><strong>Java
+              class:</strong></span></td><td><code class="literal">SpringLocalizationFilterService</code></td></tr><tr><td align="right"><span class="bold"><strong>Default configuration
+              name:</strong></span></td><td>-</td></tr><tr><td align="right"><span class="bold"><strong>Provides:</strong></span></td><td><code class="literal">LocalizationContext</code>,
+              <code class="literal">SpringLocalizationContext</code></td></tr><tr><td align="right"><span class="bold"><strong>Depends
+              on:</strong></span></td><td><code class="literal">WebApplicationContext</code></td></tr></tbody></table></div><p>Provides localization services, see <a href="core.html#LocalizationContext" title="2.8.2.&nbsp;LocalizationContext">Section&nbsp;2.8.2, &#8220;LocalizationContext&#8221;</a>. The difference from the <a href="integration.html#araneaLocalizationFilter" title="8.1.2.&nbsp;Spring Localization Filter">usual localization filter</a> is
+      that this one delegates the actual localization to a Spring
+      <code class="literal">MessageSource</code>.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e13248"></a>8.1.3.&nbsp;Widget Dependency Injection</h3></div></div></div><p>Aranea does not by default support configuring widgets with
+      Spring, as they are assumed to be created by the programmer and their
+      life-cycle is managed by Aranea. The main problem however is that
+      widgets are assumed to be serializable and Spring beans are often not
+      (especially since they often are proxies with references to bean factory
+      and so on). As a solution we provide a utility class SpringInjectionUtil
+      that allows to inject Spring beans after a following convention:</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax9">injectSomeSpringBean</span>(ISomeBean someBean) <span class="syntax11">{</span>
+  <span class="syntax4">this</span>.someBean <span class="syntax11">=</span> someBean;
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p>This method is similar to a setter method, but starts with
+      "inject". The remainder of the method name is interpreted as the name of
+      Spring bean to be injected, with the first letter lowercase (in the case
+      of our example bean named "someSpringBean" would be injected). To
+      actually inject the beans to all similarly called methods in the current
+      widget call <code class="literal">injectBeans()</code> in widget
+      <code class="literal">init()</code> method as follows:</p><pre class="programlisting"><pre><span class="syntax0">...
+<span class="syntax6">protected</span> <span class="syntax9">init</span>() <span class="syntax11">{</span>
+  ...
+  SpringInjectionUtil.<span class="syntax9">injectBeans</span>(<span class="syntax9">getEnvironment</span>(), <span class="syntax4">this</span>);
+<span class="syntax11">}</span>
+...
+</span></pre></pre><p>You may even put this call into the base widget of your
+      application to ensure that all application widgets would get their
+      dependencies injected.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The injected bean must be an interface, as Aranea will construct
+        an indirection proxy. This will ensure that the referenced object will
+        be serializable (and small for that matter), but will also introduce
+        a small performance penalty (we believe to be negligible next to the
+        proxies of Spring itself).</p></div></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="uilibwchapter.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="javascript.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;7.&nbsp;Other Uilib Widgets&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;9.&nbsp;Javascript Libraries</td></tr></table></div></body></html>

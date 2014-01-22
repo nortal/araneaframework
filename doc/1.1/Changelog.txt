@@ -1,0 +1,643 @@
+ARANEA FRAMEWORK CHANGELOG
+---------------------------------------------------------------------------------------------
+2008.07.25    | Aranea 1.1.6
+
+Bugfixes
+   Aranea 1.1.5 bugs                                                          | See #691
+
+---------------------------------------------------------------------------------------------
+2008.06.27    | Aranea 1.1.5
+
+Bugfixes
+   Ivy XML should not require Aranea-dependable projects download all JARs    | See #681
+
+---------------------------------------------------------------------------------------------
+2008.06.19    | Aranea 1.1.5-M1
+
+Bugfixes
+   <ui:listRowCheckBox/> tag and "onChangeEventId" attribute                  | See #672
+
+---------------------------------------------------------------------------------------------
+2008.06.16    | Aranea 1.1.4
+
+Features and Improvements
+   List filtering using multi select controls                                 | See #664
+   Ability to describe links in a message                                     | See #654
+   <ui:listRowCheckBox/> tag and "onChangeEventId" attribute                  | See #672
+   The ID attribute of form elements missing                                  | See #665
+   convertAndValidate() that throws an exception                              | See #671
+   Data.setDataValue exception message                                        | See #677
+   Wonderful inconsistency in ListWidget                                      | See #679
+   ui:date(Time)Input: date format and calendar                               | See #680
+   Errors in modal mode block further use of application                      | See #670
+
+Bugfixes
+   DateTimeInput fires submits when listeners are not registered              | See #674
+   Disabled FormElements do not look like it anymore                          | See #666
+   Session does not serialize                                                 | See #668
+
+---------------------------------------------------------------------------------------------
+2008.05.21    | Aranea 1.1.3
+
+Features and Improvements
+   Improved documentation (reference manual, javadoc, now also TLD doc)       | See #251
+   ListSqlHelper for PostgreSQL (PostgreListSqlHelper)                        | See #642
+   Radio buttons and check boxes (incl. select-all check box) for list rows   | See #154
+   All primitive types supported by default in Aranea forms                   | See #636
+   ListWidget to support startsWith and endsWith filter expressions           | See #645
+   Render a disabled field as a read-only input                               | See #648
+   StandardFlowContainerWidget.getActiveFlow was made public                  | See #658
+   TabContainerWidget.getSelectedTab now returns TabWidget (not just widget)  | See #659
+
+Bugfixes
+   Aranea does not work with Safari browser                                   | See #650
+   FormUtil.createElement fails with null Data                                | See #649
+
+---------------------------------------------------------------------------------------------
+2008.04.16    | Aranea 1.1.2
+
+Bugfixes
+   Modalbox submitting of 'overlay' attribute                                 | See #640
+   Optimize scripting Text object (aranea-util.js)                            | See #643
+   Calendar placement in IE7                                                  | See #639
+
+---------------------------------------------------------------------------------------------
+2008.03.19    | Aranea 1.1.1
+
+Features and Improvements
+   Allow file importer group names to contain dots                            | See #628
+   behaviour.js internally uses prototype CSS selector support                | See #627
+   Reference manual javascript documentation brought up-to-date               | See #625
+
+Bugfixes
+   Mandatory FileUploadControl validation erroneously succeeded               | See #633
+
+---------------------------------------------------------------------------------------------
+2008.02.22    | Aranea 1.1
+
+Features and Improvements
+   isRunningInOverlay() method added to BaseUIWidget                          | See change #620
+   Update region submits in overlay use smoother page update method           | See change #620
+   aranea-tests.jar included in a distribution 'dist' folder, contains tests  | See
+   and few classes which might be useful for testing custom components        |     #381
+
+Bugfixes
+   ListSqlHelper incompatibility introduced in 1.1-M6 was fixed               | See #614
+   TabWidget.getTabContentWidget() always returned NULL for stateless tabs    | See #621
+   Several BaseTag.get*() methods do not throw Exception anymore              | See #617
+   ConfirmationContext.CONFIRMATION_RESULT_KEY was missing 'ara' prefix       | See #610
+   Main example demo was using uncompressed TinyMCE javascript files          | See #608
+
+Deprecation & API changes
+    Deprecated outdated StandardClientStateFilterWidget                       | See #616
+---------------------------------------------------------------------------------------------
+2008.02.07    | Aranea 1.1-RC1
+
+Features and Improvements
+    'options' attribute for <ui:tooltip> tag                                  | See #605
+    Support adding rendered update regions on serverside (UpdateRegionContext)| See #601
+    TinyMCE updated to 3.0 + updateregion support fixed                       | See #587, #602
+    Documented FlowContext.TransitionHandler in reference manual              | See #606
+
+Bugfixes
+    timeinputs were too narrow in IE when using update regions                | See #604
+    Removed the lazy script loading facilities (problems with IE + TinyMCE)   | See change #599
+
+---------------------------------------------------------------------------------------------
+2008.01.31    | Aranea 1.1-M6
+
+Features and Improvements
+    ThreadCloningContext has acquired public API for session thread cloning   | See #558
+    OverlayContext acquired methods for setting overlay options               | See #563
+    StandardControlEventListenerAdapter has new remove*EventListener methods  | See #193
+    <ui:contextMenu/> supports updateregions                                  | See #547
+    Most behaviours are added to DOM elements only once                       | See #591
+    Added FormElementValidationErrorRenderers for rendering form element      | See
+    validation messages in a customized way (i.e directly at invalid element) |     #574
+    Flow navigation now uses TransitionHandlers. This allows for i.e asking   | See
+    user to confirm when navigating away from flow containing unsaved data    |     #560
+    ListSqlHelper now supports NamingStrategies for conversion between field  | See
+    identifiers and database column identifiers and query aliases             |     #543
+    When WindowScrollPositionContext is present, flow transitions will store  | See 
+    scroll position context separately for each flow                          |     #588
+
+    Documentation updates
+    
+Bugfixes
+    ListSqlHelper.setSimpleSqlQuery had bug with using custom 'where' clause  | See #561
+    Timing issues with updateregion processing were worked around             | See #556
+    Default calendar CSS left it hidden behind modal dialog in overlay        | See #551
+    Tooltips were permanently smothered on screen after AJAX requests         | See #548
+    FormSimpleLabelHtmlTag sometimes failed to correctly find element label   | See #593
+    IE threw JS errors when using global scoped keyboard handler              | See #592
+    aranea-contextmenu.js failed with script parsing error in IE              | See #586
+    araneaPage().getSystemForm() returned wrong value when overlay was active | See #576
+
+Deprecation & API changes
+    Deprecated FlowContext FlowReference interface and getReference() method  | See change #578
+    org.araneaframework.jsp.engine package was removed                        | See change #394
+---------------------------------------------------------------------------------------------
+2007.10.31    | Aranea 1.1-M5
+
+Features and Improvements
+    Proxy*Listeners are able to invoke private & protected handleXXX* methods | See #526
+    Support for key combinations and meta keys in JSP keyboard handler tags   | See #472
+    Standardized invalid form element marking                                 | See #534
+    FormElement.convert() never changes Control content                       | See #529
+    Some scripts are now only loaded on-demand (rich editor)                  | See #162
+    <ui:radioSelect/> and <ui:checkboxMultiSelect/> support selection         | See 
+    by clicking on radio/checkbox labels                                      |     #541
+    ConverterFactory changed to support class extension easily                | See #295
+
+    Documentation updates -- no out-of-date or plain wrong information should | See  
+    have remained in 1.1 reference manual. Still incomplete though.           |  change #538
+
+    Aranea 1.1 examples updated                                               | See change #538
+
+Bugfixes
+    FormElementLabelHtmlTag.setStyle(String) did not apply to HTML            | See #533
+    Fixed circular lazyness problem causing too many refreshes in ListWidget  | See #540
+
+Deprecation & API changes
+	Deprecated BeanFormWidget.writeBean() & readBean() were removed           | See #474
+	Removed throw clauses from                                                | --------
+	                           MemoryBasedListDataprovider.refreshData()      |   
+	                           UpdateRegionProvider.getRegions()              | See
+	                           ListOrder.init(), ListOrder.destroy()          |   #137
+	                           ListFilter.init(), ListFilter.destroy()        | --------
+---------------------------------------------------------------------------------------------
+2007.10.01    | Aranea 1.1-M4
+
+Features and Improvements
+    setInputFilter() method has been added to various Controls                | See #486
+    ProxyActionListener was added (analogous to ProxyEventListener)           | See #490
+    All Aranea JSP <ui:*button> tags now recognize 'tabindex' attribute       | See #473
+    New ListItemsData constructor -- ListItemsData(List itemRange, Long count)| See #494
+    Bundled Prototype JS library was upgraded from 1.5.1 -> 1.5.1.1           | See #489
+    Support for background server-side form validation (while filling form)   | See change #502, #511                                                                              
+    Tab widget (TabContainerWidget) was added to Uilib                        | See change #466, #516, #522
+    A hybrid of text input and select, ComboTextControl was added to Uilib    | See #483
+    Support for right-click menu (ContextMenuWidget)                          | See #487
+    <ui:tooltip> tag was added                                                | See #497
+    Added support for running processes in modal overlay layer                | See change #388, #515
+    The 'root' flow container now is distinguished by additional              | See 
+    'RootFlowContext' environment entry                                       |     #508
+    LocalizationContext now accepts LocaleChangeListeners                     | See #525, #253
+    Documentation updates and some outdated information removal               | See change #522
+
+Bugfixes
+    BeanFormWidget writeToBean (old readBean()) destroying content of subform | See #420
+    FormWidget restoreBaseState() did not work correctly                      | See #507
+    Rare NPE in ListSqlHelper.getDatabase(Filter|Order)Params was removed     | See #249
+    examples/serviceHelloName had stopped working                             | See #510
+    BaseTag.getConfiguration() always returned NULL                           | See #380
+    disableWidget()/enableWidget() do not throw exceptions when called on     | See
+    already disabled/enabled widgets                                          |     #519
+    BaseApplicationWidget erronously tried to route update() to children who  | See
+    were not widgets (to components and services too)                         |     #524
+    
+Deprecation & API changes
+    BeanFormWidget.readFromBean() replaces deprecated writeBean().            | See
+    BeanFormWidget.writeToBean() replaces deprecated readBean().              |   #447
+    We are sorry that old methods were named so confusingly unintuitively.    | & #474
+    'throws Exception' was removed from FormWidget.addElement* signatures     | See #512
+    'throws Exception' was removed ListWidget's FilterHelper.* signatures     | See change #515
+---------------------------------------------------------------------------------------------
+2007.06.22    | Aranea 1.1-M3
+
+Features and Improvements
+    Aranea specific request parameters got prefixes ('araTransactionId', ...) | See
+    There were some name clashes otherwise in integration projects.           |     change #414	
+    TcdAndTldMerger is bundled inside aranea.jar                              | See #434
+    Some minor documentation updates                                          | See change #426, #448
+
+Bugfixes
+    Update regions caused NPE sometimes when active flow was ended in request | See #432
+    Demos->Advanced->Advanced popups last component did not work              | See #424
+---------------------------------------------------------------------------------------------
+2007.06.12    | Aranea 1.1-M2
+
+Features and Improvements
+    FormWidget addElement methods accept hierarchical element identifiers     | See #171
+    Convenience constructors added to composite constraints                   | See change #370
+    Convenience start() methods added to FlowContext                          | See #391
+    MenuItem allows starting new flows from MenuItem 'holders'                | See change #395
+    <ui:messages> tag allows setting HTML div id ('divId' attribute)          | See #384
+    Component interface now includes isAlive() method                         | See #382
+    Framework does not depend on Log4j anymore (uses commons-logging)         | See #377
+    Bundled TinyMCE was upgraded to 2.1.1.1                                   | See change #418
+    Bundled script.aculo.us scripts were upgraded to 1.7.1_beta3              | See change #418
+
+Bugfixes
+    <ui:link> did not work due to attached javascript                         | See #399
+    <ui:tree> did not honor renderer set by TreeWidget.setRetrender()         | See #357
+    List ordering broke in 1.1-M1 every now and then                          | See #389
+    ListWidget broke when ListDataProvider was used directly                  | See #402
+    Convert on uninitialized FormElement's threw NPE (incompatible with 1.0)  | See #400
+    BackendListDataProvider threw NPE when logging was activated              | See #403
+    Exception was thrown when requested to update nonexisting updateregion    | See #406
+    Messages were not updated on client side when they disappeared on server  | See #416
+    FormElement's outside updateregions ignored subsequent request after      | See 
+    partial rendering                                                         |     #411
+---------------------------------------------------------------------------------------------
+2007.05.03    | Aranea 1.1-M1
+
+Features and Improvements
+    Widgets know their name (accessible with getScope() method)               | See #7
+    Real partial rendering support                                            | See #227
+    Widget actions support real unsynchronized access (through session router)| See #319 
+    Widget process() lifecycle method was removed (broke OO-encapsulation)    | See #367
+    FormWidget addElement() method accepts hierarchial ids                    | See #171
+
+    Visibility of context attributes in JSP tags was reduced to containing    |
+    widget only                                                               | See change #339
+    Removed ui:root, ui:viewport, ui:globalWidgetInclude tags                 |
+
+Bugfixes
+    Enforced component lifecycle (no resurrections)                           | See #321
+    Returning from init() method of widget wrapped in PopupFlowWidget failed  | See #312
+
+    Much more detailed changelog is available from SVN repo (dev/changes-1.1.txt)
+---------------------------------------------------------------------------------------------
+2007.04.20    | Aranea 1.0.8
+
+Bugfixes
+    'Bugfix' in 1.0.7 often caused NPE on Form Lists initialization. Sorry!   | See #359
+---------------------------------------------------------------------------------------------
+2007.04.13    | Aranea 1.0.7
+
+Features and Improvements
+    TreeWidget was backported from Aranea stable branch                       | See #345
+    Different error message resources for NumberControl and FloatControl      | See #349
+
+Bugfixes
+    Cleared DateTimeControl obtaining value 'Jan 01 00:00:00 EET 1970'        | See #322
+    List Comparators missed equals() methods (problems with overlapRange())   | See #319
+    Other small fixes                                                         | See change #179
+---------------------------------------------------------------------------------------------
+2007.03.16    | Aranea 1.0.6
+
+Features and Improvements
+    "ant run-app-*" targets now work when using Ant 1.7                       | See #320
+    AraneaPage.(action & action_6) take Ajax.Request options as parameters    | See change #170
+    FormSelectDisplayHtmlTag output can be optionally wrapped                 | See #324
+    All distribution .jar files now include classes' source code              | See #327
+
+Bugfixes
+    FileUpload Control now produces error messages when file size limit is    |
+    exceeded (NB! only when request size limit is within boundaries)          | See #248
+    <span> in FormSelectDisplayHtmlTag is now closed correctly                | See #322
+    ListWidget.destroy() caused NullPointerException in some cases            | See #325
+    Form modifications from actions and session threads were a hassle         | See change #153
+    Memory based lists were reloading data too often                          | See #294
+
+---------------------------------------------------------------------------------------------
+2007.02.09    | Aranea 1.0.5
+
+Features and Improvements
+    There is a minimal blank application template now.                        | See #296
+    Standard Uilib includes BaseMenuWidget now.                               | See #313
+    Example tags used in sample apps have their own namespace now: 'tui',     |
+    this should clear up the confusion about which tags are from Aranea JSP   | See #306
+    and which were made specifically for examples.                            |
+
+    In addition to TLDs, aranea.jar now includes aranea-standard.tcd, which   |
+    is a 'tag-class descriptor' and contains xdoclet attribute information    |
+    for all Aranea tag classes (including abstract classes). These can be     | See #306
+    used with TcdAndTldMerger utility to generate TLDs for tags based on      |
+    Aranea tags, without attribute information getting lost.                  |
+
+    DownLoaderWidget & DownLoaderService + corresponding tags.                | See change #158,160
+    
+Bugfixes
+    executeCallbacks() invocation was missing from AraneaPage.event_6.        | See #305
+    onunload() javascript that closed popup windows was removed.              | See #308
+    SpringBeanInvocationHandler.invoke() had broken exception handling.       | See #307
+    FormKeyboardHandlerHtmlTag.createHandlerToInvokeJavascriptEvent.          | See #311
+
+---------------------------------------------------------------------------------------------
+2006.12.22    | Aranea 1.0.4
+
+Features and Improvements
+    AutoCompleteTextControl now has setter for ResponseBuilder (as opposed to |
+    finding ResponseBuilder from ConfigurationContext)                        | See #298
+    Actions javascript API was backported from Aranea 1.1 branch              | See #302
+    Additional action and popup examples
+    (Demos->Advanced->(Form With Actions | Advanced popups))
+
+Bugfixes
+    aranea-resources.xml contained references to example specific files       | See #288
+    aranea-popups.js contained hardcoded system form identifier               | See #290
+    TldLocationsCache threw NPE on some containers when WEB-INF/lib contained |
+    empty folders                                                             | See #292
+    <ui:onLoadEvent> 'event' attribute was escaped too strictly               | See #293
+    IE had trouble handling popup maps where id contained slashes             | See #297
+    WindowClosingService (used by PopupFlowWrapperWidget) caused opener       |
+    window to lose form data                                                  | See #292
+    JspWidgetCallUtil.getSubmitScriptForEvent constructed updateRegions       |
+    parameter that was unaccepted by event functions                          | See #303
+
+---------------------------------------------------------------------------------------------
+2006.12.01    | Aranea 1.0.3
+
+Features and Improvements
+    InputData and OutputData are accessible from BaseWidget init() now        | See #269
+    Aranea JSP now bundles ListFilterButton and ListFilterClearButton tags    | See #268
+    Rendering of HTML <select>'s was made optional for <ui:*TimeInput>        | See #279
+    EmptyStringNullableControl now treats blank strings as empty too          | See #282
+
+Bugfixes
+    <ui:eventKeyboardHandler> generated incomplete submit script              | See #274
+    ListSqlHelper did not handle generating aliases for tables which name     | See
+    contained underscore                                                      |     #273
+    StandardClassReloadingFilterWidget worked wrong for some classes already  | See
+    loaded in the webapp classloader                                          |     #276
+    MessagesHtmlTag did not escape outputted HTML                             | See #283
+    DateTimeControl did not have onChange listeners                           | See #281
+    _ap.event_6 submit method did not return false (broke at least IE6)       | See #278
+    FormElement tags did complain about correct Control types that were       | See
+    implemented as (anonymous) inner classes                                  |     #286
+    FileImporter searched overrides from classpath not from app context       | See #287
+
+---------------------------------------------------------------------------------------------
+2006.11.17    | Aranea 1.0.2
+
+Features and Improvements
+    <ui:autoCompleteTextInput> triggers onChange event when something         | See
+    is selected from the suggestion list                                      |     #264
+    
+    Utility for setting FormElement properties that are used when rendering   |
+    FormElement with Aranea JSP <ui:automaticFormElementTag> is now included  | See #257
+    in aranea.jar (class AutomaticFormElementUtil)                            |
+
+Bugfixes
+    'araneaCustomConfProperties' init parameter was ignored by dispatcher     | See #261
+    Default properties could not be used in local Aranea configuration        | See #262
+    <ui:timeInput> did not write out TimeControl's onChangeEventListener      | See #258
+    ComponentUtil.LISTENER_KEY contained dots (caused broken scoping)         | See #266
+    List docs mixed up strict and non-strict filter definition                | See change #134
+    Range filter produced error messages containing invalid labels when       | See
+    non-validating filter input was entered                                   |     #259
+
+---------------------------------------------------------------------------------------------
+2006.11.03    | Aranea 1.0.1
+
+Features and Improvements
+    Additional Aranea JSP TLD with URI                                        |
+       http://araneaframework.org/tag-library/standard_rt                     | See change #130
+    where tag attributes' rtexprvalue is set to true.                         |
+
+    Template application demonstrates basic localization                      | See change #130
+    StandardJspFilterService has new property jspExtension (default: ".jsp")  | See change #131
+    JspContext has additional method getJspExtension()                        | See change #131
+    BaseService new method handleServiceException()                           | See change #131
+    BaseWidget new method handleWidgetException()                             | See change #131
+    StandardFileUploadFilterService now implements FileUploadContext          | See change #131
+
+Bugfixes
+    ExceptionHandlerContext interface was removed (useless remnant)           | See #254
+    BaseExpiringServiceRouter provided wrong context class                    | See change #131
+    EqualFilter locale bugfix (lazyness)                                      | See #255
+    ExpressionUtil le() method did not work                                   | See change #131
+    ThreadContext reported wrong id after cloning                             | See #246
+
+---------------------------------------------------------------------------------------------
+2006.10.13    | Aranea 1.0
+
+Features and Improvements
+	Reference manual updates
+	Updated to compile with Java 1.3
+	Tutorial splitted: introduction & main tutorial
+	Library dependencies folders reorganized
+
+Bugfixes
+	Some small fixes
+
+---------------------------------------------------------------------------------------------
+2006.10.09    | Aranea 1.0-RC4
+
+Features and Improvements
+        Composite Constraints can optionally be lazy                          | See change #112
+        Managed services can be set TTL after which they may expire           | See #200
+        Experimental development filter                                       | See change #109
+        Spring bean injection utility                                         | See change #123
+        Major updates: reference manual
+        Minor updates: tutorial
+
+Bugfixes
+        Row updates sometimes breaking in IE                                  | See #241
+        NPE when layout(cell|row) was provided empty class ""                 | See change #117
+        MessageContext losing message ordering                                | See #244
+        OutputData and InputData are not Serializable anymore                 | See change #114
+        DateTimeControl value could not be set by programmer                  | See change #120
+        Request encoding was set at the wrong time                            | See #236
+        UploadFilter messed up encodings                                      | See #250
+
+API Changes
+        Lists API did change substantially (please re-read refman lists section).
+        Form lists API changed a little.
+        ErrorUtil -> MessageUtil
+        CompositeConstraint -> BaseCompositeConstraint
+        DisplayItemUtil.addItemsFromVoCollection -> addItemsFromBeanCollection
+        RelocatableServiceDecorator -> RelocatableDecorator
+        RelocatableWidgetDecorator -> RelocatableDecorator
+
+---------------------------------------------------------------------------------------------
+2006.09.11    | Aranea 1.0-RC3
+
+Features and Improvements
+        Constraints internals were rewritten                                  | See change #107
+        TransactionFilterWidget does not consider NULL id valid anymore       | See change #107
+        Some standard components were documented                              | See change #106
+
+Bugfixes
+        BeanUtil.copy(Object from, Class toType) did not work                 | See change #108
+
+API Changes
+        None
+
+---------------------------------------------------------------------------------------------
+2006.09.01    | Aranea 1.0-RC2
+
+Features and Improvements
+        Additional methods in MessageContext                                  | See #233
+        Javadoc has been cleaned up and updated                               | See #221
+        In example application, invalid form fields are highlighted now
+
+Bugfixes
+        Opening links in new window did not work with url-encoded session IDs | See #234
+        Some buggy addElement methods were fixed (concerned list filters)     | See change #100
+        SqlStatement did not work with any DB besides HSQLDB anymore          | See change #101
+        FormElements erroneously lost state on page reload                    | See #237
+        FormElement action() marked FormElement as non-rendered               | See #232
+        Event precondition evaluation did not work with IE                    | See #238
+
+API Changes
+        LayoutTag -> LayoutHtmlTag
+        LayoutRowTag -> LayoutRowTag
+        LayoutCellTag -> LayoutCellTag
+        ConvertionException -> ConversionException
+        
+        ServletUtil.getOutputOData -> ServletUtil.getOutputData
+        UiWidgetContainer.REQUEST_CONTEXT_KEY --> UiWidgetContainer.KEY
+        
+        org.araneaframework.uilib.list.util.like package changed much, as
+        it was released week ago it should not cause any problems.
+
+2006.08.25    | Aranea 1.0-RC1
+
+Features and Improvements
+        Support for external linking (hard URL links to application parts)    | See #17
+        Support for opening application links in new window                   | See #42
+        Cleaner Lists API                                                     | See #50, #122, #160, #223
+        Aranea class naming and packaging policy was written down
+        in dev/aranea-development-guide.odt and many packages and classes     | See #134, #204, #206, #207, #209
+        were named accordingly 
+        Javascript API was rewritten, outdated validation scripts removed     | See #151
+        Memory use decreased up to 60%, some memory leaks fixed               | See #197, #211, #210                
+
+Bugfixes
+        Removed the nonworking FloatControl validation                        | See #38, #124, #166
+        SessionListener definition from tlds was removed                      | See #218
+        Aranea should not download DTD-s and TLDs anymore                     | See #196
+        A security issue concerning DisplayTags was fixed                     | See #202
+
+API Changes
+        Numerous, because of package renames and established naming policy
+
+---------------------------------------------------------------------------------------------
+2006.07.07    | Aranea 1.0-M4
+
+Features and Improvements
+        Proper rich text editor integrated (http://tinymce.moxiecode.com/)    | See #22, #152
+        Aranea javascripts do not use document.write() anymore                | See #141
+        More reliable class resolving with ClassLoaderUtil                    | See #95
+        Uilib includes AutoCompleteTextControl (provides suggestions)         | See #63
+        FileImporter now simulates real URLs for accessible resources         | See #159
+        Popups have means of interacting between themselves                   | See #127
+        Extension mechanism - defining resources Aranea can use               | See #89
+        HTML for rendering formelements is smaller                            | See #81
+        Request URLs are properly encoded to allow both cookie and URL 
+        rewriting based session tracking                                      | See #123
+        Every framework interface method does not throw checked Exception
+        anymore, instead exceptions are wrapped into RuntimeExceptions        | See #137
+        Aranea distributed jars now include manifest with version information | See #161
+        Tags can be added attributes with <ui:attribute>                      | See #101
+        Inline styles can be specified for JSP tags                           | See #173
+        BeanFormWidget works with primitive bean fields
+        
+Bugfixes
+        <ui:fileUpload/> failed to set encoding of surrounding systemForm     | See #184
+        Incorrect handling of simulated onchange in most JSP *input tags      | See #178
+        Date, Float and TimeControl tried to invoke wrong onChange listener   | See #153
+        "Show all" button that used to crash backend list                     | See #128
+        Filtering editable list in template application crashed               | See #132
+        Disabled Controls did not preserve values between requests            | See #168
+And others... 
+
+API Changes
+        StandardViewPortWidget has been removed, StandardWidgetContainerWidget|
+        includes its previous functionality.                                  | See #133
+
+        Popup API has changed, open() methods are back and take an additional | 
+        opener parameter.                                                     | See #127
+
+General changes
+        Due to FileImporter simulating real URLs now, Aranea servlet needs to | 
+        be mapped as <url-pattern>/servlet/*</url-pattern> not just           | See #159
+        <url-pattern>/servlet</url-pattern> as before.                        | 
+
+        XStream jar bundled with Aranea has been updated, older version had   |
+        problems with serializing TextControls                                |
+
+
+Infrastructure changes
+        The example application running www.araneaframework.org:2000/main     | See #91
+
+---------------------------------------------------------------------------------------------
+2006.05.16    | Aranea 1.0-M3
+
+Features and Improvements
+        Possible to save state on the client side                             | See #87
+        Popups allow to start just a root flow in a popup                     | See #109
+        Partial page update takes place on server-side                        | See #1
+
+        Aranea configuration is modularized now. A main configuration is
+        provided in the aranea.jar and an application can have overrides.
+
+        JSP tag API improvements and simplification.      
+
+Bugfixes
+        Date ranged filters with timestamp throws exception                   | See #47
+        Encoding was broken with multipart requests                           | See #112
+        Duplicate filterButton tags removed from template                     | See #67
+        BeanMapper fields separating                                          | See #96
+        Non descriptive exception name with forms when no id specified        | See #61
+        Widgets were rendered even when a HTTP redirect was taking place      | See #71
+        Correct handling of empty collection with MultiSelect value           | See #99
+And others...
+
+API Changes
+        Tag API cleanup (before->doStartTag, after->doEndTag, init() removed,
+        deinit() removed), new layout tags.
+        
+        Popup API has changed (no more need to specify ID-s, possibility to
+        open popup windows to random URL, open -> openDetached)
+
+General changes
+        Javascript filenames lost the prefix jwlf. As framework's javascript  |
+        files are automatically included from the jar no change in any of     | See #29
+        applications should be noted.                                         |
+
+        Jars needed to run the example applications have moved from ./lib     | See #78
+        to ./examples/lib directory.                                          |
+	
+Infrastructure changes
+        Nightly builds available.                                             | See #39
+
+        The example application running www.araneaframework.org:2000/main     | See #91
+
+        RSS feeds available for the forum.                                    | See #84
+
+---------------------------------------------------------------------------------------------
+2006.03.31    | Aranea 1.0-M2
+
+Change: API   | Button tags' attribute "mold" changed to "renderMode".
+Change: API   | Tags' disabledCssClass changed to "disabledStyleClass".
+Change: API   | StandardRoutedMessage renamed to RoutedMessage.
+Change: API   | StandardMessage renamed to BroadcastMessage.
+Change: API   | StandardJspFilterService.Configuration renamed to StandardJspFilterService.JspConfiguration
+Change: API   | Some standard styleclasses may have been changed.
+Change: API   | UiStdFormButtonBaseTag had action* attributes removed.
+Change: API   | Label tag attribute showColumn renamed to showColon.
+Change: API   | Some ContinuationManagerContext methods were renamed: 
+                 runContinuationOnce() -> runOnce()
+                 isContinuationRunning() -> isRunning()
+                 runContinuation() -> start()
+Change: API   | Environment's getEntry() method does not throw exception anymore when entry is not found.
+Change: API   | Environment has new requireEntry() method that behaves like old getEntry method.
+Change: API   | All StandardPresentationWidget's have global proxying eventlistener preregistered after initialization.
+Change: API   | StandardViewPortService does not exist anymore.
+Change: API   | StandardSpringMainServlet, StandardSpringServiceFactory and StandardMainServlet are removed.
+Change: API   | Instead there are AraneaSpringDispatcherServlet, SimpleAraneaSpringDispatcherServlet, BaseAraneaDispatcherServlet, SpringServiceFactory.
+Change: Docs  | Updates to tutorial.
+Change: Docs  | Updates to reference manual.
+
+Feature: Core | New flowcontainer, ExceptionHandlingFlowContainerWidget that has exception handling ability.
+Feature: Core | BeanListWidget now consists of real BeanFormWidget's instead of FormWidget's.
+Feature: Core | MessageContext has clearMessages() method now.
+Feature: Core | StandardWidget has clearGlobalEventListener() method now.
+Feature: Core | Added FileDownloaderService for serving downloadable files.
+Feature: Core | UiImageBaseTag has new setTitle() method.
+Feature: Core | StandardServletInputData implements ServletOverridableInputData instead ServletInputData.
+Feature: Core | New services: StandardServiceFilterChainFilterService && StandardWidgetFilterChainFilterWidget allow easier configuration.
+Feature: Core | New DefaultConfiguration class.
+Feature: Core | New ReloadingPropertyFileResourceBundle class.
+  
+Bugfix: Core  | Working timeinputs.
+Bugfix: Core  | Layout tag rowClasses and cellClasses work again.
+Bugfix: Core  | Meaningful messages for JSP missing attribute exceptions.
+Bugfix: Core  | The encoding problems in StandardServletFileUploadFilterService were fixed.
+Bugfix: Core  | List bug fixes.
+Bugfix: Core  | Updates and fixes to example application.
+Bugfix: Core  | ... and countless other bug fixes :)
