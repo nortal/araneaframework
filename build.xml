@@ -42,16 +42,13 @@
 	<!-- ======================================== -->
 
 	<target name="init-ivy" description="Initializes ivy path and settings">
-		<condition property="ivy.settings.file" value="ivysettings_unix.xml" else="ivysettings.xml">
-			<os family="unix"/>
-		</condition>
 
 		<path id="ivy.lib.path">
 			<fileset dir="lib/ivy/" includes="*.jar"/>
 		</path>
 
 		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
-		<ivy:settings file="${ivy.settings.file}" />
+		<ivy:settings file="ivysettings.xml" />
 	</target>
 
 	<target name="fetch-libs" depends="init-ivy" description="Download all necessary libraries">

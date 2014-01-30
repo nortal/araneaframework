@@ -7,7 +7,7 @@
 
 	<resolvers>
 		<chain name="defaultChainResolver">
-			<ibiblio m2compatible="true" name="ibiblio-aranea" root="${aranea.ivy.root}" pattern="${aranea.ivy.pattern}"/>
+			<ibiblio m2compatible="true" name="bintray" root="${bintray.root}" pattern="${bintray.pattern}"/>
 			<ibiblio m2compatible="true" name="ibiblio-maven2" root="${repo1.mvn.root}" pattern="${repo1.mvn.pattern}"/>
 		</chain>
 	</resolvers>
